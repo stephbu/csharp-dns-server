@@ -1,0 +1,4 @@
+#Version:1.0
+#Fields:MachineName,PodName,MachineFunction,Port,Image,SKU,StaticIP,ScaleUnit,staticFunction,staticScaleunit,status,repair,netMask,Freeze,FreezeEndsAt,ConnectedTo,Enclosure,Environment,PhysicalMachineName,PhysicalIP,PodPower,PodSwitch,QualifiedFunction
+STEPHBU01,POD_Quincy,LCP,0,retail.amd64,NonStdHw,127.0.0.1,0,NU,0,H,None,16777215,0,1900-01-01 00:00:00.000,,,lsdplat-pvt-blulab,STEPHBU01,127.0.0.1,,,
+#EOF
