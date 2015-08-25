@@ -2,14 +2,27 @@
 
 Fully functional DNS server written in C#.
 
-## Features
-- Pluggable Zone Resolver.  Host one or more zone locally and run your code to resolve names in that zone.  Enables many complex scenarios such as:
-  - round-robin load-balancing.  Distribute load and provide failover with a datacentre without expensive hardware.
-  - health-checks.  Pull machines from DNS when they fail health response
-  - time-based constraints. Parental controls blockage of Facebook.
-- Delegates all other DNS lookup to host machines default DNS server(s)
+The project was written to provide DNS services within a datacentre, specifically to eliminate the need for an expensive load-balancer device by providing round-robin DNS services instead.
 
-Builtin Web Server provides
+## Features
+
+As written, the server has a number of intrinsic features:
+
+ - Pluggable Zone Resolver.  Host one or more zones locally, and run your code to resolve names in that zone.  Enables many complex scenarios such as:
+ - round-robin load-balancing.  Distribute load and provide failover with a datacentre without expensive hardware.
+ - health-checks.  While maintaining a list of machines in round-robin for a name, the code performs periodic healthchecks against the machines, if necessary removing machines that fail the health checks from rotation.
+ - time-based constraints. Parental controls blockage of Facebook.
+ - Delegates all other DNS lookup to host machines default DNS server(s)
+
+The DNS server also has a builtin basic Web Server providing operational insight into the server behaviour.
 - healthcheck for server status
 - counters
 - zone information
+
+## Challenges
+
+### Testing
+Much time was spent using Netmon to capture real DNS challenges and verify that the C# DNS server responded appropriately.
+
+### DNS-Sec
+No effort made to handle or respond to DNS-Sec challenges.
