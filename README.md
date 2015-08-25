@@ -2,7 +2,7 @@
 
 Fully functional DNS server written in C#.
 
-The project was written to provide DNS services within a datacentre, specifically to eliminate the need for an expensive load-balancer device by providing round-robin DNS services instead.
+The project was written to provide DNS services within a datacentre, specifically to remove the need for an expensive load-balancer device by providing round-robin DNS services, and retrying connectivity instead.
 
 ## Licence
 This software is licenced under MIT terms that permits reuse within proprietary software provided all copies of the licensed software include a copy of the MIT License terms and the copyright notice.  See [licence.txt](./licence.txt)
