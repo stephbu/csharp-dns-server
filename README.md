@@ -25,6 +25,12 @@ The DNS server also has a builtin basic Web Server providing operational insight
 ## Challenges
 
 ### Testing
+
+Two phases of testing was completed.
+1) Verification that the bit-packing classes correctly added and removed bits in correct Endian order, complicated by network bitpacking in reverse order to Windows big-endian packing.
+
+2) Protocol verification - that well known messages were correctly decoded and re-encoded using the bit-packing system.
+
 Much time was spent using Netmon to capture real DNS challenges and verify that the C# DNS server responded appropriately.
 
 ### DNS-Sec
