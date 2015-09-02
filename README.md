@@ -16,14 +16,14 @@ As written, the server has a number of intrinsic features:
  - health-checks.  While maintaining a list of machines in round-robin for a name, the code performs periodic healthchecks against the machines, if necessary removing machines that fail the health checks from rotation.
  - Delegates all other DNS lookup to host machines default DNS server(s)
 
-## Interesting Possible Uses
-Time-based constraints such as parental controls to block a site, e.g. Facebook.
-Logging of site usage e.g. company notifications
-
-The DNS server also has a builtin basic Web Server providing operational insight into the server behaviour.
+The DNS server also has a built-in Web Server providing operational insight into the server behaviour.
 - healthcheck for server status
 - counters
 - zone information
+
+## Interesting Possible Uses
+Time-based constraints such as parental controls to block a site, e.g. Facebook.
+Logging of site usage e.g. company notifications
 
 ## Challenges
 
