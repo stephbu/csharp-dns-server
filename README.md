@@ -30,6 +30,7 @@ Logging of site usage e.g. company notifications
 ### Testing
 
 Two phases of testing was completed.
+
 1) Verification that the bit-packing classes correctly added and removed bits in correct Endian order, complicated by network bitpacking in reverse order to Windows big-endian packing.
 
 2) Protocol verification - that well known messages were correctly decoded and re-encoded using the bit-packing system.
