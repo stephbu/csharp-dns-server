@@ -11,6 +11,8 @@ This software is licenced under MIT terms that permits reuse within proprietary 
 
 [![Build status](https://ci.appveyor.com/api/projects/status/goayaopiib8tbyfv?svg=true)](https://ci.appveyor.com/project/stephbu/csharp-dns-server)
 
+[![Build status](https://ci.appveyor.com/api/projects/status/goayaopiib8tbyfv/branch/master?svg=true)](https://ci.appveyor.com/project/stephbu/csharp-dns-server/branch/master)
+
 ## Features
 
 As written, the server has a number of intrinsic features:
