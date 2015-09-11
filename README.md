@@ -13,8 +13,6 @@ This software is licenced under MIT terms that permits reuse within proprietary 
 |--------|--------|
 | master | [![Build status](https://ci.appveyor.com/api/projects/status/goayaopiib8tbyfv/branch/master?svg=true)](https://ci.appveyor.com/project/stephbu/csharp-dns-server/branch/master) |
 
-
-
 ## Features
 
 As written, the server has a number of intrinsic features:
@@ -57,7 +55,7 @@ Suggested workflow for PRs is
 1. Make a fork of csharp-dns-server/master in your own repository.
 2. Create a branch in your own repo to entirely encapsulate all your proposed changes
 3. Make your changes, add documentation if you need it, markdown text preferred.
-4. Squash your commits into a signal change [Find out how to here](http://stackoverflow.com/questions/616556/how-do-you-squash-commits-into-one-patch-with-git-format-patch)
+4. Squash your commits into a single change [(Find out how to squash here)](http://stackoverflow.com/questions/616556/how-do-you-squash-commits-into-one-patch-with-git-format-patch)
 5. Submit a PR, and put in comments anything that you think I'll need to help merge and evaluate the changes
 
 ### Licence Reminder
