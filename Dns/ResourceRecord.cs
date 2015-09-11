@@ -9,14 +9,14 @@ namespace Dns
     using System;
     using System.IO;
 
-    public class Resource
+    public class ResourceRecord
     {
         public string Name { get; set; }
-        public ResourceType Type { get; set; }
-        public ResourceClass Class { get; set; }
         public uint TTL { get; set; }
-        public ushort DataLength { get; set; }
+        public ResourceClass Class { get; set; }
+        public ResourceType Type { get; set; }
         public RData RData { get; set;}
+        public ushort DataLength { get; set; }
 
         /// <summary>Serialize resource to stream according to RFC1034 format</summary>
         /// <param name="stream"></param>

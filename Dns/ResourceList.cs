@@ -10,7 +10,7 @@ namespace Dns
     using System.Collections.Generic;
     using System.IO;
 
-    public class ResourceList : List<Resource>
+    public class ResourceList : List<ResourceRecord>
     {
         public int LoadFrom(byte[] bytes, int offset, ushort count)
         {
@@ -20,36 +20,36 @@ namespace Dns
             {
                 // TODO: move this code into the Resource object
 
-                Resource resource = new Resource();
+                ResourceRecord resourceRecord = new ResourceRecord();
                 //// extract the domain, question type, question class and Ttl
 
-                resource.Name = DnsProtocol.ReadString(bytes, ref currentOffset);
+                resourceRecord.Name = DnsProtocol.ReadString(bytes, ref currentOffset);
 
-                resource.Type = (ResourceType) (BitConverter.ToUInt16(bytes, currentOffset).SwapEndian());
+                resourceRecord.Type = (ResourceType) (BitConverter.ToUInt16(bytes, currentOffset).SwapEndian());
                 currentOffset += sizeof (ushort);
 
-                resource.Class = (ResourceClass) (BitConverter.ToUInt16(bytes, currentOffset).SwapEndian());
+                resourceRecord.Class = (ResourceClass) (BitConverter.ToUInt16(bytes, currentOffset).SwapEndian());
                 currentOffset += sizeof (ushort);
 
-                resource.TTL = BitConverter.ToUInt32(bytes, currentOffset).SwapEndian();
+                resourceRecord.TTL = BitConverter.ToUInt32(bytes, currentOffset).SwapEndian();
                 currentOffset += sizeof (uint);
 
-                resource.DataLength = BitConverter.ToUInt16(bytes, currentOffset).SwapEndian();
+                resourceRecord.DataLength = BitConverter.ToUInt16(bytes, currentOffset).SwapEndian();
                 currentOffset += sizeof (ushort);
 
-                if (resource.Class == ResourceClass.IN && resource.Type == ResourceType.A)
+                if (resourceRecord.Class == ResourceClass.IN && resourceRecord.Type == ResourceType.A)
                 {
-                    resource.RData = ANameRData.Parse(bytes, currentOffset, resource.DataLength);
+                    resourceRecord.RData = ANameRData.Parse(bytes, currentOffset, resourceRecord.DataLength);
                 }
-                else if (resource.Type == ResourceType.CNAME)
+                else if (resourceRecord.Type == ResourceType.CNAME)
                 {
-                    resource.RData = CNameRData.Parse(bytes, currentOffset, resource.DataLength);
+                    resourceRecord.RData = CNameRData.Parse(bytes, currentOffset, resourceRecord.DataLength);
                 }
 
                 // move past resource data record
-                currentOffset = currentOffset + resource.DataLength;
+                currentOffset = currentOffset + resourceRecord.DataLength;
 
-                this.Add(resource);
+                this.Add(resourceRecord);
             }
 
             int bytesRead = currentOffset - offset;

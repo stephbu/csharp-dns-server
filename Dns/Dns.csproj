@@ -55,7 +55,7 @@
     <Compile Include="Question.cs" />
     <Compile Include="QuestionList.cs" />
     <Compile Include="HttpServer.cs" />
-    <Compile Include="Resource.cs" />
+    <Compile Include="ResourceRecord.cs" />
     <Compile Include="ResourceList.cs" />
     <Compile Include="ResourceType.cs" />
     <Compile Include="CsvParser.cs" />

@@ -266,9 +266,9 @@ namespace DnsTests
             message.AdditionalCount = 0;
             message.Questions = new QuestionList();
             message.Questions.Add(new Question {Name = "www.msn.com", Class = ResourceClass.IN, Type = ResourceType.A});
-            message.Answers.Add(new Resource {Name = "8.8.8.8", Class = ResourceClass.IN, Type = ResourceType.NS, TTL = 468, DataLength = 0, RData = null});
+            message.Answers.Add(new ResourceRecord {Name = "8.8.8.8", Class = ResourceClass.IN, Type = ResourceType.NS, TTL = 468, DataLength = 0, RData = null});
             RData data = new ANameRData {Address = IPAddress.Parse("8.8.8.9")};
-            message.Answers.Add(new Resource {Name = "8.8.8.9", Class = ResourceClass.IN, Type = ResourceType.NS, TTL = 468, RData = data, DataLength = (ushort) data.Length});
+            message.Answers.Add(new ResourceRecord {Name = "8.8.8.9", Class = ResourceClass.IN, Type = ResourceType.NS, TTL = 468, RData = data, DataLength = (ushort) data.Length});
 
             DnsMessage outMessage;
             using (MemoryStream stream = new MemoryStream())

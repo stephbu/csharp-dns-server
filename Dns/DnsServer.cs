@@ -84,7 +84,7 @@ namespace Dns
                                 message.AA = true;
                                 message.RA = false;
                                 message.AnswerCount++;
-                                message.Answers.Add(new Resource {Name = question.Name, Class = ResourceClass.IN, Type = ResourceType.PTR, TTL = 3600, DataLength = 0xB, RData = new DomainNamePointRData() {Name = "localhost"}});
+                                message.Answers.Add(new ResourceRecord {Name = question.Name, Class = ResourceClass.IN, Type = ResourceType.PTR, TTL = 3600, DataLength = 0xB, RData = new DomainNamePointRData() {Name = "localhost"}});
                             }
                         }
                         else if (_resolver.TryGetHostEntry(question.Name, question.Class, question.Type, out entry)) // Right zone, hostname/machine function does exist
@@ -96,7 +96,7 @@ namespace Dns
                             foreach (IPAddress address in entry.AddressList)
                             {
                                 message.AnswerCount++;
-                                message.Answers.Add(new Resource {Name = question.Name, Class = ResourceClass.IN, Type = ResourceType.A, TTL = 10, RData = new ANameRData {Address = address}});
+                                message.Answers.Add(new ResourceRecord {Name = question.Name, Class = ResourceClass.IN, Type = ResourceType.A, TTL = 10, RData = new ANameRData {Address = address}});
                             }
                         }
                         else if (question.Name.EndsWith(_resolver.GetZoneName())) // Right zone, but the hostname/machine function doesn't exist
@@ -109,7 +109,7 @@ namespace Dns
                             message.Answers.Clear();
 
                             var soaResourceData = new StatementOfAuthorityRData() {PrimaryNameServer = Environment.MachineName, ResponsibleAuthoritativeMailbox = "stephbu." + Environment.MachineName, Serial = _resolver.GetZoneSerial(), ExpirationLimit = 86400, RetryInterval = 300, RefreshInterval = 300, MinimumTTL = 300};
-                            var soaResourceRecord = new Resource {Class = ResourceClass.IN, Type = ResourceType.SOA, TTL = 300, RData = soaResourceData};
+                            var soaResourceRecord = new ResourceRecord {Class = ResourceClass.IN, Type = ResourceType.SOA, TTL = 300, RData = soaResourceData};
                             message.NameServerCount++;
                             message.Authorities.Add(soaResourceRecord);
                         }

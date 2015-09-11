@@ -314,7 +314,7 @@ namespace Dns
 
             if (Answers != null)
             {
-                foreach (Resource resource in this.Answers)
+                foreach (ResourceRecord resource in this.Answers)
                 {
                     Console.WriteLine("Record: {0} of type {1} on class {2}", resource.Name, (ResourceType) resource.Type, (ResourceClass)resource.Class);
                     resource.Dump();
@@ -324,7 +324,7 @@ namespace Dns
 
             if (Authorities != null)
             {
-                foreach (Resource resource in this.Authorities)
+                foreach (ResourceRecord resource in this.Authorities)
                 {
                     Console.WriteLine("Record: {0} of type {1} on class {2}", resource.Name, (ResourceType)resource.Type, (ResourceClass)resource.Class);
                     resource.Dump();
