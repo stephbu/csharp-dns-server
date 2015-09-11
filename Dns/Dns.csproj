@@ -51,6 +51,8 @@
     <Compile Include="Contracts\IDnsResolver.cs" />
     <Compile Include="Contracts\IHtmlDump.cs" />
     <Compile Include="Utility\BitPacker.cs" />
+    <Compile Include="Utility\CsvParser.cs" />
+    <Compile Include="Utility\CsvRow.cs" />
     <Compile Include="ZoneProvider\BaseZoneProvider.cs" />
     <Compile Include="Question.cs" />
     <Compile Include="QuestionList.cs" />
@@ -58,8 +60,6 @@
     <Compile Include="ResourceRecord.cs" />
     <Compile Include="ResourceList.cs" />
     <Compile Include="ResourceType.cs" />
-    <Compile Include="CsvParser.cs" />
-    <Compile Include="CsvRow.cs" />
     <Compile Include="DnsCache.cs" />
     <Compile Include="DnsMessage.cs" />
     <Compile Include="DnsProtocol.cs" />

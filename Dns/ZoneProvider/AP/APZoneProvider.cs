@@ -9,12 +9,12 @@ namespace Dns.ZoneProvider.AP
     using System.IO;
     using System.Net;
     using System.Linq;
+    using Dns.Utility;
     using Dns.ZoneProvider;
 
     /// <summary>Source of Zone records</summary>
     public class APZoneProvider : FileWatcherZoneProvider
     {
-        private string _machineInfoFile;
         private string _zoneSuffix;
         private uint _serial;
 

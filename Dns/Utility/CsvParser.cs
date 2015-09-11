@@ -1,10 +1,10 @@
-﻿// //------------------------------------------------------------------------------------------------- 
+// //------------------------------------------------------------------------------------------------- 
 // // <copyright file="CsvParser.cs" company="stephbu">
 // // Copyright (c) Steve Butler. All rights reserved.
 // // </copyright>
 // //-------------------------------------------------------------------------------------------------
 
-namespace Dns
+namespace Dns.Utility
 {
     using System;
     using System.Collections.Generic;
