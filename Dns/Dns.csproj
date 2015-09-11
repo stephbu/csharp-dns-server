@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseZoneProvider.cs" />
+    <Compile Include="Bind\BindZoneProvider.cs" />
     <Compile Include="BitPacker.cs" />
     <Compile Include="IAddressDispenser.cs" />
     <Compile Include="IHtmlDump.cs" />

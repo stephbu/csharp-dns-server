@@ -7,23 +7,27 @@
 namespace Dns
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
     using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Linq;
 
-    /// <summary>Source of Zone records</summary>
-    public class APZoneProvider : IObservable<Zone>, IDisposable
+    public abstract class FileWatcherZoneProvider : BaseZoneProvider
     {
-        private string _machineInfoFile;
-        private FileSystemWatcher _machineWatcher;
-        private readonly List<IObserver<Zone>> _observers = new List<IObserver<Zone>>();
+        public delegate void FileWatcherDelegate(object sender, FileSystemEventArgs e);
+
+        public event FileWatcherDelegate OnCreated = delegate { };
+        public event FileWatcherDelegate OnDeleted = delegate { };
+        public event FileWatcherDelegate OnRenamed = delegate { };
+        public event FileWatcherDelegate OnChanged = delegate { };
+        public event FileWatcherDelegate OnSettlement = delegate {};
+
+        private FileSystemWatcher _fileWatcher;
         private TimeSpan _settlement = TimeSpan.FromSeconds(10);
-        private Timer _timer;
-        private string _zoneSuffix;
-        private uint _serial;
+        private readonly Timer _timer;
+
+        public abstract Zone GenerateZone();
 
         /// <summary>Timespan between last file change and zone generation</summary>
         public TimeSpan FileSettlementPeriod
@@ -32,54 +36,41 @@ namespace Dns
             set { this._settlement = value; }
         }
 
-        void IDisposable.Dispose()
-        {
-            if (_machineWatcher != null)
-            {
-                _machineWatcher.EnableRaisingEvents = false;
-                _machineWatcher.Dispose();
-            }
-        }
+        public string Filename { get; private set; }
 
-        /// <summary>Subscribe Observer to zone publishing</summary>
-        /// <param name="observer">Observer</param>
-        /// <returns>Subscription object that subscriber must maintain, and dispose when subscription cancellation is required</returns>
-        IDisposable IObservable<Zone>.Subscribe(IObserver<Zone> observer)
+        protected FileWatcherZoneProvider(string filename)
         {
-            _observers.Add(observer);
-            return new Subscription(this, observer);
-        }
-
-        /// <summary>Initialize ZoneProvider</summary>
-        /// <param name="machineInfoFile"></param>
-        /// <param name="zoneSuffix"></param>
-        public void Initialize(string machineInfoFile, string zoneSuffix)
-        {
-            if (string.IsNullOrWhiteSpace(machineInfoFile))
+            if (string.IsNullOrWhiteSpace(filename))
             {
-                throw new ArgumentException("Null or empty", "machineInfoFile");
+                throw new ArgumentException("Null or empty", "filename");
             }
 
-            machineInfoFile = Environment.ExpandEnvironmentVariables(machineInfoFile);
-            machineInfoFile = Path.GetFullPath(machineInfoFile);
+            filename = Environment.ExpandEnvironmentVariables(filename);
+            filename = Path.GetFullPath(filename);
 
-            if (!File.Exists(machineInfoFile))
+            if (!File.Exists(filename))
             {
-                throw new FileNotFoundException("machineInfoFile not found", machineInfoFile);
+                throw new FileNotFoundException("filename not found", filename);
             }
 
-            _machineInfoFile = machineInfoFile;
-            _zoneSuffix = zoneSuffix;
 
-            string directory = Path.GetDirectoryName(machineInfoFile);
-            string fileNameFilter = Path.GetFileName(machineInfoFile);
+            string directory = Path.GetDirectoryName(filename); 
+            string fileNameFilter = Path.GetFileName(filename);
 
-            _machineWatcher = new FileSystemWatcher(directory, fileNameFilter);
-            _machineWatcher.Created += _machineWatcher_OnChanged;
-            _machineWatcher.Changed += _machineWatcher_OnChanged;
-            _machineWatcher.Renamed += _machineWatcher_OnChanged;
-            _machineWatcher.Deleted += _machineWatcher_OnChanged;
+            this.Filename = filename;
+            this._fileWatcher = new FileSystemWatcher(directory, fileNameFilter); 
+
+            this._fileWatcher.Created += (s, e) => this.OnCreated(s, e);
+            this._fileWatcher.Changed += (s, e) => this.OnChanged(s, e);
+            this._fileWatcher.Renamed += (s, e) => this.OnRenamed(s, e);
+            this._fileWatcher.Deleted += (s, e) => this.OnDeleted(s, e);
+
             _timer = new Timer(OnTimer);
+
+            _fileWatcher.Created += this.FileChange;
+            _fileWatcher.Changed += this.FileChange;
+            _fileWatcher.Renamed += this.FileChange;
+            _fileWatcher.Deleted += this.FileChange;
         }
 
         /// <summary>Start watching and generating zone files</summary>
@@ -87,45 +78,21 @@ namespace Dns
         {
             // fire first zone generation event on startup
             _timer.Change(TimeSpan.FromSeconds(3), Timeout.InfiniteTimeSpan);
-            _machineWatcher.EnableRaisingEvents = true;
-        }
-
-        /// <summary>Stop watching</summary>
-        public void Stop()
-        {
-            _machineWatcher.EnableRaisingEvents = false;
-        }
-
-        /// <summary>Publish zone to all subscribers</summary>
-        /// <param name="zone"></param>
-        private void Notify(Zone zone)
-        {
-            int remainingRetries = 3;
-
-            while (remainingRetries > 0)
-            {
-                ParallelLoopResult result = Parallel.ForEach(_observers, observer => observer.OnNext(zone));
-                if (result.IsCompleted)
-                {
-                    break;
-                }
-                remainingRetries--;
-            }
-        }
-
-        /// <summary>Removes observer subscription</summary>
-        /// <param name="observer"></param>
-        private void Unsubscribe(IObserver<Zone> observer)
-        {
-            this._observers.Remove(observer);
+            _fileWatcher.EnableRaisingEvents = true;
         }
 
         /// <summary>Handler for any file changes</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void _machineWatcher_OnChanged(object sender, FileSystemEventArgs e)
+        private void FileChange(object sender, FileSystemEventArgs e)
         {
             _timer.Change(_settlement, Timeout.InfiniteTimeSpan);
+        }
+
+        /// <summary>Stop watching</summary>
+        public void Stop()
+        {
+            _fileWatcher.EnableRaisingEvents = false;
         }
 
         /// <summary>Handler for settlement completion</summary>
@@ -133,20 +100,54 @@ namespace Dns
         private void OnTimer(object state)
         {
             _timer.Change(Timeout.Infinite, Timeout.Infinite);
-            Task.Run(() => CreateZone())
-                .ContinueWith(task => this.Notify(task.Result));
+            Task.Run(() => this.GenerateZone()).ContinueWith(t => this.Notify(t.Result));
         }
 
-        /// <summary>Generates zone</summary>
-        /// <returns></returns>
-        private Zone CreateZone()
+
+        public override void Dispose()
         {
-            if (!File.Exists(_machineInfoFile))
+            if (this._fileWatcher != null)
+            {
+                _fileWatcher.EnableRaisingEvents = false;
+                _fileWatcher.Dispose();
+            }
+
+            if (this._timer != null)
+            {
+                _timer.Change(Timeout.Infinite, Timeout.Infinite);
+                this._timer.Dispose();
+            }
+        }
+    }
+
+    /// <summary>Source of Zone records</summary>
+    public class APZoneProvider : FileWatcherZoneProvider
+    {
+        private string _machineInfoFile;
+        private string _zoneSuffix;
+        private uint _serial;
+
+        public APZoneProvider(string machineInfoFile, string zoneSuffix) : base(machineInfoFile)
+        {
+            this.Initialize(machineInfoFile, zoneSuffix);
+        }
+
+        /// <summary>Initialize ZoneProvider</summary>
+        /// <param name="machineInfoFile"></param>
+        /// <param name="zoneSuffix"></param>
+        public void Initialize(string machineInfoFile, string zoneSuffix)
+        {
+            _zoneSuffix = zoneSuffix;
+        }
+
+        public override Zone GenerateZone()
+        {
+            if (!File.Exists(this.Filename))
             {
                 return null;
             }
-            
-            CsvParser parser = CsvParser.Create(_machineInfoFile);
+
+            CsvParser parser = CsvParser.Create(this.Filename);
             var machines = parser.Rows.Select(row => new {MachineFunction = row["MachineFunction"], StaticIP = row["StaticIP"], MachineName = row["MachineName"]}).ToArray();
 
             var zoneRecords = machines
@@ -162,24 +163,6 @@ namespace Dns
             // increment serial number
             _serial++;
             return zone;
-        }
-
-        /// <summary>Subscription memento for IObservable interface</summary>
-        public class Subscription : IDisposable
-        {
-            private IObserver<Zone> _observer;
-            private APZoneProvider _provider;
-
-            public Subscription(APZoneProvider provider, IObserver<Zone> observer)
-            {
-                this._provider = provider;
-                this._observer = observer;
-            }
-
-            void IDisposable.Dispose()
-            {
-                this._provider.Unsubscribe(this._observer);
-            }
         }
     }
 }

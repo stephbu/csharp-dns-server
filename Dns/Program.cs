@@ -24,14 +24,13 @@ namespace Dns
         {
             Console.CancelKeyPress += Console_CancelKeyPress;
 
-            _zoneProvider = new APZoneProvider();
+            _zoneProvider = new APZoneProvider("d:\\data\\machineinfo.csv", ".foo.bar");
             _zoneResolver = new SmartZoneResolver();
             _dnsServer = new DnsServer();
             _httpServer = new HttpServer();
 
             _zoneResolver.SubscribeTo(_zoneProvider);
 
-            _zoneProvider.Initialize("d:\\data\\machineinfo.csv", ".foo.bar");
             _dnsServer.Initialize(_zoneResolver);
             _httpServer.Initialize("http://+:8080/");
             _httpServer.OnProcessRequest += _httpServer_OnProcessRequest;
