@@ -4,14 +4,12 @@
 // // // </copyright>
 // // //-------------------------------------------------------------------------------------------------
 
-namespace Dns
+namespace Dns.ZoneProvider
 {
     using System;
     using System.IO;
-    using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Linq;
 
     public abstract class FileWatcherZoneProvider : BaseZoneProvider
     {
@@ -65,20 +63,20 @@ namespace Dns
             this._fileWatcher.Renamed += (s, e) => this.OnRenamed(s, e);
             this._fileWatcher.Deleted += (s, e) => this.OnDeleted(s, e);
 
-            _timer = new Timer(OnTimer);
+            this._timer = new Timer(this.OnTimer);
 
-            _fileWatcher.Created += this.FileChange;
-            _fileWatcher.Changed += this.FileChange;
-            _fileWatcher.Renamed += this.FileChange;
-            _fileWatcher.Deleted += this.FileChange;
+            this._fileWatcher.Created += this.FileChange;
+            this._fileWatcher.Changed += this.FileChange;
+            this._fileWatcher.Renamed += this.FileChange;
+            this._fileWatcher.Deleted += this.FileChange;
         }
 
         /// <summary>Start watching and generating zone files</summary>
         public void Start()
         {
             // fire first zone generation event on startup
-            _timer.Change(TimeSpan.FromSeconds(3), Timeout.InfiniteTimeSpan);
-            _fileWatcher.EnableRaisingEvents = true;
+            this._timer.Change(TimeSpan.FromSeconds(3), Timeout.InfiniteTimeSpan);
+            this._fileWatcher.EnableRaisingEvents = true;
         }
 
         /// <summary>Handler for any file changes</summary>
@@ -86,20 +84,20 @@ namespace Dns
         /// <param name="e"></param>
         private void FileChange(object sender, FileSystemEventArgs e)
         {
-            _timer.Change(_settlement, Timeout.InfiniteTimeSpan);
+            this._timer.Change(this._settlement, Timeout.InfiniteTimeSpan);
         }
 
         /// <summary>Stop watching</summary>
         public void Stop()
         {
-            _fileWatcher.EnableRaisingEvents = false;
+            this._fileWatcher.EnableRaisingEvents = false;
         }
 
         /// <summary>Handler for settlement completion</summary>
         /// <param name="state"></param>
         private void OnTimer(object state)
         {
-            _timer.Change(Timeout.Infinite, Timeout.Infinite);
+            this._timer.Change(Timeout.Infinite, Timeout.Infinite);
             Task.Run(() => this.GenerateZone()).ContinueWith(t => this.Notify(t.Result));
         }
 
@@ -108,61 +106,15 @@ namespace Dns
         {
             if (this._fileWatcher != null)
             {
-                _fileWatcher.EnableRaisingEvents = false;
-                _fileWatcher.Dispose();
+                this._fileWatcher.EnableRaisingEvents = false;
+                this._fileWatcher.Dispose();
             }
 
             if (this._timer != null)
             {
-                _timer.Change(Timeout.Infinite, Timeout.Infinite);
+                this._timer.Change(Timeout.Infinite, Timeout.Infinite);
                 this._timer.Dispose();
             }
-        }
-    }
-
-    /// <summary>Source of Zone records</summary>
-    public class APZoneProvider : FileWatcherZoneProvider
-    {
-        private string _machineInfoFile;
-        private string _zoneSuffix;
-        private uint _serial;
-
-        public APZoneProvider(string machineInfoFile, string zoneSuffix) : base(machineInfoFile)
-        {
-            this.Initialize(machineInfoFile, zoneSuffix);
-        }
-
-        /// <summary>Initialize ZoneProvider</summary>
-        /// <param name="machineInfoFile"></param>
-        /// <param name="zoneSuffix"></param>
-        public void Initialize(string machineInfoFile, string zoneSuffix)
-        {
-            _zoneSuffix = zoneSuffix;
-        }
-
-        public override Zone GenerateZone()
-        {
-            if (!File.Exists(this.Filename))
-            {
-                return null;
-            }
-
-            CsvParser parser = CsvParser.Create(this.Filename);
-            var machines = parser.Rows.Select(row => new {MachineFunction = row["MachineFunction"], StaticIP = row["StaticIP"], MachineName = row["MachineName"]}).ToArray();
-
-            var zoneRecords = machines
-                            .GroupBy(machine => machine.MachineFunction + _zoneSuffix, machine => IPAddress.Parse(machine.StaticIP))
-                            .Select(group => new ZoneRecord {Host = group.Key, Count = group.Count(), Addresses = group.Select(address => address).ToArray()})
-                            .ToArray();
-
-            Zone zone = new Zone();
-            zone.Suffix = _zoneSuffix;
-            zone.Serial = _serial;
-            zone.Initialize(zoneRecords);
-
-            // increment serial number
-            _serial++;
-            return zone;
         }
     }
 }

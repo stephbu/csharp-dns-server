@@ -4,9 +4,10 @@
 // // // </copyright>
 // // //-------------------------------------------------------------------------------------------------
 
-namespace Dns.Bind
+namespace Dns.ZoneProvider.Bind
 {
     using System;
+    using Dns.ZoneProvider;
 
     public class BindZoneProvider : FileWatcherZoneProvider
     {

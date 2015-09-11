@@ -46,8 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseZoneProvider.cs" />
-    <Compile Include="Bind\BindZoneProvider.cs" />
+    <Compile Include="ZoneProvider\BaseZoneProvider.cs" />
     <Compile Include="BitPacker.cs" />
     <Compile Include="IAddressDispenser.cs" />
     <Compile Include="IHtmlDump.cs" />
@@ -73,12 +72,14 @@
     <Compile Include="SmartAddressDispenser.cs" />
     <Compile Include="SocketExtensions.cs" />
     <Compile Include="Zone.cs" />
+    <Compile Include="ZoneProvider\FileWatcherZoneProvider.cs" />
     <Compile Include="ZoneRecord.cs" />
     <Compile Include="SmartZoneResolver.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UdpListener.cs" />
-    <Compile Include="APZoneProvider.cs" />
+    <Compile Include="ZoneProvider\AP\APZoneProvider.cs" />
+    <Compile Include="ZoneProvider\Bind\BindZoneProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

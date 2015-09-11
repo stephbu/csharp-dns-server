@@ -10,6 +10,7 @@ namespace Dns
     using System.IO;
     using System.Net;
     using System.Threading;
+    using Dns.ZoneProvider.AP;
 
     internal class Program
     {

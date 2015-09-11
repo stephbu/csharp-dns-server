@@ -1,4 +1,4 @@
-namespace Dns
+namespace Dns.ZoneProvider
 {
     using System;
     using System.Collections.Generic;
