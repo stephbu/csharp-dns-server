@@ -47,3 +47,19 @@ Much time was spent using Netmon to capture real DNS challenges and verify that 
 
 ### DNS-Sec
 No effort made to handle or respond to DNS-Sec challenges.
+
+## Contribution Guide
+Pull Requests, Bug Reports, and Feature Requests are most welcome.  
+
+### Contribution Workflow
+Suggested workflow for PRs is
+
+1. Make a fork of csharp-dns-server/master in your own repository.
+2. Create a branch in your own repo to entirely encapsulate all your proposed changes
+3. Make your changes, add documentation if you need it, markdown text preferred.
+4. Squash your commits into a signal change [Find out how to here](http://stackoverflow.com/questions/616556/how-do-you-squash-commits-into-one-patch-with-git-format-patch)
+5. Submit a PR, and put in comments anything that you think I'll need to help merge and evaluate the changes
+
+### Licence Reminder
+All contributions must be licenced under the same MIT terms, do include a header file to that effect.
+
