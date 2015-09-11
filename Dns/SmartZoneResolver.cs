@@ -12,6 +12,7 @@ namespace Dns
     using System.Linq;
     using System.Net;
     using System.Threading;
+    using Dns.Contracts;
 
     public class SmartZoneResolver : IObserver<Zone>, IDnsResolver
     {

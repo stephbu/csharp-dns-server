@@ -1,15 +1,15 @@
 ﻿// // //------------------------------------------------------------------------------------------------- 
-// // // <copyright file="IHtmlDump.cs" company="stephbu">
+// // // <copyright file="IDnsCache.cs" company="stephbu">
 // // // Copyright (c) Steve Butler. All rights reserved.
 // // // </copyright>
 // // //-------------------------------------------------------------------------------------------------
 
-namespace Dns
+namespace Dns.Contracts
 {
-    using System.IO;
-
-    public interface IHtmlDump
+    public interface IDnsCache
     {
-        void DumpHtml(TextWriter writer);
+        byte[] Get(string key);
+
+        void Set(string key, byte[] bytes, int ttlSeconds);
     }
 }

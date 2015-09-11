@@ -10,6 +10,7 @@ namespace Dns
     using System.IO;
     using System.Net;
     using System.Threading.Tasks;
+    using Dns.Contracts;
 
     internal delegate void OnHttpRequestHandler(HttpListenerContext context);
     internal delegate void OnHandledException(Exception ex);

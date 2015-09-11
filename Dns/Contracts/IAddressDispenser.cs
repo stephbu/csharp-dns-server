@@ -1,15 +1,18 @@
 ﻿// // //------------------------------------------------------------------------------------------------- 
-// // // <copyright file="IDnsCache.cs" company="stephbu">
+// // // <copyright file="IAddressDispenser.cs" company="stephbu">
 // // // Copyright (c) Steve Butler. All rights reserved.
 // // // </copyright>
 // // //-------------------------------------------------------------------------------------------------
 
-namespace Dns
+namespace Dns.Contracts
 {
-    public interface IDnsCache
-    {
-        byte[] Get(string key);
+    using System.Collections.Generic;
+    using System.Net;
 
-        void Set(string key, byte[] bytes, int ttlSeconds);
+    public interface IAddressDispenser : IHtmlDump
+    {
+        string HostName { get; }
+
+        IEnumerable<IPAddress> GetAddresses();
     }
 }

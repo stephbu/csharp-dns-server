@@ -46,10 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contracts\IAddressDispenser.cs" />
+    <Compile Include="Contracts\IDnsCache.cs" />
+    <Compile Include="Contracts\IDnsResolver.cs" />
+    <Compile Include="Contracts\IHtmlDump.cs" />
+    <Compile Include="Utility\BitPacker.cs" />
     <Compile Include="ZoneProvider\BaseZoneProvider.cs" />
-    <Compile Include="BitPacker.cs" />
-    <Compile Include="IAddressDispenser.cs" />
-    <Compile Include="IHtmlDump.cs" />
     <Compile Include="Question.cs" />
     <Compile Include="QuestionList.cs" />
     <Compile Include="HttpServer.cs" />
@@ -62,8 +64,6 @@
     <Compile Include="DnsMessage.cs" />
     <Compile Include="DnsProtocol.cs" />
     <Compile Include="DnsServer.cs" />
-    <Compile Include="IDnsCache.cs" />
-    <Compile Include="IDnsResolver.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="OpCode.cs" />
     <Compile Include="RCode.cs" />
@@ -84,6 +84,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

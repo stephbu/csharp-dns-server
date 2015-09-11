@@ -11,9 +11,9 @@ namespace Dns
     using System.Net;
     using System.Net.Sockets;
     using System.Threading;
+    using Dns.Contracts;
     using Microsoft.Win32;
     using System.Linq;
-    using System.Collections;
     using System.Collections.Generic;
 
     internal class DnsServer : IHtmlDump

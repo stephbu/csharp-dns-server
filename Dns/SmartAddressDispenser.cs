@@ -10,6 +10,7 @@ namespace Dns
     using System.Collections.Generic;
     using System.IO;
     using System.Net;
+    using Dns.Contracts;
 
     // TODO: implement healthchecks to ensure that the dispenser only issues LKG addresses
 

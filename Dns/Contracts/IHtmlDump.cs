@@ -1,18 +1,15 @@
 ﻿// // //------------------------------------------------------------------------------------------------- 
-// // // <copyright file="IAddressDispenser.cs" company="stephbu">
+// // // <copyright file="IHtmlDump.cs" company="stephbu">
 // // // Copyright (c) Steve Butler. All rights reserved.
 // // // </copyright>
 // // //-------------------------------------------------------------------------------------------------
 
-namespace Dns
+namespace Dns.Contracts
 {
-    using System.Collections.Generic;
-    using System.Net;
+    using System.IO;
 
-    public interface IAddressDispenser : IHtmlDump
+    public interface IHtmlDump
     {
-        string HostName { get; }
-
-        IEnumerable<IPAddress> GetAddresses();
+        void DumpHtml(TextWriter writer);
     }
 }

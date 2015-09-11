@@ -8,10 +8,11 @@ namespace Dns
 {
     using System;
     using System.Runtime.Caching;
+    using Dns.Contracts;
 
     internal class DnsCache : IDnsCache
     {
-        private MemoryCache _cache = new MemoryCache("DnsCache");
+        private readonly MemoryCache _cache = new MemoryCache("DnsCache");
 
         byte[] IDnsCache.Get(string key)
         {

@@ -4,9 +4,8 @@
 // // // </copyright>
 // // //-------------------------------------------------------------------------------------------------
 
-namespace Dns
+namespace Dns.Contracts
 {
-    using System.IO;
     using System.Net;
 
     /// <summary>Provides domain name resolver capabilities</summary>

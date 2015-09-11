@@ -4,6 +4,8 @@ using Dns;
 
 namespace DnsTests
 {
+    using Dns.Utility;
+
     [TestClass]
     public class BitPackerTests
     {
