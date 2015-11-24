@@ -1,14 +1,15 @@
 {
   "dependencies": {
     "Dns": "1.0.0-*",
-    "xunit": "2.1.0",
-    "xUnit.Assert": "2.1.0",
-    "xunit.core":"2.1.0",
-    "xunit.extensibility.core": "2.1.0"
+    "xunit": "2.1.0-*",
+    "xUnit.Assert": "2.1.0-*",
+    "xunit.core":"2.1.0-*",
+    "xunit.extensibility.core": "2.1.0-*",
+    "xunit.runner.dnx": "2.1.0-*"
   },
   
   "commands": {
-    "DnsTests": "DnsTests"
+    "test": "xunit.runner.dnx"
   },
   
   "runtimes": {
