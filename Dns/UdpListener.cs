@@ -51,12 +51,12 @@ namespace Dns
 
                         if (OnRequest != null)
                         {
-                            Task.Factory.StartNew(() => OnRequest(args));
+                            Task.Run(() => OnRequest(args));
                         }
                         else
                         {
                             // defaults to console dump if no listener is bound
-                            Task.Factory.StartNew(() => ProcessReceiveFrom(args));
+                            Task.Run(() => ProcessReceiveFrom(args));
                         }
                     }
                 }
