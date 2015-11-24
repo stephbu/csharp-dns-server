@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "Dns": "1.0.0-*",
+    "Dns": "",
     "xunit": "2.1.0-*",
     "xUnit.Assert": "2.1.0-*",
     "xunit.core":"2.1.0-*",
