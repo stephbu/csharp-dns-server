@@ -21,10 +21,14 @@
   
   "frameworks": {
     ".NETFramework,Version=v4.5":{
+      "dependencies": {
+        "xunit.runner.utility": "2.1.0-*"
+      },
+      
       "frameworkAssemblies": {
-          "System.Runtime":"",
-          "System.Runtime.Caching":""
-          }
+        "System.Runtime":"",
+        "System.Runtime.Caching":""
+      }
     },
     "dnx451": {
       "dependencies": {
