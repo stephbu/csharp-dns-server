@@ -1,44 +1,43 @@
 {
-  "version": "1.0.0-*",
-  "authors": [ "Stephen Butler" ],
-  "title": "csharp-dns-server",
-  "description": "CSharp DNS Server",
-  "projectUrl": "https://github.com/stephbu/csharp-dns-server",
-  "licenseUrl": "https://raw.githubusercontent.com/stephbu/csharp-dns-server/master/licence.txt",
-  
-  "dependencies": {
-  },
-  
-  "runtimes": {
-    "win": { },
-    "win-anycpu": {
-      "#import": [ "win" ]},
-    "win7": { },
-    "win7-anycpu": { },
-    "ubuntu.14.04": { },
-    "ubuntu.14.04-anycpu": { },
-    "osx.10.10": { },
-    "osx.10.10-anycpu": { }
-  },
-  
-  "commands": {
-    "Dns": "Dns"
-  },
-  
-  "frameworks": {
-    ".NETFramework,Version=v4.5":{
-      "frameworkAssemblies": {
-          "System.Runtime.Caching":""
-          }
+    "version": "1.0.0-*",
+    "authors": [
+        "Stephen Butler"
+    ],
+    "title": "csharp-dns-server",
+    "description": "CSharp DNS Server",
+    "projectUrl": "https://github.com/stephbu/csharp-dns-server",
+    "licenseUrl": "https://raw.githubusercontent.com/stephbu/csharp-dns-server/master/licence.txt",
+    "dependencies": {},
+    "runtimes": {
+        "win": {},
+        "win-anycpu": {
+            "#import": [
+                "win"
+            ]
+        },
+        "win7": {},
+        "win7-anycpu": {},
+        "ubuntu.14.04": {},
+        "ubuntu.14.04-anycpu": {},
+        "osx.10.10": {},
+        "osx.10.10-anycpu": {}
     },
-    "dnx451": {
-      "frameworkAssemblies": {
-          "System.Runtime.Caching":""
-          }  
-      }
-  },
-  
-  "compile": ["*.cs","**/*.cs"],
-  
-  "compilationOptions": {"warningsAsErrors":true}
+    "commands": {
+        "Dns": "Dns"
+    },
+    "frameworks": {
+        "dnx451": {
+            "frameworkAssemblies": {
+                "System.Runtime": "",
+                "System.Runtime.Caching": ""
+            }
+        }
+    },
+    "compile": [
+        "*.cs",
+        "**/*.cs"
+    ],
+    "compilationOptions": {
+        "warningsAsErrors": true
+    }
 }

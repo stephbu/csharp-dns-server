@@ -1,50 +1,43 @@
 ﻿{
-  "dependencies": {
-    "xunit": "2.1.0",
-    "xUnit.Assert": "2.1.0-*",
-    "xunit.core": "2.1.0-*",
-    "xunit.extensibility.core": "2.1.0-*",
-    "xunit.runner.visualstudio": "2.1.0"
-  },
-  "runtimes": {
-    "win": {},
-    "win-anycpu": {
-      "#import": [
-        "win"
-      ]
-    },
-    "win7": {},
-    "win7-anycpu": {},
-    "ubuntu.14.04": {},
-    "ubuntu.14.04-anycpu": {},
-    "osx.10.10": {},
-    "osx.10.10-anycpu": {}
-  },
-  "frameworks": {
-    ".NETFramework,Version=v4.5": {
-      "dependencies": {
-        "xunit.runner.utility": "2.1.0-*"
-      },
-      "frameworkAssemblies": {
-        "System.Runtime": "",
-        "System.Runtime.Caching": ""
-      }
-    },
-    "dnx451": {
-      "dependencies": {
+    "dependencies": {
+        "Dns": "1.0.0-*",
+        "xunit": "2.1.0",
+        "xUnit.Assert": "2.1.0-*",
+        "xunit.core": "2.1.0-*",
+        "xunit.extensibility.core": "2.1.0-*",
         "xunit.runner.dnx": "2.1.0-*"
-      },
-      "frameworkAssemblies": {
-        "System.Runtime": "",
-        "System.Runtime.Caching": ""
-      }
+    },
+    "runtimes": {
+        "win": {},
+        "win-anycpu": {
+            "#import": [
+                "win"
+            ]
+        },
+        "win7": {},
+        "win7-anycpu": {},
+        "ubuntu.14.04": {},
+        "ubuntu.14.04-anycpu": {},
+        "osx.10.10": {},
+        "osx.10.10-anycpu": {}
+    },
+  
+    "commands": {
+        "test": "xunit.runner.dnx"
+    },
+    "frameworks": {
+        "dnx451": {
+            "frameworkAssemblies": {
+                "System.Runtime": "",
+                "System.Runtime.Caching": ""
+            }
+        }
+    },
+    "compile": [
+        "*.cs",
+        "**/*.cs"
+    ],
+    "compilationOptions": {
+        "warningsAsErrors": true
     }
-  },
-  "compile": [
-    "*.cs",
-    "**/*.cs"
-  ],
-  "compilationOptions": {
-    "warningsAsErrors": true
-  }
 }
