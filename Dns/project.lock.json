@@ -2,13 +2,19 @@
   "locked": false,
   "version": 2,
   "targets": {
+    ".NETFramework,Version=v4.5": {},
     "DNX,Version=v4.5.1": {},
+    ".NETFramework,Version=v4.5/osx.10.11-x86": {},
+    ".NETFramework,Version=v4.5/osx.10.11-x64": {},
     "DNX,Version=v4.5.1/osx.10.11-x86": {},
     "DNX,Version=v4.5.1/osx.10.11-x64": {}
   },
   "libraries": {},
   "projectFileDependencyGroups": {
     "": [],
+    ".NETFramework,Version=v4.5": [
+      "fx/System.Runtime.Caching "
+    ],
     "DNX,Version=v4.5.1": [
       "fx/System.Runtime.Caching "
     ]

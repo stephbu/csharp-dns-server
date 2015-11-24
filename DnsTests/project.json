@@ -10,6 +10,12 @@
     "DnsTests": "DnsTests"
   },
   "frameworks": {
+    ".NETFramework,Version=v4.5":{
+      "frameworkAssemblies": {
+          "System.Runtime":"",
+          "System.Runtime.Caching":""
+          }
+    },
     "dnx451": {
       "dependencies": {
       },
