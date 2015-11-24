@@ -1,0 +1,30 @@
+{
+  "dependencies": {
+    "Dns": "1.0.0-*",
+    "xunit": "2.1.0",
+    "xUnit.Assert": "2.1.0",
+    "xunit.core":"2.1.0",
+    "xunit.extensibility.core": "2.1.0"
+  },
+  "commands": {
+    "DnsTests": "DnsTests"
+  },
+  "frameworks": {
+    "dnx451": {
+      "dependencies": {
+      },
+      
+      "frameworkAssemblies": {
+        "System.Runtime":"",
+        "System.Runtime.Caching": ""
+      }
+    }
+  },
+  "compile": [
+    "*.cs",
+    "**/*.cs"
+  ],
+  "compilationOptions": {
+    "warningsAsErrors": true
+  }
+}

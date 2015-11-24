@@ -49,7 +49,7 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Xunit, 2.1.0" />
       </ItemGroup>
     </Otherwise>
   </Choose>

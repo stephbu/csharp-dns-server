@@ -10,188 +10,187 @@ namespace DnsTests
     using System.Linq;
     using System.Net;
     using Dns;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class DnsProtocolTest
     {
-        [TestMethod]
+        [Fact]
         public void DnsQuery()
         {
             byte[] sampleQuery = new byte[] {0xD3, 0x03, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07, 0x64, 0x64, 0x63, 0x64, 0x73, 0x30, 0x31, 0x07, 0x72, 0x65, 0x64, 0x6D, 0x6F, 0x6E, 0x64, 0x04, 0x63, 0x6F, 0x72, 0x70, 0x09, 0x6D, 0x69, 0x63, 0x72, 0x6F, 0x73, 0x6F, 0x66, 0x74, 0x03, 0x63, 0x6F, 0x6D, 0x00, 0x00, 0x01, 0x00, 0x01};
             DnsMessage query;
-            Assert.IsTrue(DnsMessage.TryParse(sampleQuery, out query));
+            Assert.Equal(true, DnsMessage.TryParse(sampleQuery, out query));
             query.Dump();
         }
 
-        [TestMethod]
+        [Fact]
         public void DnsQuery2()
         {
             byte[] sampleQuery = new byte[] {0x00, 0x03, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x77, 0x77, 0x77, 0x03, 0x6D, 0x73, 0x6E, 0x03, 0x63, 0x6F, 0x6D, 0x07, 0x72, 0x65, 0x64, 0x6D, 0x6F, 0x6E, 0x64, 0x04, 0x63, 0x6F, 0x72, 0x70, 0x09, 0x6D, 0x69, 0x63, 0x72, 0x6F, 0x73, 0x6F, 0x66, 0x74, 0x03, 0x63, 0x6F, 0x6D, 0x00, 0x00, 0x1C, 0x00, 0x01};
             DnsMessage query;
-            Assert.IsTrue(DnsMessage.TryParse(sampleQuery, out query));
+            Assert.True(DnsMessage.TryParse(sampleQuery, out query));
 
             // Header Checks
-            Assert.AreEqual(0x3, query.QueryIdentifier);
-            Assert.AreEqual(false, query.QR);
-            Assert.AreEqual(0x0000, query.Opcode);
-            Assert.AreEqual(false, query.AA);
-            Assert.AreEqual(false, query.TC);
-            Assert.AreEqual(true, query.RD);
-            Assert.AreEqual(false, query.RA);
-            Assert.AreEqual(false, query.Zero);
-            Assert.AreEqual(false, query.AuthenticatingData);
-            Assert.AreEqual(false, query.CheckingDisabled);
-            Assert.AreEqual(0x0000, query.RCode);
-            Assert.AreEqual(0x0001, query.QuestionCount);
-            Assert.AreEqual(0x0000, query.AnswerCount);
-            Assert.AreEqual(0x0000, query.NameServerCount);
-            Assert.AreEqual(0x0000, query.AdditionalCount);
+            Assert.Equal(0x3, query.QueryIdentifier);
+            Assert.Equal(false, query.QR);
+            Assert.Equal(0x0000, query.Opcode);
+            Assert.Equal(false, query.AA);
+            Assert.Equal(false, query.TC);
+            Assert.Equal(true, query.RD);
+            Assert.Equal(false, query.RA);
+            Assert.Equal(false, query.Zero);
+            Assert.Equal(false, query.AuthenticatingData);
+            Assert.Equal(false, query.CheckingDisabled);
+            Assert.Equal(0x0000, query.RCode);
+            Assert.Equal(0x0001, query.QuestionCount);
+            Assert.Equal(0x0000, query.AnswerCount);
+            Assert.Equal(0x0000, query.NameServerCount);
+            Assert.Equal(0x0000, query.AdditionalCount);
 
             // Question Checks
-            Assert.AreEqual(query.QuestionCount, query.Questions.Count());
+            Assert.Equal(query.QuestionCount, query.Questions.Count());
 
             // Q1
-            Assert.AreEqual("www.msn.com.redmond.corp.microsoft.com", query.Questions[0].Name);
-            Assert.AreEqual(ResourceType.AAAA, query.Questions[0].Type);
-            Assert.AreEqual(ResourceClass.IN, query.Questions[0].Class);
+            Assert.Equal("www.msn.com.redmond.corp.microsoft.com", query.Questions[0].Name);
+            Assert.Equal(ResourceType.AAAA, query.Questions[0].Type);
+            Assert.Equal(ResourceClass.IN, query.Questions[0].Class);
 
             // dump results
             query.Dump();
         }
 
-        [TestMethod]
+        [Fact]
         public void DnsResponse1()
         {
             byte[] sampleQuery = new byte[] {0x44, 0xFD, 0x81, 0x80, 0x00, 0x01, 0x00, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x03, 0x77, 0x77, 0x77, 0x10, 0x67, 0x6F, 0x6F, 0x67, 0x6C, 0x65, 0x2D, 0x61, 0x6E, 0x61, 0x6C, 0x79, 0x74, 0x69, 0x63, 0x73, 0x03, 0x63, 0x6F, 0x6D, 0x00, 0x00, 0x01, 0x00, 0x01, 0xC0, 0x0C, 0x00, 0x05, 0x00, 0x01, 0x00, 0x00, 0x89, 0x89, 0x00, 0x20, 0x14, 0x77, 0x77, 0x77, 0x2D, 0x67, 0x6F, 0x6F, 0x67, 0x6C, 0x65, 0x2D, 0x61, 0x6E, 0x61, 0x6C, 0x79, 0x74, 0x69, 0x63, 0x73, 0x01, 0x6C, 0x06, 0x67, 0x6F, 0x6F, 0x67, 0x6C, 0x65, 0xC0, 0x21, 0xC0, 0x36, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x19, 0x00, 0x04, 0xAD, 0xC2, 0x21, 0x25, 0xC0, 0x36, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x19, 0x00, 0x04, 0xAD, 0xC2, 0x21, 0x21, 0xC0, 0x36, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x19, 0x00, 0x04, 0xAD, 0xC2, 0x21, 0x28, 0xC0, 0x36, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x19, 0x00, 0x04, 0xAD, 0xC2, 0x21, 0x29, 0xC0, 0x36, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x19, 0x00, 0x04, 0xAD, 0xC2, 0x21, 0x20, 0xC0, 0x36, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x19, 0x00, 0x04, 0xAD, 0xC2, 0x21, 0x2E, 0xC0, 0x36, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x19, 0x00, 0x04, 0xAD, 0xC2, 0x21, 0x26, 0xC0, 0x36, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x19, 0x00, 0x04, 0xAD, 0xC2, 0x21, 0x24, 0xC0, 0x36, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x19, 0x00, 0x04, 0xAD, 0xC2, 0x21, 0x27, 0xC0, 0x36, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x19, 0x00, 0x04, 0xAD, 0xC2, 0x21, 0x22, 0xC0, 0x36, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x19, 0x00, 0x04, 0xAD, 0xC2, 0x21, 0x23};
             DnsMessage query;
-            Assert.IsTrue(DnsMessage.TryParse(sampleQuery, out query));
+            Assert.True(DnsMessage.TryParse(sampleQuery, out query));
             query.Dump();
         }
 
         // Response Contains Compression information
-        [TestMethod]
+        [Fact]
         public void DnsResponse2()
         {
             byte[] sampleQuery = new byte[] {0x00, 0x04, 0x81, 0x80, 0x00, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x03, 0x77, 0x77, 0x77, 0x03, 0x6D, 0x73, 0x6E, 0x03, 0x63, 0x6F, 0x6D, 0x00, 0x00, 0x01, 0x00, 0x01, 0xC0, 0x0C, 0x00, 0x05, 0x00, 0x01, 0x00, 0x00, 0x02, 0x35, 0x00, 0x1E, 0x02, 0x75, 0x73, 0x03, 0x63, 0x6F, 0x31, 0x03, 0x63, 0x62, 0x33, 0x06, 0x67, 0x6C, 0x62, 0x64, 0x6E, 0x73, 0x09, 0x6D, 0x69, 0x63, 0x72, 0x6F, 0x73, 0x6F, 0x66, 0x74, 0xC0, 0x14, 0xC0, 0x29, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x53, 0x00, 0x04, 0x83, 0xFD, 0x0D, 0x8C};
             DnsMessage query;
-            Assert.IsTrue(DnsMessage.TryParse(sampleQuery, out query));
+            Assert.True(DnsMessage.TryParse(sampleQuery, out query));
 
             // Header Checks
-            Assert.AreEqual(0x4, query.QueryIdentifier);
-            Assert.AreEqual(true, query.QR);
-            Assert.AreEqual(0x0000, query.Opcode);
-            Assert.AreEqual(false, query.AA);
-            Assert.AreEqual(false, query.TC);
-            Assert.AreEqual(true, query.RD);
-            Assert.AreEqual(true, query.RA);
-            Assert.AreEqual(false, query.Zero);
-            Assert.AreEqual(false, query.AuthenticatingData);
-            Assert.AreEqual(false, query.CheckingDisabled);
-            Assert.AreEqual(0x0000, query.RCode);
-            Assert.AreEqual(0x0001, query.QuestionCount);
-            Assert.AreEqual(0x0002, query.AnswerCount);
-            Assert.AreEqual(0x0000, query.NameServerCount);
-            Assert.AreEqual(0x0000, query.AdditionalCount);
+            Assert.Equal(0x4, query.QueryIdentifier);
+            Assert.Equal(true, query.QR);
+            Assert.Equal(0x0000, query.Opcode);
+            Assert.Equal(false, query.AA);
+            Assert.Equal(false, query.TC);
+            Assert.Equal(true, query.RD);
+            Assert.Equal(true, query.RA);
+            Assert.Equal(false, query.Zero);
+            Assert.Equal(false, query.AuthenticatingData);
+            Assert.Equal(false, query.CheckingDisabled);
+            Assert.Equal(0x0000, query.RCode);
+            Assert.Equal(0x0001, query.QuestionCount);
+            Assert.Equal(0x0002, query.AnswerCount);
+            Assert.Equal(0x0000, query.NameServerCount);
+            Assert.Equal(0x0000, query.AdditionalCount);
 
             // Question Checks
-            Assert.AreEqual(query.QuestionCount, query.Questions.Count());
+            Assert.Equal(query.QuestionCount, query.Questions.Count());
 
             // Q1
-            Assert.AreEqual("www.msn.com", query.Questions[0].Name);
-            Assert.AreEqual(ResourceType.A, query.Questions[0].Type);
-            Assert.AreEqual(ResourceClass.IN, query.Questions[0].Class);
+            Assert.Equal("www.msn.com", query.Questions[0].Name);
+            Assert.Equal(ResourceType.A, query.Questions[0].Type);
+            Assert.Equal(ResourceClass.IN, query.Questions[0].Class);
 
             // dump results
             query.Dump();
         }
 
         // Response Contains Compression information
-        [TestMethod]
+        [Fact]
         public void DnsResponse3()
         {
             byte[] sampleQuery = new byte[] {0xDD, 0x15, 0x81, 0x80, 0x00, 0x01, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x03, 0x61, 0x70, 0x69, 0x04, 0x62, 0x69, 0x6E, 0x67, 0x03, 0x63, 0x6F, 0x6D, 0x00, 0x00, 0x01, 0x00, 0x01, 0xC0, 0x0C, 0x00, 0x05, 0x00, 0x01, 0x00, 0x00, 0x00, 0x83, 0x00, 0x14, 0x04, 0x61, 0x31, 0x33, 0x34, 0x02, 0x6C, 0x6D, 0x06, 0x61, 0x6B, 0x61, 0x6D, 0x61, 0x69, 0x03, 0x6E, 0x65, 0x74, 0x00, 0xC0, 0x2A, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x0E, 0x00, 0x04, 0xCF, 0x6D, 0x49, 0x91, 0xC0, 0x2A, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x0E, 0x00, 0x04, 0xCF, 0x6D, 0x49, 0x51};
             DnsMessage query;
-            Assert.IsTrue(DnsMessage.TryParse(sampleQuery, out query));
+            Assert.True(DnsMessage.TryParse(sampleQuery, out query));
 
             // Header Checks
-            Assert.AreEqual(0xDD15, query.QueryIdentifier);
-            Assert.AreEqual(true, query.QR);
-            Assert.AreEqual(0x0000, query.Opcode);
-            Assert.AreEqual(false, query.AA);
-            Assert.AreEqual(false, query.TC);
-            Assert.AreEqual(true, query.RD);
-            Assert.AreEqual(true, query.RA);
-            Assert.AreEqual(false, query.Zero);
-            Assert.AreEqual(false, query.AuthenticatingData);
-            Assert.AreEqual(false, query.CheckingDisabled);
-            Assert.AreEqual(0x0000, query.RCode);
-            Assert.AreEqual(0x0001, query.QuestionCount);
-            Assert.AreEqual(0x0003, query.AnswerCount);
-            Assert.AreEqual(0x0000, query.NameServerCount);
-            Assert.AreEqual(0x0000, query.AdditionalCount);
+            Assert.Equal(0xDD15, query.QueryIdentifier);
+            Assert.Equal(true, query.QR);
+            Assert.Equal(0x0000, query.Opcode);
+            Assert.Equal(false, query.AA);
+            Assert.Equal(false, query.TC);
+            Assert.Equal(true, query.RD);
+            Assert.Equal(true, query.RA);
+            Assert.Equal(false, query.Zero);
+            Assert.Equal(false, query.AuthenticatingData);
+            Assert.Equal(false, query.CheckingDisabled);
+            Assert.Equal(0x0000, query.RCode);
+            Assert.Equal(0x0001, query.QuestionCount);
+            Assert.Equal(0x0003, query.AnswerCount);
+            Assert.Equal(0x0000, query.NameServerCount);
+            Assert.Equal(0x0000, query.AdditionalCount);
 
             // Question Checks
-            Assert.AreEqual(query.QuestionCount, query.Questions.Count());
+            Assert.Equal(query.QuestionCount, query.Questions.Count());
 
             // Q1
-            Assert.AreEqual("api.bing.com", query.Questions[0].Name);
-            Assert.AreEqual(ResourceType.A, query.Questions[0].Type);
-            Assert.AreEqual(ResourceClass.IN, query.Questions[0].Class);
+            Assert.Equal("api.bing.com", query.Questions[0].Name);
+            Assert.Equal(ResourceType.A, query.Questions[0].Type);
+            Assert.Equal(ResourceClass.IN, query.Questions[0].Class);
 
             // Answer Checks
-            Assert.AreEqual(query.AnswerCount, query.Answers.Count());
+            Assert.Equal(query.AnswerCount, query.Answers.Count());
 
             // A1
-            Assert.AreEqual("api.bing.com", query.Answers[0].Name);
-            Assert.AreEqual(ResourceType.CNAME, query.Answers[0].Type);
-            Assert.AreEqual(ResourceClass.IN, query.Answers[0].Class);
-            Assert.IsTrue(query.Answers[0].TTL == 0x83);
-            Assert.AreEqual(0x14, query.Answers[0].DataLength);
-            Assert.AreEqual(typeof (CNameRData), query.Answers[0].RData.GetType());
+            Assert.Equal("api.bing.com", query.Answers[0].Name);
+            Assert.Equal(ResourceType.CNAME, query.Answers[0].Type);
+            Assert.Equal(ResourceClass.IN, query.Answers[0].Class);
+            Assert.True(query.Answers[0].TTL == 0x83);
+            Assert.Equal(0x14, query.Answers[0].DataLength);
+            Assert.Equal(typeof (CNameRData), query.Answers[0].RData.GetType());
 
             // dump results
             query.Dump();
         }
 
         // Response Contains Compression information
-        [TestMethod]
+        [Fact]
         public void DnsQuery3()
         {
             byte[] sampleQuery = new byte[] {0xFB, 0x65, 0x84, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x09, 0x73, 0x65, 0x63, 0x75, 0x72, 0x65, 0x2D, 0x75, 0x73, 0x0C, 0x69, 0x6D, 0x72, 0x77, 0x6F, 0x72, 0x6C, 0x64, 0x77, 0x69, 0x64, 0x65, 0x03, 0x63, 0x6F, 0x6D, 0x00, 0x00, 0x1C, 0x00, 0x01};
             DnsMessage query;
-            Assert.IsTrue(DnsMessage.TryParse(sampleQuery, out query));
+            Assert.True(DnsMessage.TryParse(sampleQuery, out query));
 
             // Header Checks
-            Assert.AreEqual(0xFB65, query.QueryIdentifier);
-            Assert.AreEqual(true, query.QR);
-            Assert.AreEqual(0x0000, query.Opcode);
-            Assert.AreEqual(true, query.AA);
-            Assert.AreEqual(false, query.TC);
-            Assert.AreEqual(false, query.RD);
-            Assert.AreEqual(false, query.RA);
-            Assert.AreEqual(false, query.Zero);
-            Assert.AreEqual(false, query.AuthenticatingData);
-            Assert.AreEqual(false, query.CheckingDisabled);
-            Assert.AreEqual(0x0000, query.RCode);
-            Assert.AreEqual(0x0001, query.QuestionCount);
-            Assert.AreEqual(0x0000, query.AnswerCount);
-            Assert.AreEqual(0x0000, query.NameServerCount);
-            Assert.AreEqual(0x0000, query.AdditionalCount);
+            Assert.Equal(0xFB65, query.QueryIdentifier);
+            Assert.Equal(true, query.QR);
+            Assert.Equal(0x0000, query.Opcode);
+            Assert.Equal(true, query.AA);
+            Assert.Equal(false, query.TC);
+            Assert.Equal(false, query.RD);
+            Assert.Equal(false, query.RA);
+            Assert.Equal(false, query.Zero);
+            Assert.Equal(false, query.AuthenticatingData);
+            Assert.Equal(false, query.CheckingDisabled);
+            Assert.Equal(0x0000, query.RCode);
+            Assert.Equal(0x0001, query.QuestionCount);
+            Assert.Equal(0x0000, query.AnswerCount);
+            Assert.Equal(0x0000, query.NameServerCount);
+            Assert.Equal(0x0000, query.AdditionalCount);
 
             // Question Checks
-            Assert.AreEqual(query.QuestionCount, query.Questions.Count());
+            Assert.Equal(query.QuestionCount, query.Questions.Count());
 
             // Q1
-            Assert.AreEqual("secure-us.imrworldwide.com", query.Questions[0].Name);
-            Assert.AreEqual(ResourceType.AAAA, query.Questions[0].Type);
-            Assert.AreEqual(ResourceClass.IN, query.Questions[0].Class);
+            Assert.Equal("secure-us.imrworldwide.com", query.Questions[0].Name);
+            Assert.Equal(ResourceType.AAAA, query.Questions[0].Type);
+            Assert.Equal(ResourceClass.IN, query.Questions[0].Class);
 
             // dump results
             query.Dump();
         }
 
-        [TestMethod]
+        [Fact]
         public void TransitiveQueryTest()
         {
             DnsMessage message = new DnsMessage();
@@ -217,35 +216,35 @@ namespace DnsTests
             using (MemoryStream stream = new MemoryStream())
             {
                 message.WriteToStream(stream);
-                Assert.IsTrue(DnsMessage.TryParse(stream.GetBuffer(), out outMessage));
+                Assert.True(DnsMessage.TryParse(stream.GetBuffer(), out outMessage));
             }
 
-            Assert.AreEqual(0xFEED, outMessage.QueryIdentifier);
-            Assert.IsFalse(outMessage.QR);
-            Assert.AreEqual((byte) OpCode.QUERY, outMessage.Opcode);
-            Assert.IsFalse(outMessage.AA);
-            Assert.IsFalse(outMessage.TC);
-            Assert.IsTrue(outMessage.RD);
-            Assert.IsFalse(outMessage.RA);
-            Assert.IsFalse(outMessage.Zero);
-            Assert.IsFalse(outMessage.AuthenticatingData);
-            Assert.IsFalse(outMessage.CheckingDisabled);
-            Assert.AreEqual(0x0000, outMessage.RCode);
-            Assert.AreEqual(0x0001, outMessage.QuestionCount);
-            Assert.AreEqual(0x0000, outMessage.AnswerCount);
-            Assert.AreEqual(0x0000, outMessage.NameServerCount);
-            Assert.AreEqual(0x0000, outMessage.AdditionalCount);
+            Assert.Equal(0xFEED, outMessage.QueryIdentifier);
+            Assert.False(outMessage.QR);
+            Assert.Equal((byte) OpCode.QUERY, outMessage.Opcode);
+            Assert.False(outMessage.AA);
+            Assert.False(outMessage.TC);
+            Assert.True(outMessage.RD);
+            Assert.False(outMessage.RA);
+            Assert.False(outMessage.Zero);
+            Assert.False(outMessage.AuthenticatingData);
+            Assert.False(outMessage.CheckingDisabled);
+            Assert.Equal(0x0000, outMessage.RCode);
+            Assert.Equal(0x0001, outMessage.QuestionCount);
+            Assert.Equal(0x0000, outMessage.AnswerCount);
+            Assert.Equal(0x0000, outMessage.NameServerCount);
+            Assert.Equal(0x0000, outMessage.AdditionalCount);
 
             // Question Checks
-            Assert.AreEqual(outMessage.QuestionCount, outMessage.Questions.Count());
+            Assert.Equal(outMessage.QuestionCount, outMessage.Questions.Count());
 
             // Q1
-            Assert.AreEqual("www.msn.com", outMessage.Questions[0].Name);
-            Assert.AreEqual(ResourceType.A, outMessage.Questions[0].Type);
-            Assert.AreEqual(ResourceClass.IN, outMessage.Questions[0].Class);
+            Assert.Equal("www.msn.com", outMessage.Questions[0].Name);
+            Assert.Equal(ResourceType.A, outMessage.Questions[0].Type);
+            Assert.Equal(ResourceClass.IN, outMessage.Questions[0].Class);
         }
 
-        [TestMethod]
+        [Fact]
         public void TransitiveQueryTest2()
         {
             DnsMessage message = new DnsMessage();
@@ -274,48 +273,48 @@ namespace DnsTests
             using (MemoryStream stream = new MemoryStream())
             {
                 message.WriteToStream(stream);
-                Assert.IsTrue(DnsMessage.TryParse(stream.GetBuffer(), out outMessage));
+                Assert.True(DnsMessage.TryParse(stream.GetBuffer(), out outMessage));
             }
 
-            Assert.AreEqual(0xFEED, outMessage.QueryIdentifier);
-            Assert.IsFalse(outMessage.QR);
-            Assert.AreEqual((byte) OpCode.QUERY, outMessage.Opcode);
-            Assert.IsFalse(outMessage.AA);
-            Assert.IsFalse(outMessage.TC);
-            Assert.IsTrue(outMessage.RD);
-            Assert.IsFalse(outMessage.RA);
-            Assert.IsFalse(outMessage.Zero);
-            Assert.IsFalse(outMessage.AuthenticatingData);
-            Assert.IsFalse(outMessage.CheckingDisabled);
-            Assert.AreEqual(0x0000, outMessage.RCode);
-            Assert.AreEqual(0x0001, outMessage.QuestionCount);
-            Assert.AreEqual(0x0002, outMessage.AnswerCount);
-            Assert.AreEqual(0x0000, outMessage.NameServerCount);
-            Assert.AreEqual(0x0000, outMessage.AdditionalCount);
+            Assert.Equal(0xFEED, outMessage.QueryIdentifier);
+            Assert.False(outMessage.QR);
+            Assert.Equal((byte) OpCode.QUERY, outMessage.Opcode);
+            Assert.False(outMessage.AA);
+            Assert.False(outMessage.TC);
+            Assert.True(outMessage.RD);
+            Assert.False(outMessage.RA);
+            Assert.False(outMessage.Zero);
+            Assert.False(outMessage.AuthenticatingData);
+            Assert.False(outMessage.CheckingDisabled);
+            Assert.Equal(0x0000, outMessage.RCode);
+            Assert.Equal(0x0001, outMessage.QuestionCount);
+            Assert.Equal(0x0002, outMessage.AnswerCount);
+            Assert.Equal(0x0000, outMessage.NameServerCount);
+            Assert.Equal(0x0000, outMessage.AdditionalCount);
 
             // Question Checks
-            Assert.AreEqual(outMessage.QuestionCount, outMessage.Questions.Count());
+            Assert.Equal(outMessage.QuestionCount, outMessage.Questions.Count());
 
             // Q1
-            Assert.AreEqual("www.msn.com", outMessage.Questions[0].Name);
-            Assert.AreEqual(ResourceType.A, outMessage.Questions[0].Type);
-            Assert.AreEqual(ResourceClass.IN, outMessage.Questions[0].Class);
+            Assert.Equal("www.msn.com", outMessage.Questions[0].Name);
+            Assert.Equal(ResourceType.A, outMessage.Questions[0].Type);
+            Assert.Equal(ResourceClass.IN, outMessage.Questions[0].Class);
 
-            Assert.AreEqual(outMessage.AnswerCount, outMessage.Answers.Count());
-            Assert.AreEqual(outMessage.AnswerCount, outMessage.Answers.Count());
-            Assert.AreEqual("8.8.8.8", outMessage.Answers[0].Name);
-            Assert.AreEqual("8.8.8.9", outMessage.Answers[1].Name);
+            Assert.Equal(outMessage.AnswerCount, outMessage.Answers.Count());
+            Assert.Equal(outMessage.AnswerCount, outMessage.Answers.Count());
+            Assert.Equal("8.8.8.8", outMessage.Answers[0].Name);
+            Assert.Equal("8.8.8.9", outMessage.Answers[1].Name);
         }
 
-        [TestMethod]
+        [Fact]
         public void Opcode()
         {
             DnsMessage message = new DnsMessage();
             message.QR = true;
-            Assert.AreEqual(0x8000, message.Flags);
+            Assert.Equal(0x8000, message.Flags);
             message.Opcode = (byte) OpCode.UPDATE;
-            Assert.AreEqual((byte) OpCode.UPDATE, message.Opcode);
-            Assert.AreEqual(0xa800, message.Flags);
+            Assert.Equal((byte) OpCode.UPDATE, message.Opcode);
+            Assert.Equal(0xa800, message.Flags);
         }
     }
 }
