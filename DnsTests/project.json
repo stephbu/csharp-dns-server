@@ -5,13 +5,8 @@
     "xUnit.Assert": "2.1.0-*",
     "xunit.core":"2.1.0-*",
     "xunit.extensibility.core": "2.1.0-*",
-    "xunit.runner.aspnet": "2.1.0-*"
   },
-  
-  "commands": {
-    "test": "xunit.runner.aspnet"
-  },
-  
+    
   "runtimes": {
     "win": { },
     "win-anycpu": {
