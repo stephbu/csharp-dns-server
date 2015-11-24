@@ -1,5 +1,10 @@
 {
   "version": "1.0.0-*",
+  "authors": [ "Stephen Butler" ],
+  "title": "csharp-dns-server",
+  "description": "CSharp DNS Server",
+  "projectUrl": "https://github.com/stephbu/csharp-dns-server",
+  "licenseUrl": "https://raw.githubusercontent.com/stephbu/csharp-dns-server/master/licence.txt",
   
   "dependencies": {
   },
