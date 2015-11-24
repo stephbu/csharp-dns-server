@@ -6,9 +6,15 @@
     "xunit.core":"2.1.0",
     "xunit.extensibility.core": "2.1.0"
   },
+  
   "commands": {
     "DnsTests": "DnsTests"
   },
+  
+  "runtimes": {
+    "win-anycpu": {}
+  },
+  
   "frameworks": {
     ".NETFramework,Version=v4.5":{
       "frameworkAssemblies": {
@@ -26,10 +32,12 @@
       }
     }
   },
+  
   "compile": [
     "*.cs",
     "**/*.cs"
   ],
+  
   "compilationOptions": {
     "warningsAsErrors": true
   }
