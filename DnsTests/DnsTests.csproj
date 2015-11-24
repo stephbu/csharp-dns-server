@@ -53,7 +53,7 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Xunit, 2.1.0">
+        <Reference Include="Xunit">
         </Reference>
       </ItemGroup>
     </Otherwise>
