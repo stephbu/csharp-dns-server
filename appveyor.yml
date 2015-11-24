@@ -5,4 +5,4 @@ install:
 before_build:
 - nuget restore
 build:
-  verbosity: verbose
+  verbosity: detailed
