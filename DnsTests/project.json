@@ -12,7 +12,10 @@
   },
   
   "runtimes": {
-    "win-anycpu": {}
+    "win": { },
+    "win-anycpu": {
+      "#import": [ "win" ]
+    }
   },
   
   "frameworks": {
