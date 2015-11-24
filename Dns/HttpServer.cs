@@ -53,7 +53,7 @@ namespace Dns
                 try
                 {
                     HttpListenerContext context = await this._listener.GetContextAsync();
-                    Task.Run(() => this.ProcessRequest(context));
+                    var processRequest = Task.Run(() => this.ProcessRequest(context));
                 }
                 catch (HttpListenerException ex)
                 {

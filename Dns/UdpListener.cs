@@ -51,12 +51,12 @@ namespace Dns
 
                         if (OnRequest != null)
                         {
-                            Task.Run(() => OnRequest(args));
+                            var process = Task.Run(() => OnRequest(args));
                         }
                         else
                         {
                             // defaults to console dump if no listener is bound
-                            Task.Run(() => ProcessReceiveFrom(args));
+                            var dump = Task.Run(() => ProcessReceiveFrom(args));
                         }
                     }
                 }

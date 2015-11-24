@@ -267,7 +267,7 @@ namespace Dns
                     catch (Exception ex)
                     {
                         // TODO: log unable to parse IP address from registry
-                        Console.WriteLine("Unable to resolve host name for DNS entry {0}", address);
+                        Console.WriteLine("Unable to resolve host name for DNS entry {0}, error {1}", address, ex.Message);
                     }
                 }
 

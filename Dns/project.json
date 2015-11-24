@@ -1,10 +1,13 @@
 {
   "version": "1.0.0-*",
+  
   "dependencies": {
   },
+  
   "commands": {
     "Dns": "Dns"
   },
+  
   "frameworks": {
     "dnx451": {
       "frameworkAssemblies": {
@@ -12,5 +15,8 @@
           }  
       }
   },
-  "compile": ["*.cs","**/*.cs"]
+  
+  "compile": ["*.cs","**/*.cs"],
+  
+  "compilationOptions": {"warningsAsErrors":true}
 }
