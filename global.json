@@ -1,6 +1,0 @@
-{
-  "projects": [ "Dns", "DnsTests" ],
-  "sdk": {
-    "version": "1.0.0-beta7"
-  }
-}

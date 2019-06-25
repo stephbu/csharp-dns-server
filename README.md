@@ -15,14 +15,14 @@ This software is licenced under MIT terms that permits reuse within proprietary 
 
 ## Features
 
-As written, the server has a number of intrinsic features:
+As written, the server has the following features:
 
  - Pluggable Zone Resolver.  Host one or more zones locally, and run your code to resolve names in that zone.  Enables many complex scenarios such as:
- - round-robin load-balancing.  Distribute load and provide failover with a datacentre without expensive hardware.
+s - round-robin load-balancing.  Distribute load and provide failover with a datacentre without expensive hardware.
  - health-checks.  While maintaining a list of machines in round-robin for a name, the code performs periodic healthchecks against the machines, if necessary removing machines that fail the health checks from rotation.
  - Delegates all other DNS lookup to host machines default DNS server(s)
 
-The DNS server also has a built-in Web Server providing operational insight into the server behaviour.
+The DNS server has a built-in Web Server providing operational insight into the current server behaviour.
 - healthcheck for server status
 - counters
 - zone information

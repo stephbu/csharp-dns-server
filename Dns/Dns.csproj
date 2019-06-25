@@ -1,97 +1,21 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9E39C971-92EC-4BD0-90DC-472C422F9376}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Dns</RootNamespace>
-    <AssemblyName>Dns</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Caching" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Contracts\IAddressDispenser.cs" />
-    <Compile Include="Contracts\IDnsCache.cs" />
-    <Compile Include="Contracts\IDnsResolver.cs" />
-    <Compile Include="Contracts\IHtmlDump.cs" />
-    <Compile Include="Utility\BitPacker.cs" />
-    <Compile Include="Utility\CsvParser.cs" />
-    <Compile Include="Utility\CsvRow.cs" />
-    <Compile Include="ZoneProvider\BaseZoneProvider.cs" />
-    <Compile Include="Question.cs" />
-    <Compile Include="QuestionList.cs" />
-    <Compile Include="HttpServer.cs" />
-    <Compile Include="ResourceRecord.cs" />
-    <Compile Include="ResourceList.cs" />
-    <Compile Include="ResourceType.cs" />
-    <Compile Include="DnsCache.cs" />
-    <Compile Include="DnsMessage.cs" />
-    <Compile Include="DnsProtocol.cs" />
-    <Compile Include="DnsServer.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="OpCode.cs" />
-    <Compile Include="RCode.cs" />
-    <Compile Include="RData.cs" />
-    <Compile Include="ResourceClass.cs" />
-    <Compile Include="SmartAddressDispenser.cs" />
-    <Compile Include="SocketExtensions.cs" />
-    <Compile Include="Zone.cs" />
-    <Compile Include="ZoneProvider\FileWatcherZoneProvider.cs" />
-    <Compile Include="ZoneRecord.cs" />
-    <Compile Include="SmartZoneResolver.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UdpListener.cs" />
-    <Compile Include="ZoneProvider\AP\APZoneProvider.cs" />
-    <Compile Include="ZoneProvider\Bind\BindZoneProvider.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <RootNamespace>Dns</RootNamespace>
+        <Authors>stephbu@gmail.com</Authors>
+        <RepositoryUrl>https://github.com/stephbu/csharp-dns-server</RepositoryUrl>
+        <IsPackable>false</IsPackable>
+        <PackageId>csharp-dns-server</PackageId>
+        <OutputType>Exe</OutputType>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="System.Runtime.Caching" Version="4.5.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Properties" />
+    </ItemGroup>
+
 </Project>

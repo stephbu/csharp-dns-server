@@ -4,6 +4,8 @@
 // // // </copyright>
 // // //-------------------------------------------------------------------------------------------------
 
+using System.Net.NetworkInformation;
+
 namespace Dns
 {
     using System;
@@ -18,7 +20,7 @@ namespace Dns
 
     internal class DnsServer : IHtmlDump
     {
-        private IPHostEntry[] _defaultDns;
+        private IPAddress[] _defaultDns;
         private UdpListener _udpListener; // listener for UDP53 traffic
         private IDnsResolver _resolver; // resolver for name entries
         private long _requests;
@@ -36,10 +38,12 @@ namespace Dns
             _resolver = resolver;
 
             _udpListener = new UdpListener();
+            
+            // TODO: change DNS port to configurable setting
             _udpListener.Initialize(53);
             _udpListener.OnRequest += ProcessUdpRequest;
 
-            _defaultDns = GetDefaultDNS();
+            _defaultDns = GetDefaultDNS().ToArray();
         }
 
         /// <summary>Start DNS listener</summary>
@@ -135,9 +139,9 @@ namespace Dns
                             if (message.IsQuery())
                             {
                                 // send to upstream DNS servers
-                                foreach (IPHostEntry dnsServer in _defaultDns)
+                                foreach (IPAddress dnsServer in _defaultDns)
                                 {
-                                    SendUdp(responseStream.GetBuffer(), 0, (int) responseStream.Position, new IPEndPoint(dnsServer.AddressList.First(addr => addr.AddressFamily == AddressFamily.InterNetwork), 53));
+                                    SendUdp(responseStream.GetBuffer(), 0, (int) responseStream.Position, new IPEndPoint(dnsServer, 53));
                                 }
                             }
                             else
@@ -230,48 +234,23 @@ namespace Dns
         }
 
         /// <summary>Returns list of manual or DHCP specified DNS addresses</summary>
-        /// <returns></returns>
-        private IPHostEntry[] GetDefaultDNS()
+        /// <returns>List of configured DNS names</returns>
+        private IEnumerable<IPAddress> GetDefaultDNS()
         {
-            const string tcpParametersKey = @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters";
-            using (RegistryKey dnsServerKey = Registry.LocalMachine.OpenSubKey(tcpParametersKey))
+            NetworkInterface[] adapters  = NetworkInterface.GetAllNetworkInterfaces();
+            foreach (NetworkInterface adapter in adapters)
             {
-                if (dnsServerKey == null)
+
+                IPInterfaceProperties adapterProperties = adapter.GetIPProperties();
+                IPAddressCollection dnsServers = adapterProperties.DnsAddresses;
+
+                foreach (IPAddress dns in dnsServers)
                 {
-                    Console.WriteLine("Unable to open DNS servers key");
-                    return new IPHostEntry[]{};
+                    Console.WriteLine("Discovered DNS: ", dns);
+                    
+                    yield return dns;
                 }
-                string serverlist = (string) dnsServerKey.GetValue("NameServer");
-                serverlist += " " + (string) dnsServerKey.GetValue("DhcpNameServer");
-                Console.WriteLine("DNS Servers: {0}", serverlist);
-                char[] token = new char[1];
-                token[0] = ' ';
-
-                List<IPHostEntry> dnsHostNames = new List<IPHostEntry>();
-
-                string[] addresses = serverlist.Split(token, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string address in addresses)
-                {
-                    IPAddress ipAddress;
-                    if (!IPAddress.TryParse(address, out ipAddress))
-                    {
-                        // TODO: log unable to parse IP address from registry
-                        continue;
-                    }
-
-                    try
-                    {
-                        var hostEntry = Dns.GetHostEntry(address);
-                        dnsHostNames.Add(hostEntry);
-                    }
-                    catch (Exception ex)
-                    {
-                        // TODO: log unable to parse IP address from registry
-                        Console.WriteLine("Unable to resolve host name for DNS entry {0}, error {1}", address, ex.Message);
-                    }
-                }
-
-                return dnsHostNames.ToArray();
+                    
             }
         }
 
@@ -279,7 +258,7 @@ namespace Dns
         {
             writer.WriteLine("DNS Server Status<br/>");
             writer.Write("Default Nameservers:");
-            foreach (IPHostEntry dns in _defaultDns)
+            foreach (IPAddress dns in _defaultDns)
             {
                 writer.WriteLine(dns);
             }
