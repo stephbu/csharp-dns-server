@@ -7,24 +7,27 @@
 namespace Dns
 {
     using System;
-    using System.Runtime.Caching;
+    using Microsoft.Extensions.Caching.Memory;
     using Dns.Contracts;
 
     internal class DnsCache : IDnsCache
     {
-        private readonly MemoryCache _cache = new MemoryCache("DnsCache");
+        private readonly MemoryCache _cache = new MemoryCache(new MemoryCacheOptions());
 
         byte[] IDnsCache.Get(string key)
         {
-            return _cache[key] as byte[];
+            byte[] entry;
+            if (_cache.TryGetValue(key, out entry)) {
+                return entry;
+            }
+
+            return null;
         }
 
         void IDnsCache.Set(string key, byte[] bytes, int ttlSeconds)
         {
-            CacheItem item = new CacheItem(key, bytes);
-            CacheItemPolicy policy = new CacheItemPolicy {AbsoluteExpiration = DateTimeOffset.Now + TimeSpan.FromSeconds(ttlSeconds)};
-
-            _cache.Add(item, policy);
+            var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.Now + TimeSpan.FromSeconds(ttlSeconds));
+            _cache.Set(key, bytes, cacheEntryOptions);
         }
     }
 }
