@@ -1,0 +1,35 @@
+﻿$TTL 14400
+$ORIGIN stephbu.org.
+
+; Specify the primary nameserver ns1.example.com in SOA
+@ 14400 IN SOA ns1.stephbu.org. stephbu.org. (
+                                2008092902 ; Serial in YYYYMMDDXX (XX is increment)
+                                10800; refresh seconds
+                                3600; retry
+                                604800; expire
+                                38400; minimum
+                                );
+; Website IP Address specified in A record
+
+       IN A 11.11.11.11
+
+; TWO nameserver names
+
+       IN NS ns1.example.com.
+       IN NS ns2.example.com.
+
+; Nameservers and their corresponding IPs
+
+ns1  IN A 11.11.11.11
+ns2  IN A 22.22.22.22
+
+; Specify here any Aliases using CNAME record
+
+www IN CNAME stephbu.org.
+ftp IN CNAME stephbu.org.
+
+; Set Mail Exchanger record with priority
+
+mail IN MX 10 stephbu.org.
+
+

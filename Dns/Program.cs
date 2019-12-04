@@ -12,7 +12,7 @@ namespace Dns
     using System.Threading;
     using Dns.ZoneProvider.AP;
 
-    internal class Program
+    public class Program
     {
         private static APZoneProvider _zoneProvider; // reloads Zones from machineinfo.csv changes
         private static SmartZoneResolver _zoneResolver; // resolver and delegated lookup for unsupported zones;
@@ -21,10 +21,13 @@ namespace Dns
         private static ManualResetEvent _exit = new ManualResetEvent(false);
         private static ManualResetEvent _exitTimeout = new ManualResetEvent(false);
 
-        private static void Main(string[] args)
+        public static void Main(string[] args)
         {
             Console.CancelKeyPress += Console_CancelKeyPress;
-
+            
+            // parse command line
+            
+            // TODO: read zone data and select ZoneProvider from configuration
             _zoneProvider = new APZoneProvider("d:\\data\\machineinfo.csv", ".foo.bar");
             _zoneResolver = new SmartZoneResolver();
             _dnsServer = new DnsServer();
