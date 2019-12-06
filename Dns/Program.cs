@@ -25,10 +25,8 @@ namespace Dns
         {
             Console.CancelKeyPress += Console_CancelKeyPress;
             
-            // parse command line
-            
             // TODO: read zone data and select ZoneProvider from configuration
-            _zoneProvider = new APZoneProvider("d:\\data\\machineinfo.csv", ".foo.bar");
+            _zoneProvider = new APZoneProvider("data\\machineinfo.csv", ".foo.bar");
             _zoneResolver = new SmartZoneResolver();
             _dnsServer = new DnsServer();
             _httpServer = new HttpServer();
