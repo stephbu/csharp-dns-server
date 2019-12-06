@@ -13,12 +13,31 @@ This software is licenced under MIT terms that permits reuse within proprietary 
 |--------|--------|
 | master | [![Build status](https://ci.appveyor.com/api/projects/status/goayaopiib8tbyfv/branch/master?svg=true)](https://ci.appveyor.com/project/stephbu/csharp-dns-server/branch/master) |
 
+## Getting Started
+
+```
+// clone the repo
+>> cd $repo-root
+>> git clone https://github.com/stephbu/csharp-dns-server
+
+// check you can build the project
+>> cd $repo-root/csharp-dns-server
+>> dotnet build
+
+// check that the tests run
+>> dotnet test
+
+```
+
+## Gotchas
+- if you're running on Windows 10 with Docker Tools installed, Docker uses the ICS SharedAccess service to provide DNS resolution for Docker containers - this listens on UDP:53, and will conflict with the DNS project.  Either turn off the the service (```net stop SharedAccess```), or change the UDP port.
+
 ## Features
 
 As written, the server has the following features:
 
  - Pluggable Zone Resolver.  Host one or more zones locally, and run your code to resolve names in that zone.  Enables many complex scenarios such as:
-s - round-robin load-balancing.  Distribute load and provide failover with a datacentre without expensive hardware.
+ - round-robin load-balancing.  Distribute load and provide failover with a datacentre without expensive hardware.
  - health-checks.  While maintaining a list of machines in round-robin for a name, the code performs periodic healthchecks against the machines, if necessary removing machines that fail the health checks from rotation.
  - Delegates all other DNS lookup to host machines default DNS server(s)
 
