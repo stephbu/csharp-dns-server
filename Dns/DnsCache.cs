@@ -10,7 +10,7 @@ namespace Dns
     using Microsoft.Extensions.Caching.Memory;
     using Dns.Contracts;
 
-    internal class DnsCache : IDnsCache
+    public class DnsCache : IDnsCache
     {
         private readonly MemoryCache _cache = new MemoryCache(new MemoryCacheOptions());
 
