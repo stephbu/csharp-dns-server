@@ -8,6 +8,12 @@ namespace Dns.ZoneProvider.IPProbe
     using System.Linq;
     using Microsoft.Extensions.Configuration;
 
+
+    /// <summary>
+    /// IPProbeZoneProvider map via configuration a set of monitored IPs to host A records.
+    /// Various monitoring strategies are implemented to detect IP health.
+    /// Health IP addresses are added to the Zone.
+    /// </summary>
     public partial class IPProbeZoneProvider : BaseZoneProvider
     {
 
@@ -127,7 +133,7 @@ namespace Dns.ZoneProvider.IPProbe
 
                 yield return new ZoneRecord
                 {
-                    Host = host.Name,
+                    Host = host.Name + this.Zone,
                     Addresses = availableAddresses,
                     Count = availableAddresses.Length,
                     Type = ResourceType.A,
