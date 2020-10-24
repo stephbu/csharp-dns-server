@@ -47,26 +47,24 @@ namespace Dns
             _zoneResolver = new SmartZoneResolver();
             _zoneResolver.SubscribeTo(_zoneProvider);
 
-
             _dnsServer = new DnsServer(appConfig.Server.DnsListener.Port);
 
             _httpServer = new HttpServer();
 
-
             _dnsServer.Initialize(_zoneResolver);
-            _httpServer.Initialize("http://+:8080/");
-            _httpServer.OnProcessRequest += _httpServer_OnProcessRequest;
-            _httpServer.OnHealthProbe += _httpServer_OnHealthProbe;
 
             _zoneProvider.Start(cts.Token);
-            _dnsServer.Start();
-            _httpServer.Start();
+            _dnsServer.Start(cts.Token);
+
+            if(appConfig.Server.WebServer.Enabled)
+            {
+                _httpServer.Initialize(string.Format("http://+:{0}/", appConfig.Server.WebServer.Port));
+                _httpServer.OnProcessRequest += _httpServer_OnProcessRequest;
+                _httpServer.OnHealthProbe += _httpServer_OnHealthProbe;
+                _httpServer.Start(cts.Token);
+            }
 
             cts.Token.WaitHandle.WaitOne();
-
-            _httpServer.Stop();
-            _dnsServer.Stop();
-            _zoneProvider.Stop();
 
             _exitTimeout.Set();
         }
@@ -114,6 +112,7 @@ namespace Dns
 
         private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
         {
+            Console.WriteLine("/r/nShutting Down");
             cts.Cancel();
             _exitTimeout.WaitOne(5000);
         }

@@ -114,10 +114,11 @@ namespace Dns.ZoneProvider.IPProbe
 
         public override void Start(CancellationToken ct)
         {
+            ct.Register(this.Stop);
             this.runningTask = Task.Run(()=>ProbeLoop(ct));
         }
 
-        public override void Stop()
+        private void Stop()
         {
             this.runningTask.Wait();
         }
@@ -130,6 +131,12 @@ namespace Dns.ZoneProvider.IPProbe
                     .Where(addr => addr.IsAvailable)
                     .Select(addr => addr.Address)
                     .ToArray();
+
+                if(availableAddresses.Length == 0)
+                {
+                    // no hosts with empty recordsets
+                    continue;
+                }
 
                 yield return new ZoneRecord
                 {

@@ -23,8 +23,8 @@
             {
                 get
                 {
-                    // Endpoint is available if 3 of the last 5 results were positive
-                    return this.Results.TakeLast(5).Where(r => r.Available).Count() > 3;
+                    // Endpoint is available up-to last 3 results were successful
+                    return this.Results.TakeLast(3).All(r => r.Available);
                 }
             }
 

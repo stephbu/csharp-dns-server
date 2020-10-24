@@ -54,15 +54,10 @@ namespace Dns
         }
 
         /// <summary>Start DNS listener</summary>
-        public void Start()
+        public void Start(CancellationToken ct)
         {
             _udpListener.Start();
-        }
-
-        /// <summary>Stop DNS Server</summary>
-        public void Stop()
-        {
-            _udpListener.Stop();
+            ct.Register(_udpListener.Stop);
         }
 
         /// <summary>Process UDP Request</summary>

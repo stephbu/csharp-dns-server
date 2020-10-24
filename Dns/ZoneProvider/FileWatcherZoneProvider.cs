@@ -81,6 +81,8 @@ namespace Dns.ZoneProvider
         /// <summary>Start watching and generating zone files</summary>
         public override void Start(CancellationToken ct)
         {
+            ct.Register(this.Stop);
+
             // fire first zone generation event on startup
             this._timer.Change(TimeSpan.FromSeconds(3), Timeout.InfiniteTimeSpan);
             this._fileWatcher.EnableRaisingEvents = true;
@@ -95,7 +97,7 @@ namespace Dns.ZoneProvider
         }
 
         /// <summary>Stop watching</summary>
-        public override void Stop()
+        private void Stop()
         {
             this._fileWatcher.EnableRaisingEvents = false;
         }

@@ -9,6 +9,7 @@ namespace Dns
     using System;
     using System.IO;
     using System.Net;
+    using System.Threading;
     using System.Threading.Tasks;
     using Dns.Contracts;
 
@@ -45,9 +46,10 @@ namespace Dns
         }
 
         /// <summary>Start listening</summary>
-        public async void Start()
+        public async void Start(CancellationToken ct)
         {
-            _listener.Start();
+            ct.Register(this.Stop);
+
             while (true)
             {
                 try

@@ -70,8 +70,6 @@ namespace Dns.ZoneProvider
         }
 
         public abstract void Start(CancellationToken ct);
-
-        public abstract void Stop();
         
     }
 }
