@@ -12,25 +12,11 @@ namespace Dns.ZoneProvider.AP
     using Dns.Utility;
     using Dns.ZoneProvider;
 
+    using Microsoft.Extensions.Configuration;
 
     /// <summary>Source of Zone records</summary>
     public class APZoneProvider : FileWatcherZoneProvider
     {
-        private string _zoneSuffix;
-        private uint _serial;
-
-        public APZoneProvider(string machineInfoFile, string zoneSuffix) : base(machineInfoFile)
-        {
-            this.Initialize(machineInfoFile, zoneSuffix);
-        }
-
-        /// <summary>Initialize ZoneProvider</summary>
-        /// <param name="machineInfoFile"></param>
-        /// <param name="zoneSuffix"></param>
-        public void Initialize(string machineInfoFile, string zoneSuffix)
-        {
-            _zoneSuffix = zoneSuffix;
-        }
 
         public override Zone GenerateZone()
         {
@@ -43,17 +29,17 @@ namespace Dns.ZoneProvider.AP
             var machines = parser.Rows.Select(row => new {MachineFunction = row["MachineFunction"], StaticIP = row["StaticIP"], MachineName = row["MachineName"]}).ToArray();
 
             var zoneRecords = machines
-                            .GroupBy(machine => machine.MachineFunction + _zoneSuffix, machine => IPAddress.Parse(machine.StaticIP))
+                            .GroupBy(machine => machine.MachineFunction + this.Zone, machine => IPAddress.Parse(machine.StaticIP))
                             .Select(group => new ZoneRecord {Host = group.Key, Count = group.Count(), Addresses = group.Select(address => address).ToArray()})
                             .ToArray();
 
             Zone zone = new Zone();
-            zone.Suffix = _zoneSuffix;
-            zone.Serial = _serial;
+            zone.Suffix = this.Zone;
+            zone.Serial = this._serial;
             zone.Initialize(zoneRecords);
 
             // increment serial number
-            _serial++;
+            this._serial++;
             return zone;
         }
     }

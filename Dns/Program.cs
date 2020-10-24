@@ -8,41 +8,61 @@ namespace Dns
 {
     using System;
     using System.IO;
+    using System.Linq;
     using System.Net;
     using System.Threading;
     using Dns.ZoneProvider.AP;
 
+    using Ninject;
+    using Microsoft.Extensions.Configuration;
+
     public class Program
     {
-        private static APZoneProvider _zoneProvider; // reloads Zones from machineinfo.csv changes
+
+        private static IKernel container = new StandardKernel();
+
+        private static ZoneProvider.BaseZoneProvider _zoneProvider; // reloads Zones from machineinfo.csv changes
         private static SmartZoneResolver _zoneResolver; // resolver and delegated lookup for unsupported zones;
         private static DnsServer _dnsServer; // resolver and delegated lookup for unsupported zones;
         private static HttpServer _httpServer;
-        private static ManualResetEvent _exit = new ManualResetEvent(false);
         private static ManualResetEvent _exitTimeout = new ManualResetEvent(false);
+        private static CancellationTokenSource cts = new CancellationTokenSource();
 
+        // TODO: Move startup args into config file
         public static void Main(string[] args)
         {
             Console.CancelKeyPress += Console_CancelKeyPress;
-            
-            // TODO: read zone data and select ZoneProvider from configuration
-            _zoneProvider = new APZoneProvider("data\\machineinfo.csv", ".foo.bar");
+
+            IConfiguration configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", true, true)
+                .Build();
+
+            var appConfig = configuration.Get<Config.AppConfig>();
+
+            container.Bind<ZoneProvider.BaseZoneProvider>().To(ByName(appConfig.Server.Zone.Provider));
+            var zoneProviderConfig = configuration.GetSection("zoneprovider");
+            _zoneProvider = container.Get<ZoneProvider.BaseZoneProvider>();
+            _zoneProvider.Initialize(zoneProviderConfig, appConfig.Server.Zone.Name);
+
             _zoneResolver = new SmartZoneResolver();
-            _dnsServer = new DnsServer();
+            _zoneResolver.SubscribeTo(_zoneProvider);
+
+
+            _dnsServer = new DnsServer(appConfig.Server.DnsListener.Port);
+
             _httpServer = new HttpServer();
 
-            _zoneResolver.SubscribeTo(_zoneProvider);
 
             _dnsServer.Initialize(_zoneResolver);
             _httpServer.Initialize("http://+:8080/");
             _httpServer.OnProcessRequest += _httpServer_OnProcessRequest;
             _httpServer.OnHealthProbe += _httpServer_OnHealthProbe;
 
-            _zoneProvider.Start();
+            _zoneProvider.Start(cts.Token);
             _dnsServer.Start();
             _httpServer.Start();
 
-            _exit.WaitOne();
+            cts.Token.WaitHandle.WaitOne();
 
             _httpServer.Stop();
             _dnsServer.Stop();
@@ -94,8 +114,22 @@ namespace Dns
 
         private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
         {
-            _exit.Set();
+            cts.Cancel();
             _exitTimeout.WaitOne(5000);
+        }
+
+        private static Type ByName(string name)
+        {
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies().Reverse())
+            {
+                var tt = assembly.GetType(name);
+                if (tt != null)
+                {
+                    return tt;
+                }
+            }
+
+            return null;
         }
     }
 }

@@ -20,6 +20,8 @@ namespace Dns
         public OnRequestHandler OnRequest;
         private Socket _listener;
 
+
+        // TODO: rea
         public void Initialize(ushort port = 53)
         {
             _listener = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);

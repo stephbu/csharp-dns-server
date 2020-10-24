@@ -10,6 +10,7 @@ namespace Dns.ZoneProvider
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.Configuration;
 
     public abstract class FileWatcherZoneProvider : BaseZoneProvider
     {
@@ -23,7 +24,7 @@ namespace Dns.ZoneProvider
 
         private FileSystemWatcher _fileWatcher;
         private TimeSpan _settlement = TimeSpan.FromSeconds(10);
-        private readonly Timer _timer;
+        private Timer _timer;
 
         public abstract Zone GenerateZone();
 
@@ -36,8 +37,12 @@ namespace Dns.ZoneProvider
 
         public string Filename { get; private set; }
 
-        protected FileWatcherZoneProvider(string filename)
+        public override void Initialize(IConfiguration config, string zoneName)
         {
+            var filewatcherConfig = config.Get<FileWatcherZoneProviderOptions>();
+
+            var filename = filewatcherConfig.FileName;
+
             if (string.IsNullOrWhiteSpace(filename))
             {
                 throw new ArgumentException("Null or empty", "filename");
@@ -69,10 +74,12 @@ namespace Dns.ZoneProvider
             this._fileWatcher.Changed += this.FileChange;
             this._fileWatcher.Renamed += this.FileChange;
             this._fileWatcher.Deleted += this.FileChange;
+
+            this.Zone = zoneName;
         }
 
         /// <summary>Start watching and generating zone files</summary>
-        public void Start()
+        public override void Start(CancellationToken ct)
         {
             // fire first zone generation event on startup
             this._timer.Change(TimeSpan.FromSeconds(3), Timeout.InfiniteTimeSpan);
@@ -88,7 +95,7 @@ namespace Dns.ZoneProvider
         }
 
         /// <summary>Stop watching</summary>
-        public void Stop()
+        public override void Stop()
         {
             this._fileWatcher.EnableRaisingEvents = false;
         }

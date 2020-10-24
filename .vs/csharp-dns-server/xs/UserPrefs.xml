@@ -1,0 +1,72 @@
+﻿<Properties StartupConfiguration="{6804468B-333A-4A7C-BFC1-FD4E498AB4A6}|Default">
+  <MonoDevelop.Ide.ItemProperties.dns PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Dns/SmartZoneResolver.cs">
+    <Files>
+      <File FileName="dns/ZoneProvider/IPProbe/IPProbeZoneProvider.cs" Line="100" Column="10" IsPinned="True" />
+      <File FileName="dns/Config/AppConfig.cs" Line="20" Column="1" />
+      <File FileName="dnstest/ConfigTests.cs" Line="16" Column="12" />
+      <File FileName="dnstest/BitPackerTests.cs" Line="4" Column="1" />
+      <File FileName="dnstest/DnsCacheTests.cs" Line="12" Column="1" />
+      <File FileName="dnstest/Data/Config/appsettings.json" Line="16" Column="2" />
+      <File FileName="../../../../../../../../usr/local/share/dotnet/sdk/3.1.402/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.RuntimeIdentifierInference.targets" Line="139" Column="5" />
+      <File FileName="dns/ZoneProvider/BaseZoneProvider.cs" Line="13" Column="30" />
+      <File FileName="dns/ZoneProvider/FileWatcherZoneProvider.cs" Line="86" Column="58" />
+      <File FileName="dns/ZoneProvider/FileWatcherProviderOptions.cs" Line="4" Column="48" />
+      <File FileName="dns/ZoneProvider/Bind/BindZoneProvider.cs" Line="13" Column="6" />
+      <File FileName="dns/DnsServer.cs" Line="38" Column="30" />
+      <File FileName="Dns/Program.cs" Line="63" Column="1" />
+      <File FileName="dns/ZoneProvider/AP/APZoneProvider.cs" Line="43" Column="25" />
+      <File FileName="dns/ZoneProvider/IPProbe/ProbeState.cs" Line="12" Column="1" />
+      <File FileName="dns/ZoneProvider/IPProbe/AddressProbe.cs" Line="20" Column="14" />
+      <File FileName="dns/ZoneProvider/IPProbe/HostName.cs" Line="11" Column="10" />
+      <File FileName="dns/ZoneProvider/IPProbe/IPProbeProviderOptions.cs" Line="5" Column="45" />
+      <File FileName="dns/ResourceClass.cs" Line="1" Column="1" />
+      <File FileName="dns/ZoneProvider/IPProbe/ProbeResult.cs" Line="1" Column="1" />
+      <File FileName="dns/ZoneProvider/IPProbe/ExampleIPProbeConfig.xml" Line="7" Column="1" NotebookId="1" />
+      <File FileName="dns/appsettings.json" Line="23" Column="25" NotebookId="1" />
+      <File FileName="dns/ZoneProvider/IPProbe/ProbeStrategy.cs" Line="35" Column="1" NotebookId="1" />
+      <File FileName="Dns/SmartZoneResolver.cs" Line="31" Column="1" NotebookId="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="csharp-dns-server" expanded="True">
+            <Node name="dns" expanded="True">
+              <Node name="Dependencies" expanded="True" />
+              <Node name="Config" expanded="True" />
+              <Node name="Contracts" expanded="True" />
+              <Node name="Data" expanded="True" />
+              <Node name="Utility" expanded="True" />
+              <Node name="ZoneProvider" expanded="True">
+                <Node name="AP" expanded="True" />
+                <Node name="Bind" expanded="True" />
+                <Node name="IPProbe" expanded="True" />
+              </Node>
+              <Node name="SmartZoneResolver.cs" selected="True" />
+            </Node>
+            <Node name="dnstest" expanded="True">
+              <Node name="Data" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+      <Pad Id="MonoDevelop.UnitTesting.TestPad">
+        <State name="__root__">
+          <Node name="csharp-dns-server" expanded="True" selected="True" />
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <Debugger.DebugSourceFolders />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/usr/local/share/dotnet/sdk/3.1.402/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.RuntimeIdentifierInference.targets" line="174" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
