@@ -18,7 +18,7 @@ namespace Dns.ZoneProvider.IPProbe
     {
         private IPProbeProviderOptions options;
 
-        private ProbeState state { get; set; }
+        private State state { get; set; }
         private CancellationToken ct { get; set; }
         private Task runningTask { get; set; }
 
@@ -33,40 +33,8 @@ namespace Dns.ZoneProvider.IPProbe
                 throw new Exception("Error loading IPProbeProviderOptions");
             }
 
-            this.state = new ProbeState();
-
-            foreach (var host in options.Hosts)
-            {
-                var hostResult = new HostName();
-                hostResult.Name = host.Name;
-                hostResult.AvailabilityMode = host.AvailabilityMode;
-
-                foreach(var address in host.Ip)
-                {
-                    var addressProbe = new AddressProbe
-                    {
-                        Address = IPAddress.Parse(address),
-                        ProbeFunction = Strategy.Get(host.Probe),
-                        TimeoutMilliseconds = host.Timeout,
-                    };
-
-                    AddressProbe preExisting;
-
-                    if(state.AddressProbes.TryGetValue(addressProbe, out preExisting))
-                    {
-                        hostResult.AddressProbes.Add(preExisting);
-                    }
-                    else
-                    {
-                        this.state.AddressProbes.Add(addressProbe);
-                        hostResult.AddressProbes.Add(addressProbe);
-                    }
-                }
-
-
-                this.state.HostNames.Add(hostResult);
-            }
-
+            // load up initial state from options
+            this.state = new State(options);
             this.Zone = zoneName;
 
             return;
@@ -84,7 +52,7 @@ namespace Dns.ZoneProvider.IPProbe
             {
                 var batchStartTime = DateTime.UtcNow;
 
-                Parallel.ForEach(this.state.AddressProbes, options, (probe) =>
+                Parallel.ForEach(this.state.Targets, options, (probe) =>
                 {
                     var startTime = DateTime.UtcNow;
                     var result = probe.ProbeFunction(probe.Address, probe.TimeoutMilliseconds);
@@ -122,9 +90,9 @@ namespace Dns.ZoneProvider.IPProbe
             this.runningTask.Wait();
         }
 
-        internal IEnumerable<ZoneRecord>GetZoneRecords(ProbeState state)
+        internal IEnumerable<ZoneRecord>GetZoneRecords(State state)
         {
-            foreach(var host in state.HostNames)
+            foreach(var host in state.Hosts)
             {
                 var availableAddresses = host.AddressProbes
                     .Where(addr => addr.IsAvailable)
@@ -156,7 +124,7 @@ namespace Dns.ZoneProvider.IPProbe
             }
         }
 
-        internal Zone GetZone(ProbeState state)
+        internal Zone GetZone(State state)
         {
             var zoneRecords = GetZoneRecords(state);
 

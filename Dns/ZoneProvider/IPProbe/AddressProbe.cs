@@ -7,10 +7,10 @@
 
     public partial class IPProbeZoneProvider
     {
-        internal class AddressProbe
+        internal class Target
         {
             internal IPAddress Address;
-            internal Func<IPAddress, ushort, bool> ProbeFunction;
+            internal Strategy.Probe ProbeFunction;
             internal ushort TimeoutMilliseconds;
             internal List<ProbeResult> Results = new List<ProbeResult>();
 
@@ -28,9 +28,9 @@
                 }
             }
 
-            internal class Comparer : IEqualityComparer<AddressProbe>
+            internal class Comparer : IEqualityComparer<Target>
             {
-                public bool Equals(AddressProbe x, AddressProbe y)
+                public bool Equals(Target x, Target y)
                 {
                     //Check whether the objects are the same object. 
                     if (x.Equals(y)) return true;
@@ -39,7 +39,7 @@
 
                 }
 
-                public int GetHashCode(AddressProbe obj)
+                public int GetHashCode(Target obj)
                 {
                     return obj.GetHashCode();
                 }

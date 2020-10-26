@@ -4,11 +4,11 @@
 
     public partial class IPProbeZoneProvider
     {
-        internal class HostName
+        internal class Host
         {
             internal string Name { get; set; }
             internal AvailabilityMode AvailabilityMode { get; set; }
-            internal List<AddressProbe> AddressProbes = new List<AddressProbe>();
+            internal List<Target> AddressProbes = new List<Target>();
         }
     }
 }

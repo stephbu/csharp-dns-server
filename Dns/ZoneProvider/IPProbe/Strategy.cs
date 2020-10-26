@@ -11,8 +11,10 @@
     public class Strategy
     {
 
+        public delegate bool Probe(IPAddress addr, ushort timeout);
+
         // Probe Strategy Dictionary, maps configuration to implemented functions
-        private static Dictionary<string, Func<IPAddress,ushort, bool>> probeFunctions = new Dictionary<string, Func<IPAddress,ushort, bool>>();
+        private static Dictionary<string, Probe> probeFunctions = new Dictionary<string, Probe>();
 
         static Strategy()
         {
@@ -21,7 +23,7 @@
             probeFunctions["noop"] = Strategy.NoOp;
         }
 
-        public static Func<IPAddress, ushort, bool> Get(string name)
+        public static Probe Get(string name)
         {
             return probeFunctions.GetValueOrDefault(name, Strategy.NoOp);
         }
