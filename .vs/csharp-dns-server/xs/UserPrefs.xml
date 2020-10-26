@@ -1,8 +1,8 @@
 ﻿<Properties StartupConfiguration="{6804468B-333A-4A7C-BFC1-FD4E498AB4A6}|Default">
   <MonoDevelop.Ide.ItemProperties.dns PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Dns/DnsCache.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Dns/ZoneProvider/IPProbe/ProbeStrategy.cs">
     <Files>
-      <File FileName="dns/ZoneProvider/IPProbe/IPProbeZoneProvider.cs" Line="19" Column="1" IsPinned="True" />
+      <File FileName="dns/ZoneProvider/IPProbe/IPProbeZoneProvider.cs" Line="138" Column="37" IsPinned="True" />
       <File FileName="dns/Config/AppConfig.cs" Line="20" Column="1" />
       <File FileName="dnstest/ConfigTests.cs" Line="16" Column="12" />
       <File FileName="dnstest/BitPackerTests.cs" Line="4" Column="1" />
@@ -14,12 +14,12 @@
       <File FileName="dns/ZoneProvider/FileWatcherProviderOptions.cs" Line="4" Column="48" />
       <File FileName="dns/ZoneProvider/Bind/BindZoneProvider.cs" Line="13" Column="6" />
       <File FileName="dns/DnsServer.cs" Line="37" Column="10" />
-      <File FileName="Dns/Program.cs" Line="54" Column="48" />
+      <File FileName="Dns/Program.cs" Line="36" Column="1" />
       <File FileName="dns/ZoneProvider/AP/APZoneProvider.cs" Line="40" Column="1" />
       <File FileName="dns/ZoneProvider/IPProbe/ProbeState.cs" Line="12" Column="1" />
       <File FileName="dns/ZoneProvider/IPProbe/AddressProbe.cs" Line="26" Column="82" />
-      <File FileName="dns/ZoneProvider/IPProbe/HostName.cs" Line="11" Column="10" />
-      <File FileName="dns/ZoneProvider/IPProbe/IPProbeProviderOptions.cs" Line="5" Column="45" />
+      <File FileName="dns/ZoneProvider/IPProbe/HostName.cs" Line="10" Column="67" />
+      <File FileName="dns/ZoneProvider/IPProbe/IPProbeProviderOptions.cs" Line="29" Column="6" />
       <File FileName="dns/ResourceClass.cs" Line="1" Column="1" />
       <File FileName="dns/ZoneProvider/IPProbe/ProbeResult.cs" Line="1" Column="1" />
       <File FileName="dns/Zone.cs" Line="22" Column="6" />
@@ -29,9 +29,10 @@
       <File FileName="Dns/QuestionList.cs" Line="21" Column="20" />
       <File FileName="dns/DnsCache.cs" Line="1" Column="1" />
       <File FileName="dns/ZoneProvider/IPProbe/ExampleIPProbeConfig.xml" Line="7" Column="1" NotebookId="1" />
-      <File FileName="dns/appsettings.json" Line="6" Column="7" NotebookId="1" />
       <File FileName="dns/ZoneProvider/IPProbe/ProbeStrategy.cs" Line="34" Column="29" NotebookId="1" />
       <File FileName="Dns/SmartZoneResolver.cs" Line="110" Column="1" NotebookId="1" />
+      <File FileName="dns/RCode.cs" Line="1" Column="1" NotebookId="1" />
+      <File FileName="dns/RData.cs" Line="1" Column="1" NotebookId="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -39,10 +40,11 @@
           <Node name="csharp-dns-server" expanded="True">
             <Node name="dns" expanded="True">
               <Node name="Dependencies" expanded="True" />
-              <Node name="Config" expanded="True" />
-              <Node name="Contracts" expanded="True" />
-              <Node name="Data" expanded="True" />
-              <Node name="DnsCache.cs" selected="True" />
+              <Node name="ZoneProvider" expanded="True">
+                <Node name="IPProbe" expanded="True">
+                  <Node name="ProbeStrategy.cs" selected="True" />
+                </Node>
+              </Node>
             </Node>
             <Node name="dnstest" expanded="True">
               <Node name="Data" expanded="True" />
@@ -66,6 +68,8 @@
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/usr/local/share/dotnet/sdk/3.1.402/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.RuntimeIdentifierInference.targets" line="174" column="1" />
+      <Breakpoint file="/Users/sbutler/dev/go/src/github.com/stephbu/csharp-dns-server/Dns/ZoneProvider/IPProbe/IPProbeZoneProvider.cs" relfile="Dns/ZoneProvider/IPProbe/IPProbeZoneProvider.cs" line="31" column="1" />
+      <Breakpoint file="/Users/sbutler/dev/go/src/github.com/stephbu/csharp-dns-server/Dns/ZoneProvider/IPProbe/IPProbeZoneProvider.cs" relfile="Dns/ZoneProvider/IPProbe/IPProbeZoneProvider.cs" line="139" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />

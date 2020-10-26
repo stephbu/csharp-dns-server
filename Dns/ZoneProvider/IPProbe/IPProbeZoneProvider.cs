@@ -16,8 +16,6 @@ namespace Dns.ZoneProvider.IPProbe
     /// </summary>
     public partial class IPProbeZoneProvider : BaseZoneProvider
     {
-
-        // TODO: private uint _serial = 0;
         private IPProbeProviderOptions options;
 
         private ProbeState state { get; set; }
@@ -41,6 +39,7 @@ namespace Dns.ZoneProvider.IPProbe
             {
                 var hostResult = new HostName();
                 hostResult.Name = host.Name;
+                hostResult.AvailabilityMode = host.AvailabilityMode;
 
                 foreach(var address in host.Ip)
                 {
@@ -129,20 +128,28 @@ namespace Dns.ZoneProvider.IPProbe
             {
                 var availableAddresses = host.AddressProbes
                     .Where(addr => addr.IsAvailable)
-                    .Select(addr => addr.Address)
-                    .ToArray();
+                    .Select(addr => addr.Address);
 
-                if(availableAddresses.Length == 0)
+                if(host.AvailabilityMode == AvailabilityMode.First)
+                {
+                    availableAddresses = availableAddresses.Take(1);
+                }
+
+                // materialize query
+                var addresses = availableAddresses.ToArray();
+
+                if (addresses.Length == 0)
                 {
                     // no hosts with empty recordsets
                     continue;
                 }
 
+
                 yield return new ZoneRecord
                 {
                     Host = host.Name + this.Zone,
-                    Addresses = availableAddresses,
-                    Count = availableAddresses.Length,
+                    Addresses = addresses,
+                    Count = addresses.Length,
                     Type = ResourceType.A,
                     Class = ResourceClass.IN,
                 };

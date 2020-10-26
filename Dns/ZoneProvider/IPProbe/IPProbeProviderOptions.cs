@@ -17,6 +17,14 @@ namespace Dns.ZoneProvider.IPProbe
         /// <summary>Host probe timeout</summary>
         public ushort Timeout { get; set; }
 
+        public AvailabilityMode AvailabilityMode { get; set; }
+
         public string[] Ip { get; set; }
+    }
+
+    public enum AvailabilityMode
+    {
+        All,
+        First,
     }
 }

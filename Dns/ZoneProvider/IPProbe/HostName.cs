@@ -7,6 +7,7 @@
         internal class HostName
         {
             internal string Name { get; set; }
+            internal AvailabilityMode AvailabilityMode { get; set; }
             internal List<AddressProbe> AddressProbes = new List<AddressProbe>();
         }
     }

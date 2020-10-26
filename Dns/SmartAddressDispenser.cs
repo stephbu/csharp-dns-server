@@ -12,9 +12,7 @@ namespace Dns
     using System.Net;
     using Dns.Contracts;
 
-    // TODO: implement healthchecks to ensure that the dispenser only issues LKG addresses
-
-    /// <summary>Address Dispenser than enables round-robin ordering for the specified zone record</summary>
+    /// <summary>Address Dispenser enables round-robin ordering for the specified zone record</summary>
     public class SmartAddressDispenser : IAddressDispenser
     {
         private ulong _sequence = 0;
@@ -39,6 +37,11 @@ namespace Dns
         {
             IPAddress[] addresses = _zoneRecord.Addresses;
 
+            if(addresses.Length == 0)
+            {
+                yield break;
+            }
+
             // starting position in rollover list
             int start = (int) (_sequence % (ulong) addresses.Length);
             int offset = start;
@@ -57,7 +60,7 @@ namespace Dns
                 }
 
                 // if back at starting position then exit
-                if (start == offset)
+                if (offset == start)
                 {
                     break;
                 }
