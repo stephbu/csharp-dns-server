@@ -2,15 +2,10 @@
 {
     using System;
 
-    public partial class IPProbeZoneProvider
+    internal class ProbeResult
     {
-        internal class ProbeResult
-        {
-            internal DateTime StartTime;
-            internal TimeSpan Duration;
-            internal bool Available;
-        }
-
-
+        internal DateTime StartTime;
+        internal TimeSpan Duration;
+        internal bool Available;
     }
 }

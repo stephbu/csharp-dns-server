@@ -14,7 +14,7 @@ namespace Dns.ZoneProvider.IPProbe
     /// Various monitoring strategies are implemented to detect IP health.
     /// Health IP addresses are added to the Zone.
     /// </summary>
-    public partial class IPProbeZoneProvider : BaseZoneProvider
+    public class IPProbeZoneProvider : BaseZoneProvider
     {
         private IPProbeProviderOptions options;
 
