@@ -25,16 +25,22 @@ namespace Dns
         private static SmartZoneResolver _zoneResolver; // resolver and delegated lookup for unsupported zones;
         private static DnsServer _dnsServer; // resolver and delegated lookup for unsupported zones;
         private static HttpServer _httpServer;
-        private static ManualResetEvent _exitTimeout = new ManualResetEvent(false);
-        private static CancellationTokenSource cts = new CancellationTokenSource();
 
-        // TODO: Move startup args into config file
-        public static void Main(string[] args)
+        /// <summary>
+        /// DNS Server entrypoint
+        /// </summary>
+        /// <param name="configFile">Fully qualified configuration filename</param>
+        /// <param name="cts">Cancellation Token Source</param>
+        public static void Run(string configFile, CancellationToken ct)
         {
-            Console.CancelKeyPress += Console_CancelKeyPress;
+
+            if (!File.Exists(configFile))
+            {
+                throw new FileNotFoundException(null, configFile);
+            }
 
             IConfiguration configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", true, true)
+                .AddJsonFile(configFile, true, true)
                 .Build();
 
             var appConfig = configuration.Get<Config.AppConfig>();
@@ -53,20 +59,19 @@ namespace Dns
 
             _dnsServer.Initialize(_zoneResolver);
 
-            _zoneProvider.Start(cts.Token);
-            _dnsServer.Start(cts.Token);
+            _zoneProvider.Start(ct);
+            _dnsServer.Start(ct);
 
             if(appConfig.Server.WebServer.Enabled)
             {
                 _httpServer.Initialize(string.Format("http://+:{0}/", appConfig.Server.WebServer.Port));
                 _httpServer.OnProcessRequest += _httpServer_OnProcessRequest;
                 _httpServer.OnHealthProbe += _httpServer_OnHealthProbe;
-                _httpServer.Start(cts.Token);
+                _httpServer.Start(ct);
             }
 
-            cts.Token.WaitHandle.WaitOne();
+            ct.WaitHandle.WaitOne();
 
-            _exitTimeout.Set();
         }
 
         static void _httpServer_OnHealthProbe(HttpListenerContext context)
@@ -108,13 +113,6 @@ namespace Dns
                     _httpServer.DumpHtml(writer);
                 }
             }
-        }
-
-        private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
-        {
-            Console.WriteLine("/r/nShutting Down");
-            cts.Cancel();
-            _exitTimeout.WaitOne(5000);
         }
 
         private static Type ByName(string name)
