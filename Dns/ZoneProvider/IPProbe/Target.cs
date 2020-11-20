@@ -1,9 +1,8 @@
 ﻿namespace Dns.ZoneProvider.IPProbe
 {
-    using System;
-    using System.Net;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
 
     internal class Target
     {
@@ -26,6 +25,16 @@
             }
         }
 
+        internal void AddResult(ProbeResult result)
+        {
+            this.Results.Add(result);
+            if (this.Results.Count > 10)
+            {
+                this.Results.RemoveAt(0);
+            }
+        }
+
+
         internal class Comparer : IEqualityComparer<Target>
         {
             public bool Equals(Target x, Target y)
@@ -42,15 +51,5 @@
                 return obj.GetHashCode();
             }
         }
-
-        internal void AddResult(ProbeResult result)
-        {
-            this.Results.Add(result);
-            if (this.Results.Count > 10)
-            {
-                this.Results.RemoveAt(0);
-            }
-        }
-
     }
 }
