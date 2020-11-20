@@ -46,7 +46,6 @@ namespace Dns
 
             _udpListener = new UdpListener();
             
-            // TODO: change DNS port to configurable setting
             _udpListener.Initialize(this.port);
             _udpListener.OnRequest += ProcessUdpRequest;
 
