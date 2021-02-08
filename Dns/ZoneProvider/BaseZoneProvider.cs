@@ -3,9 +3,22 @@ namespace Dns.ZoneProvider
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using System.Threading;
+
+    using Microsoft.Extensions.Configuration;
 
     public abstract class BaseZoneProvider : IObservable<Zone>, IDisposable
     {
+        internal uint _serial = 0;
+        private string _zone;
+        public string Zone
+        {
+            get { return _zone; }
+            protected set { _zone = value; }
+        }
+
+        public abstract void Initialize(IConfiguration config, string zoneName);
+
         private readonly List<IObserver<Zone>> _observers = new List<IObserver<Zone>>();
 
         public IDisposable Subscribe(IObserver<Zone> observer)
@@ -55,5 +68,8 @@ namespace Dns.ZoneProvider
                 remainingRetries--;
             }
         }
+
+        public abstract void Start(CancellationToken ct);
+        
     }
 }

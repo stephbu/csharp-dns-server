@@ -31,6 +31,13 @@ namespace Dns
 
         private ReaderWriterLockSlim _requestResponseMapLock = new ReaderWriterLockSlim();
 
+        private ushort port;
+
+        internal DnsServer(ushort port)
+        {
+            this.port = port;
+        }
+
         /// <summary>Initialize server with specified domain name resolver</summary>
         /// <param name="resolver"></param>
         public void Initialize(IDnsResolver resolver)
@@ -39,23 +46,17 @@ namespace Dns
 
             _udpListener = new UdpListener();
             
-            // TODO: change DNS port to configurable setting
-            _udpListener.Initialize(53);
+            _udpListener.Initialize(this.port);
             _udpListener.OnRequest += ProcessUdpRequest;
 
             _defaultDns = GetDefaultDNS().ToArray();
         }
 
         /// <summary>Start DNS listener</summary>
-        public void Start()
+        public void Start(CancellationToken ct)
         {
             _udpListener.Start();
-        }
-
-        /// <summary>Stop DNS Server</summary>
-        public void Stop()
-        {
-            _udpListener.Stop();
+            ct.Register(_udpListener.Stop);
         }
 
         /// <summary>Process UDP Request</summary>

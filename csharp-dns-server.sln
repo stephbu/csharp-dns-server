@@ -1,8 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dns", "dns\dns.csproj", "{6804468B-333A-4A7C-BFC1-FD4E498AB4A6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dnstest", "dnstest\dnstest.csproj", "{126A266A-FF89-4516-BF36-37774EA35CD6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dns-cli", "dns-cli\dns-cli.csproj", "{57BD1660-D9B3-4ABD-8F5F-9C89F4F1F8AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +21,15 @@ Global
 		{6804468B-333A-4A7C-BFC1-FD4E498AB4A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6804468B-333A-4A7C-BFC1-FD4E498AB4A6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6804468B-333A-4A7C-BFC1-FD4E498AB4A6}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{57BD1660-D9B3-4ABD-8F5F-9C89F4F1F8AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57BD1660-D9B3-4ABD-8F5F-9C89F4F1F8AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57BD1660-D9B3-4ABD-8F5F-9C89F4F1F8AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57BD1660-D9B3-4ABD-8F5F-9C89F4F1F8AE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = PrefixedHierarchical
+		$0.VersionControlPolicy = $2
 	EndGlobalSection
 EndGlobal

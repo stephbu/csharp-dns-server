@@ -11,10 +11,6 @@ namespace Dns.ZoneProvider.Bind
 
     public class BindZoneProvider : FileWatcherZoneProvider
     {
-        public BindZoneProvider(string filename) : base(filename)
-        {
-        }
-
         public override Zone GenerateZone()
         {
             // RFC 1035 - https://tools.ietf.org/html/rfc1035

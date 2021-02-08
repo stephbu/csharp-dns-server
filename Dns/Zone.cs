@@ -18,7 +18,6 @@ namespace Dns
         {
             this.Clear();
             this.AddRange(nameRecords);
-            // implement Zone storage and encoding
         }
     }
 }
