@@ -7,12 +7,6 @@ The project was conceived while working to reduce the cost of datacentre "stamps
 ## Licence
 This software is licenced under MIT terms that permits reuse within proprietary software provided all copies of the licensed software include a copy of the MIT License terms and the copyright notice.  See [licence.txt](./licence.txt)
 
-## Build Status
-
-| Branch | Status |
-|--------|--------|
-| master | [![Build status](https://ci.appveyor.com/api/projects/status/goayaopiib8tbyfv/branch/master?svg=true)](https://ci.appveyor.com/project/stephbu/csharp-dns-server/branch/master) |
-
 ## Getting Started
 
 ```
