@@ -13,7 +13,7 @@ namespace Dns
     using System.Threading;
     using System.Threading.Tasks;
 
-    public delegate void OnRequestHandler(SocketAsyncEventArgs args);
+    public delegate void OnRequestHandler(byte[] buffer, EndPoint remoteEndPoint);
 
     public class UdpListener
     {
@@ -51,7 +51,9 @@ namespace Dns
 
                         if (OnRequest != null)
                         {
-                            var process = Task.Run(() => OnRequest(args));
+                            var buffer = new byte[bytesRead];
+                            Buffer.BlockCopy(args.Buffer, 0, buffer, 0, buffer.Length);
+                            var process = Task.Run(() => OnRequest(buffer, args.RemoteEndPoint));
                         }
                         else
                         {

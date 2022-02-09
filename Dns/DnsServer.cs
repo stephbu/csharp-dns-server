@@ -61,10 +61,10 @@ namespace Dns
 
         /// <summary>Process UDP Request</summary>
         /// <param name="args"></param>
-        private void ProcessUdpRequest(SocketAsyncEventArgs args)
+        private void ProcessUdpRequest(byte[] buffer, EndPoint remoteEndPoint)
         {
             DnsMessage message;
-            if (!DnsProtocol.TryParse(args.Buffer, out message))
+            if (!DnsProtocol.TryParse(buffer, out message))
             {
                 // TODO log bad message
                 Console.WriteLine("unable to parse message");
@@ -79,7 +79,7 @@ namespace Dns
                 {
                     foreach (Question question in message.Questions)
                     {
-                        Console.WriteLine("{0} asked for {1} {2} {3}", args.RemoteEndPoint.ToString(),question.Name, question.Class, question.Type);
+                        Console.WriteLine("{0} asked for {1} {2} {3}", remoteEndPoint.ToString(),question.Name, question.Class, question.Type);
                         IPHostEntry entry;
                         if (question.Type == ResourceType.PTR)
                         {
@@ -126,7 +126,7 @@ namespace Dns
                             {
                                 string key = GetKeyName(message);
                                 _requestResponseMapLock.EnterWriteLock();
-                                _requestResponseMap.Add(key, args.RemoteEndPoint);
+                                _requestResponseMap.Add(key, remoteEndPoint);
                             }
                             finally
                             {
@@ -148,7 +148,7 @@ namespace Dns
                             else
                             {
                                 Interlocked.Increment(ref _responses);
-                                SendUdp(responseStream.GetBuffer(), 0, (int) responseStream.Position, args.RemoteEndPoint);
+                                SendUdp(responseStream.GetBuffer(), 0, (int) responseStream.Position, remoteEndPoint);
                             }
                         }
                     }
@@ -177,7 +177,7 @@ namespace Dns
                                     message.WriteToStream(responseStream);
                                     Interlocked.Increment(ref _responses);
 
-                                    Console.WriteLine("{0} answered {1} {2} {3} to {4}", args.RemoteEndPoint.ToString(), message.Questions[0].Name, message.Questions[0].Class, message.Questions[0].Type, ep.ToString());
+                                    Console.WriteLine("{0} answered {1} {2} {3} to {4}", remoteEndPoint.ToString(), message.Questions[0].Name, message.Questions[0].Class, message.Questions[0].Type, ep.ToString());
 
                                     SendUdp(responseStream.GetBuffer(), 0, (int)responseStream.Position, ep);
                                 }
