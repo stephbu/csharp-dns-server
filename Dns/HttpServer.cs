@@ -48,6 +48,8 @@ namespace Dns
         /// <summary>Start listening</summary>
         public async void Start(CancellationToken ct)
         {
+            _listener.Start();
+            _running = true;
             ct.Register(this.Stop);
 
             while (true)
@@ -79,7 +81,7 @@ namespace Dns
         /// <summary>Stop listening</summary>
         public void Stop()
         {
-            if (_running == true)
+            if (_running)
             {
                 _running = false;
             }
@@ -134,7 +136,7 @@ namespace Dns
         /// <summary>Process health probe request</summary>
         private void HealthProbe(HttpListenerContext context)
         {
-            
+
             if (this.OnHealthProbe != null)
             {
                 this.OnHealthProbe(context);
