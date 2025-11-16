@@ -40,6 +40,12 @@ The DNS server has a built-in Web Server providing operational insight into the 
 - counters
 - zone information
 
+## Documentation
+- [Product requirements](docs/product_requirements.md) describe the current roadmap, observability goals, and .NET maintenance plans.
+- [Project priorities](docs/priorities.md) outline the P0/P1/P2 focus areas (reliability, security/maintenance, features).
+- [Protocol references](docs/references.md) list the RFCs and supporting standards that guide implementation.
+- [AGENTS guide](AGENTS.md) explains how automation/AI contributors should work within this repository.
+
 ## Interesting Possible Uses
 Time-based constraints such as parental controls to block a site, e.g. Facebook.
 Logging of site usage e.g. company notifications
@@ -71,6 +77,7 @@ Suggested workflow for PRs is
 4. Squash your commits into a single change [(Find out how to squash here)](http://stackoverflow.com/questions/616556/how-do-you-squash-commits-into-one-patch-with-git-format-patch)
 5. Submit a PR, and put in comments anything that you think I'll need to help merge and evaluate the changes
 
+If you are using automated tooling or AI agents, please review [AGENTS.md](AGENTS.md) to ensure you follow the approved scope and workflow.
+
 ### Licence Reminder
 All contributions must be licenced under the same MIT terms, do include a header file to that effect.
-
