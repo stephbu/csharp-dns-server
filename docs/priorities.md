@@ -15,3 +15,8 @@
 - Deliver new zone providers (BIND, dynamic sources), parental-control/time-based policies, MAC-scoped records, and richer health-probe strategies.
 - Enhance management surfaces (API/UI) and AI-assist documentation (AGENTS.md) to streamline contributions.
 - Iterate on HTTP dashboards/metrics export per roadmap once P0/P1 goals are satisfied.
+
+## Execution Plan Highlights
+- **Dependency Injection**: migrate from Ninject to the built-in `Microsoft.Extensions.DependencyInjection` container across `Dns`, `dns-cli`, and supporting libraries as part of the P1 maintenance track.
+- **Telemetry Direction**: instrument the DNS server, zone providers, and HTTP endpoints with OpenTelemetry-compatible metrics/traces. External operators are expected to supply collectors/exporters; the codebase will emit OTLP-compatible data but will not bundle collector infrastructure.
+- **Roadmap Sync**: keep `docs/product_requirements.md`, this priorities doc, and `AGENTS.md` in sync whenever workstreams change so contributors understand current focus.

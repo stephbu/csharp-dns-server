@@ -42,7 +42,8 @@ The DNS server has a built-in Web Server providing operational insight into the 
 
 ## Documentation
 - [Product requirements](docs/product_requirements.md) describe the current roadmap, observability goals, and .NET maintenance plans.
-- [Project priorities](docs/priorities.md) outline the P0/P1/P2 focus areas (reliability, security/maintenance, features).
+- [Project priorities & plan](docs/priorities.md) outline the P0/P1/P2 focus areas plus execution notes (DI migration, OpenTelemetry instrumentation).
+- [Task list](docs/task_list.md) captures the prioritized backlog that tracks to those priorities.
 - [Protocol references](docs/references.md) list the RFCs and supporting standards that guide implementation.
 - [AGENTS guide](AGENTS.md) explains how automation/AI contributors should work within this repository.
 

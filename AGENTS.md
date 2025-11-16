@@ -5,6 +5,7 @@
 ## 1. Mission
 - Maintain and extend the `csharp-dns-server` so it becomes a production-ready DNS service with rich testing, observability, and zone-provider capabilities.
 - Follow the roadmap in `docs/product_requirements.md`, respect the priority tiers in `docs/priorities.md` (P0 reliability/protocol accuracy, P1 security & maintenance, P2 features), and focus on open GitHub issues aligned with those tiers.
+- Reference the prioritized backlog in `docs/task_list.md` when picking up work to stay aligned with near-term goals.
 
 ## 2. Repository Orientation
 | Project | Purpose | Notes |
