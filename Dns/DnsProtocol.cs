@@ -7,6 +7,8 @@
 namespace Dns
 {
     using System;
+    using System.Collections.Generic;
+    using System.IO;
     using System.Text;
 
     public class DnsProtocol
@@ -44,43 +46,83 @@ namespace Dns
         {
             StringBuilder resourceName = new StringBuilder();
             int compressionOffset = -1;
+            int readOffset = currentOffset;
+            HashSet<int> pointerVisitedOffsets = null;
+
             while (true)
             {
-                // get segment length or detect termination of segments
-                int segmentLength = bytes[currentOffset];
+                if (readOffset >= bytes.Length)
+                {
+                    throw new IndexOutOfRangeException("DNS label offset exceeded buffer length.");
+                }
 
-                // compressed name
+                int segmentLength = bytes[readOffset];
+
+                // compressed name pointer
                 if ((segmentLength & 0xC0) == 0xC0)
                 {
-                    currentOffset++;
-                    if (compressionOffset == -1)
+                    if (readOffset + 1 >= bytes.Length)
                     {
-                        // only record origin, and follow all pointers thereafter
-                        compressionOffset = currentOffset;
+                        throw new IndexOutOfRangeException("DNS compression pointer exceeds buffer length.");
                     }
 
-                    // move pointer to compression segment
-                    currentOffset = bytes[currentOffset];
-                    segmentLength = bytes[currentOffset];
+                    pointerVisitedOffsets ??= new HashSet<int>();
+                    if (!pointerVisitedOffsets.Add(readOffset))
+                    {
+                        throw new InvalidDataException("DNS compression pointer cycle detected.");
+                    }
+
+                    int pointer = ((segmentLength & 0x3F) << 8) | bytes[readOffset + 1];
+                    if (compressionOffset == -1)
+                    {
+                        // remember where to resume after following the pointer
+                        compressionOffset = readOffset + 2;
+                    }
+
+                    if (pointer >= bytes.Length)
+                    {
+                        throw new IndexOutOfRangeException("DNS compression pointer targets invalid offset.");
+                    }
+                    // RFC 1035 §4.1.4: Pointers must reference a prior occurrence of the same name,
+                    // must point to the start of a label, and forward references are prohibited.
+
+                    readOffset = pointer;
+                    continue;
                 }
 
                 if (segmentLength == 0x00)
                 {
-                    if (compressionOffset != -1)
-                    {
-                        currentOffset = compressionOffset;
-                    }
-                    // move past end of name \0
-                    currentOffset++;
+                    readOffset++;
                     break;
                 }
 
-                // move pass length and get segment text
-                currentOffset++;
-                resourceName.AppendFormat("{0}.", Encoding.Default.GetString(bytes, currentOffset, segmentLength));
-                currentOffset += segmentLength;
+                readOffset++;
+                if (segmentLength > 63)
+                {
+                    throw new InvalidDataException("DNS label length exceeds maximum of 63 bytes.");
+                }
+                if (readOffset + segmentLength > bytes.Length)
+                {
+                    throw new IndexOutOfRangeException("DNS label exceeds buffer length.");
+                }
+                // RFC 1035: DNS labels must be ASCII.
+                // This is an intentional breaking change; validate against existing usage if upgrading.
+                // Check for non-ASCII bytes before decoding
+                for (int i = 0; i < segmentLength; i++)
+                {
+                    if (bytes[readOffset + i] > 0x7F)
+                    {
+                        throw new InvalidDataException("DNS label contains non-ASCII characters, which are not allowed per RFC 1035.");
+                    }
+                }
+                string label = Encoding.ASCII.GetString(bytes, readOffset, segmentLength);
+                resourceName.Append(label).Append('.');
+                readOffset += segmentLength;
             }
-            return resourceName.ToString().TrimEnd(new[] {'.'});
+
+            currentOffset = compressionOffset == -1 ? readOffset : compressionOffset;
+
+            return resourceName.ToString().TrimEnd('.');
         }
     }
 }

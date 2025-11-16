@@ -6,6 +6,7 @@
 
 namespace DnsTest
 {
+    using System;
     using System.IO;
     using System.Linq;
     using System.Net;
@@ -188,6 +189,101 @@ namespace DnsTest
 
             // dump results
             query.Dump();
+        }
+
+        [Fact]
+        public void CompressedPointerBeyond255ParsesCorrectly()
+        {
+            byte[] buffer = new byte[400];
+
+            // create label at offset 300 ("bar")
+            int labelOffset = 300;
+            buffer[labelOffset] = 3;
+            buffer[labelOffset + 1] = (byte)'b';
+            buffer[labelOffset + 2] = (byte)'a';
+            buffer[labelOffset + 3] = (byte)'r';
+            buffer[labelOffset + 4] = 0x00;
+
+            // pointer referencing that label positioned later in the buffer
+            int pointerOffset = 360;
+            buffer[pointerOffset] = (byte)(0xC0 | ((labelOffset >> 8) & 0x3F));
+            buffer[pointerOffset + 1] = (byte)(labelOffset & 0xFF);
+
+            int offset = pointerOffset;
+            string result = DnsProtocol.ReadString(buffer, ref offset);
+
+            Assert.Equal("bar", result);
+            Assert.Equal(pointerOffset + 2, offset);
+        }
+
+        [Fact]
+        public void CompressedPointerCircularReferenceThrows()
+        {
+            byte[] buffer = new byte[100];
+            int pointerOffset = 50;
+            buffer[pointerOffset] = (byte)(0xC0 | ((pointerOffset >> 8) & 0x3F));
+            buffer[pointerOffset + 1] = (byte)(pointerOffset & 0xFF);
+
+            int offset = pointerOffset;
+            Assert.Throws<InvalidDataException>(() => DnsProtocol.ReadString(buffer, ref offset));
+        }
+
+        [Fact]
+        public void CompressedPointerBeyondBufferThrows()
+        {
+            byte[] buffer = new byte[100];
+            int pointerOffset = 60;
+            int invalidTarget = buffer.Length + 10;
+            buffer[pointerOffset] = (byte)(0xC0 | ((invalidTarget >> 8) & 0x3F));
+            buffer[pointerOffset + 1] = (byte)(invalidTarget & 0xFF);
+
+            int offset = pointerOffset;
+            var ex = Assert.Throws<IndexOutOfRangeException>(() => DnsProtocol.ReadString(buffer, ref offset));
+            Assert.Equal("DNS compression pointer targets invalid offset.", ex.Message);
+        }
+
+        [Fact]
+        public void CompressedPointerCanReferenceAnotherPointer()
+        {
+            byte[] buffer = new byte[200];
+
+            // base label at offset 10: "foo"
+            buffer[10] = 3;
+            buffer[11] = (byte)'f';
+            buffer[12] = (byte)'o';
+            buffer[13] = (byte)'o';
+            buffer[14] = 0x00;
+
+            // pointer B at offset 30 pointing to label at offset 10
+            buffer[30] = (byte)(0xC0 | ((10 >> 8) & 0x3F));
+            buffer[31] = (byte)(10 & 0xFF);
+
+            // pointer A at offset 60 pointing to pointer B at offset 30
+            buffer[60] = (byte)(0xC0 | ((30 >> 8) & 0x3F));
+            buffer[61] = (byte)(30 & 0xFF);
+
+            int offset = 60;
+            string name = DnsProtocol.ReadString(buffer, ref offset);
+
+            Assert.Equal("foo", name);
+            Assert.Equal(62, offset);
+        }
+
+        [Fact]
+        public void CompressedPointerTwoHopCycleThrows()
+        {
+            byte[] buffer = new byte[100];
+            int first = 10;
+            int second = 30;
+
+            buffer[first] = (byte)(0xC0 | ((second >> 8) & 0x3F));
+            buffer[first + 1] = (byte)(second & 0xFF);
+
+            buffer[second] = (byte)(0xC0 | ((first >> 8) & 0x3F));
+            buffer[second + 1] = (byte)(first & 0xFF);
+
+            int offset = first;
+            Assert.Throws<InvalidDataException>(() => DnsProtocol.ReadString(buffer, ref offset));
         }
 
         [Fact]
