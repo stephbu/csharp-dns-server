@@ -247,7 +247,7 @@ namespace Dns
 
                 foreach (IPAddress dns in dnsServers)
                 {
-                    Console.WriteLine("Discovered DNS: ", dns);
+                    Console.WriteLine("Discovered DNS: {0}", dns);
                     
                     yield return dns;
                 }
