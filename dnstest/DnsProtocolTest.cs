@@ -403,6 +403,34 @@ namespace DnsTest
         }
 
         [Fact]
+        public void ARecordParsingKeepsWireByteOrder()
+        {
+            byte[] response =
+            {
+                0x12, 0x34, 0x81, 0x80, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00,
+                0x07, 0x65, 0x78, 0x61, 0x6D, 0x70, 0x6C, 0x65, 0x03, 0x63, 0x6F, 0x6D, 0x00,
+                0x00, 0x01, 0x00, 0x01,
+                0xC0, 0x0C, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x0A, 0x00, 0x04,
+                0xC0, 0x00, 0x02, 0x0A
+            };
+
+            Assert.True(DnsMessage.TryParse(response, out var message));
+            Assert.Equal(1, message.AnswerCount);
+            Assert.Single(message.Answers);
+
+            var aRecord = Assert.IsType<ANameRData>(message.Answers[0].RData);
+            Assert.Equal(IPAddress.Parse("192.0.2.10"), aRecord.Address);
+
+            using MemoryStream stream = new MemoryStream();
+            message.WriteToStream(stream);
+            byte[] roundTrip = stream.ToArray();
+            Assert.True(roundTrip.Length >= 4);
+            byte[] emittedAddress = new byte[4];
+            Array.Copy(roundTrip, roundTrip.Length - 4, emittedAddress, 0, 4);
+            Assert.Equal(new byte[] { 0xC0, 0x00, 0x02, 0x0A }, emittedAddress);
+        }
+
+        [Fact]
         public void Opcode()
         {
             DnsMessage message = new DnsMessage();

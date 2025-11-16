@@ -30,7 +30,13 @@ namespace Dns
         public static ANameRData Parse(byte[] bytes, int offset, int size)
         {
             ANameRData aname = new ANameRData();
-            uint addressBytes = BitConverter.ToUInt32(bytes, offset);
+            if (size != 4)
+            {
+                throw new InvalidDataException("IPv4 RDATA must be 4 bytes long.");
+            }
+
+            byte[] addressBytes = new byte[size];
+            Buffer.BlockCopy(bytes, offset, addressBytes, 0, size);
             aname.Address = new IPAddress(addressBytes);
             return aname;
         }
