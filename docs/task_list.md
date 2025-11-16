@@ -20,3 +20,9 @@
 18. [ ] **T18 – Windows/NT service packaging** — Add installers/scripts so the server can run as a Windows service (issue #5).
 19. [ ] **T19 – DNSSEC support** — Add foundational DNSSEC record handling and validation paths (issue #2).
 20. [ ] **T20 – Documented static zone workflow** — Provide a simple static zone declaration option (issue #1) for setups that don’t rely on the BIND parser.
+21. [ ] **T21 – Fix AppVeyor build configuration** — Repair `appveyor.yml` so CI restores/builds/tests the .NET solution using the current SDK/runtime matrix.
+22. [ ] **T22 – Add GitHub Actions CI pipeline** — Introduce a workflow under `.github/workflows/` that restores, builds, and tests the solution on Windows/Linux runners aligned with PR gating guidance.
+23. [ ] **T23 – Correct IPv4 RDATA endianness (Critical)** — Fix `ANameRData.Parse` so addresses parsed from wire format are not byte-swapped before being forwarded to clients; add regression tests.
+24. [ ] **T24 – Stabilize UDP listener shutdown & endpoint capture (High)** — Ensure `UdpListener.Start` exits cleanly after `Stop()` and capture the remote endpoint per receive so responses aren’t misrouted.
+25. [ ] **T25 – Support larger UDP payloads (Medium)** — Increase `UdpListener` buffer sizing and/or detect truncated packets so EDNS-sized responses don’t silently corrupt parsing.
+26. [ ] **T26 – Allow full 8-bit DNS labels (Medium)** — Relax `DnsProtocol.ReadString` ASCII enforcement in line with RFC 2181 so internationalized/underscored names don’t throw.
