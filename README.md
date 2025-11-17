@@ -2,7 +2,7 @@
 
 [![GitHub Actions Status](https://github.com/stephbu/csharp-dns-server/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/stephbu/csharp-dns-server/actions/workflows/ci.yml)
 
-Fully functional DNS server written in C# targeting .NET 8 exclusively. Ensure the .NET 8 SDK is installed before building or testing.
+Fully functional DNS server written in C# targeting .NET 8. Ensure the .NET 8 SDK is installed before building or testing.
 
 The project was conceived while working to reduce the cost of datacentre "stamps" while providing robust services within a datacentre, specifically to remove the need for an expensive load-balancer device by providing round-robin DNS services, and retrying connectivity instead.
 
