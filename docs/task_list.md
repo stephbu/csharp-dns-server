@@ -26,3 +26,4 @@
 24. [ ] **T24 – Stabilize UDP listener shutdown & endpoint capture (High)** — Ensure `UdpListener.Start` exits cleanly after `Stop()` and capture the remote endpoint per receive so responses aren’t misrouted.
 25. [ ] **T25 – Support larger UDP payloads (Medium)** — Increase `UdpListener` buffer sizing and/or detect truncated packets so EDNS-sized responses don’t silently corrupt parsing.
 26. [ ] **T26 – Allow full 8-bit DNS labels (Medium)** — Relax `DnsProtocol.ReadString` ASCII enforcement in line with RFC 2181 so internationalized/underscored names don’t throw.
+27. [x] **T27 – Refresh VS Code launch/tasks configs** — Update `.vscode/launch.json` and `tasks.json` to mirror the current build/test/debug workflow so contributors get accurate defaults.
