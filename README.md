@@ -26,6 +26,9 @@ This software is licenced under MIT terms that permits reuse within proprietary 
 ## Gotchas
 - if you're running on Windows 10 with Docker Tools installed, Docker uses the ICS SharedAccess service to provide DNS resolution for Docker containers - this listens on UDP:53, and will conflict with the DNS project.  Either turn off the the service (```net stop SharedAccess```), or change the UDP port.
 
+## Continuous Integration
+All pushes and pull requests against `main` run through `.github/workflows/ci.yml`, a GitHub Actions pipeline that restores, builds, and tests the full `csharp-dns-server.sln` on both Ubuntu and Windows runners using the .NET 8 SDK.
+
 ## Features
 
 As written, the server has the following features:
