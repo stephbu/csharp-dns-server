@@ -2,7 +2,7 @@
 
 ## 1. Overview
 - **Purpose**: capture the feature, testing, and operational requirements needed to evolve the C# DNS server into a production-ready, multi-platform service and seed long-term maintenance/AI-assisted development.
-- **Current State**: single `.NET Core 3.1` solution (`Dns`, `dns-cli`, `dnstest`) providing an authoritative UDP DNS server with pluggable zone providers (CSV file, IP-health probes) and a minimal HTML status endpoint. No production deployments exist yet.
+- **Current State**: unified `.NET 8` solution (`Dns`, `dns-cli`, `dnstest`) providing an authoritative UDP DNS server with pluggable zone providers (CSV file, IP-health probes) and a minimal HTML status endpoint. No production deployments exist yet.
 - **Primary Goals**
   - Ship a reliable DNS service with extensible zone data sources, configurable health probes, and first-class observability.
   - Establish a comprehensive automated testing strategy.
@@ -92,4 +92,3 @@
 - Metrics/logging are exported in structured formats and consumed by dashboards.
 - At least one additional zone provider (BIND or equivalent) and enhanced health probes are production-ready.
 - `AGENTS.md` is published and successfully guides AI/automation contributions within the defined scope.
-

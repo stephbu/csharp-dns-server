@@ -2,7 +2,7 @@
 
 [![GitHub Actions Status](https://github.com/stephbu/csharp-dns-server/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/stephbu/csharp-dns-server/actions/workflows/ci.yml)
 
-Fully functional DNS server written in C#.
+Fully functional DNS server written in C# targeting .NET 8 exclusively. Ensure the .NET 8 SDK is installed before building or testing.
 
 The project was conceived while working to reduce the cost of datacentre "stamps" while providing robust services within a datacentre, specifically to remove the need for an expensive load-balancer device by providing round-robin DNS services, and retrying connectivity instead.
 
@@ -28,8 +28,10 @@ This software is licenced under MIT terms that permits reuse within proprietary 
 
 ```
 
+> **Note:** The solution targets `net8.0`; all commands above assume the .NET 8 SDK is available on your PATH.
+
 ## Gotchas
-- if you're running on Windows 10 with Docker Tools installed, Docker uses the ICS SharedAccess service to provide DNS resolution for Docker containers - this listens on UDP:53, and will conflict with the DNS project.  Either turn off the the service (```net stop SharedAccess```), or change the UDP port.
+- if you're running on Windows with Docker Tools installed, Docker uses the ICS SharedAccess service to provide DNS resolution for Docker containers - this listens on UDP:53, and will conflict with the DNS project.  Either turn off the the service (```net stop SharedAccess```), or change the UDP port.
 
 ## Continuous Integration
 All pushes and pull requests against `main` run through `.github/workflows/ci.yml`, a GitHub Actions pipeline that restores, builds, and tests the full `csharp-dns-server.sln` on both Ubuntu and Windows runners using the .NET 8 SDK.
