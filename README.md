@@ -24,7 +24,7 @@ This software is licenced under MIT terms that permits reuse within proprietary 
 >> dotnet test
 
 // use DIG query appconfig'd local server
-dig -p 5335 @127.0.0.1 www.google.com A 
+>> dig -p 5335 @127.0.0.1 www.google.com A 
 
 ```
 
