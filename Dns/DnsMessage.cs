@@ -56,8 +56,8 @@ namespace Dns
         /// <summary>Opcode</summary>
         public byte Opcode
         {
-            get { return (byte) ((this.Flags & 0x7800) >> 11); }
-            set { this.Flags = (ushort) ((this.Flags & ~0x7800) | (value << 11)); }
+            get { return (byte)((this.Flags & 0x7800) >> 11); }
+            set { this.Flags = (ushort)((this.Flags & ~0x7800) | (value << 11)); }
         }
 
         /// <summary>Is Authorative Answer</summary>
@@ -179,8 +179,8 @@ namespace Dns
 
         public byte RCode
         {
-            get { return (byte) (this.Flags & 0x000F); }
-            set { this.Flags = (ushort) ((this.Flags & ~0x000F) | value); }
+            get { return (byte)(this.Flags & 0x000F); }
+            set { this.Flags = (ushort)((this.Flags & ~0x000F) | value); }
         }
 
         public ushort AdditionalCount
@@ -288,7 +288,7 @@ namespace Dns
         {
             Console.WriteLine("QueryIdentifier:   0x{0:X4}", this.QueryIdentifier);
             Console.WriteLine("QR:                ({0}... .... .... ....) {1}", this.QR ? 1 : 0, this.QR ? "Response" : "Query");
-            Console.WriteLine("Opcode:            (.{0}{1}{2} {3}... .... ....) {4}", (this.Opcode & 1) > 1 ? 1 : 0, (this.Opcode & 2) > 1 ? 1 : 0, (this.Opcode & 4) > 1 ? 1 : 0, (this.Opcode & 8) > 1 ? 1 : 0, (OpCode) (this.Opcode));
+            Console.WriteLine("Opcode:            (.{0}{1}{2} {3}... .... ....) {4}", (this.Opcode & 1) > 1 ? 1 : 0, (this.Opcode & 2) > 1 ? 1 : 0, (this.Opcode & 4) > 1 ? 1 : 0, (this.Opcode & 8) > 1 ? 1 : 0, (OpCode)(this.Opcode));
             Console.WriteLine("AA:                (.... .{0}.. .... ....) {1}", this.AA ? 1 : 0, this.AA ? "Authoritative" : "Not Authoritative");
             Console.WriteLine("TC:                (.... ..{0}. .... ....) {1}", this.TC ? 1 : 0, this.TC ? "Truncated" : "Not Truncated");
             Console.WriteLine("RD:                (.... ...{0} .... ....) {1}", this.RD ? 1 : 0, this.RD ? "Recursion Desired" : "Recursion not desired");
@@ -296,7 +296,7 @@ namespace Dns
             Console.WriteLine("Zero:              (.... .... .0.. ....) 0");
             Console.WriteLine("AuthenticatedData: (.... .... ..{0}. ....) {1}", this.AuthenticatingData ? 1 : 0, this.AuthenticatingData ? "AuthenticatingData" : "Not AuthenticatingData");
             Console.WriteLine("CheckingDisabled:  (.... .... ...{0} ....) {1}", this.CheckingDisabled ? 1 : 0, this.CheckingDisabled ? "Checking Disabled" : "Not CheckingEnabled");
-            Console.WriteLine("RCode:             (.... .... .... {0}{1}{2}{3}) {4}", (this.RCode & 1) > 1 ? 1 : 0, (this.RCode & 2) > 1 ? 1 : 0, (this.RCode & 4) > 1 ? 1 : 0, (this.RCode & 8) > 1 ? 1 : 0, (RCode) (this.RCode));
+            Console.WriteLine("RCode:             (.... .... .... {0}{1}{2}{3}) {4}", (this.RCode & 1) > 1 ? 1 : 0, (this.RCode & 2) > 1 ? 1 : 0, (this.RCode & 4) > 1 ? 1 : 0, (this.RCode & 8) > 1 ? 1 : 0, (RCode)(this.RCode));
             Console.WriteLine("QuestionCount:     0x{0:X4}", this.QuestionCount);
             Console.WriteLine("AnswerCount:       0x{0:X4}", this.AnswerCount);
             Console.WriteLine("NameServerCount:   0x{0:X4}", this.NameServerCount);
@@ -316,7 +316,7 @@ namespace Dns
             {
                 foreach (ResourceRecord resource in this.Answers)
                 {
-                    Console.WriteLine("Record: {0} of type {1} on class {2}", resource.Name, (ResourceType) resource.Type, (ResourceClass)resource.Class);
+                    Console.WriteLine("Record: {0} of type {1} on class {2}", resource.Name, (ResourceType)resource.Type, (ResourceClass)resource.Class);
                     resource.Dump();
                     Console.WriteLine();
                 }

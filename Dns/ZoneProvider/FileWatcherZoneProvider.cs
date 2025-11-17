@@ -20,7 +20,7 @@ namespace Dns.ZoneProvider
         public event FileWatcherDelegate OnDeleted = delegate { };
         public event FileWatcherDelegate OnRenamed = delegate { };
         public event FileWatcherDelegate OnChanged = delegate { };
-        public event FileWatcherDelegate OnSettlement = delegate {};
+        public event FileWatcherDelegate OnSettlement = delegate { };
 
         private FileSystemWatcher _fileWatcher;
         private TimeSpan _settlement = TimeSpan.FromSeconds(10);
@@ -57,11 +57,11 @@ namespace Dns.ZoneProvider
             }
 
 
-            string directory = Path.GetDirectoryName(filename); 
+            string directory = Path.GetDirectoryName(filename);
             string fileNameFilter = Path.GetFileName(filename);
 
             this.Filename = filename;
-            this._fileWatcher = new FileSystemWatcher(directory, fileNameFilter); 
+            this._fileWatcher = new FileSystemWatcher(directory, fileNameFilter);
 
             this._fileWatcher.Created += (s, e) => this.OnCreated(s, e);
             this._fileWatcher.Changed += (s, e) => this.OnChanged(s, e);

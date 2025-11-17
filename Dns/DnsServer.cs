@@ -9,14 +9,14 @@ using System.Net.NetworkInformation;
 namespace Dns
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Net;
     using System.Net.Sockets;
     using System.Threading;
     using Dns.Contracts;
     using Microsoft.Win32;
-    using System.Linq;
-    using System.Collections.Generic;
 
     internal class DnsServer : IHtmlDump
     {
@@ -45,7 +45,7 @@ namespace Dns
             _resolver = resolver;
 
             _udpListener = new UdpListener();
-            
+
             _udpListener.Initialize(this.port);
             _udpListener.OnRequest += ProcessUdpRequest;
 
@@ -79,7 +79,7 @@ namespace Dns
                 {
                     foreach (Question question in message.Questions)
                     {
-                        Console.WriteLine("{0} asked for {1} {2} {3}", remoteEndPoint.ToString(),question.Name, question.Class, question.Type);
+                        Console.WriteLine("{0} asked for {1} {2} {3}", remoteEndPoint.ToString(), question.Name, question.Class, question.Type);
                         IPHostEntry entry;
                         if (question.Type == ResourceType.PTR)
                         {
@@ -89,7 +89,7 @@ namespace Dns
                                 message.AA = true;
                                 message.RA = false;
                                 message.AnswerCount++;
-                                message.Answers.Add(new ResourceRecord {Name = question.Name, Class = ResourceClass.IN, Type = ResourceType.PTR, TTL = 3600, DataLength = 0xB, RData = new DomainNamePointRData() {Name = "localhost"}});
+                                message.Answers.Add(new ResourceRecord { Name = question.Name, Class = ResourceClass.IN, Type = ResourceType.PTR, TTL = 3600, DataLength = 0xB, RData = new DomainNamePointRData() { Name = "localhost" } });
                             }
                         }
                         else if (_resolver.TryGetHostEntry(question.Name, question.Class, question.Type, out entry)) // Right zone, hostname/machine function does exist
@@ -97,11 +97,11 @@ namespace Dns
                             message.QR = true;
                             message.AA = true;
                             message.RA = false;
-                            message.RCode = (byte) RCode.NOERROR;
+                            message.RCode = (byte)RCode.NOERROR;
                             foreach (IPAddress address in entry.AddressList)
                             {
                                 message.AnswerCount++;
-                                message.Answers.Add(new ResourceRecord {Name = question.Name, Class = ResourceClass.IN, Type = ResourceType.A, TTL = 10, RData = new ANameRData {Address = address}});
+                                message.Answers.Add(new ResourceRecord { Name = question.Name, Class = ResourceClass.IN, Type = ResourceType.A, TTL = 10, RData = new ANameRData { Address = address } });
                             }
                         }
                         else if (question.Name.EndsWith(_resolver.GetZoneName())) // Right zone, but the hostname/machine function doesn't exist
@@ -109,16 +109,16 @@ namespace Dns
                             message.QR = true;
                             message.AA = true;
                             message.RA = false;
-                            message.RCode = (byte) RCode.NXDOMAIN;
+                            message.RCode = (byte)RCode.NXDOMAIN;
                             message.AnswerCount = 0;
                             message.Answers.Clear();
 
-                            var soaResourceData = new StatementOfAuthorityRData() {PrimaryNameServer = Environment.MachineName, ResponsibleAuthoritativeMailbox = "stephbu." + Environment.MachineName, Serial = _resolver.GetZoneSerial(), ExpirationLimit = 86400, RetryInterval = 300, RefreshInterval = 300, MinimumTTL = 300};
-                            var soaResourceRecord = new ResourceRecord {Class = ResourceClass.IN, Type = ResourceType.SOA, TTL = 300, RData = soaResourceData};
+                            var soaResourceData = new StatementOfAuthorityRData() { PrimaryNameServer = Environment.MachineName, ResponsibleAuthoritativeMailbox = "stephbu." + Environment.MachineName, Serial = _resolver.GetZoneSerial(), ExpirationLimit = 86400, RetryInterval = 300, RefreshInterval = 300, MinimumTTL = 300 };
+                            var soaResourceRecord = new ResourceRecord { Class = ResourceClass.IN, Type = ResourceType.SOA, TTL = 300, RData = soaResourceData };
                             message.NameServerCount++;
                             message.Authorities.Add(soaResourceRecord);
                         }
-                            // 
+                        // 
                         else // Referral to regular DC DNS servers
                         {
                             // store current IP address and Query ID.
@@ -142,13 +142,13 @@ namespace Dns
                                 // send to upstream DNS servers
                                 foreach (IPAddress dnsServer in _defaultDns)
                                 {
-                                    SendUdp(responseStream.GetBuffer(), 0, (int) responseStream.Position, new IPEndPoint(dnsServer, 53));
+                                    SendUdp(responseStream.GetBuffer(), 0, (int)responseStream.Position, new IPEndPoint(dnsServer, 53));
                                 }
                             }
                             else
                             {
                                 Interlocked.Increment(ref _responses);
-                                SendUdp(responseStream.GetBuffer(), 0, (int) responseStream.Position, remoteEndPoint);
+                                SendUdp(responseStream.GetBuffer(), 0, (int)responseStream.Position, remoteEndPoint);
                             }
                         }
                     }
@@ -238,7 +238,7 @@ namespace Dns
         /// <returns>List of configured DNS names</returns>
         private IEnumerable<IPAddress> GetDefaultDNS()
         {
-            NetworkInterface[] adapters  = NetworkInterface.GetAllNetworkInterfaces();
+            NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
             foreach (NetworkInterface adapter in adapters)
             {
 
@@ -248,10 +248,10 @@ namespace Dns
                 foreach (IPAddress dns in dnsServers)
                 {
                     Console.WriteLine("Discovered DNS: {0}", dns);
-                    
+
                     yield return dns;
                 }
-                    
+
             }
         }
 

@@ -1,4 +1,4 @@
-// //------------------------------------------------------------------------------------------------- 
+﻿// //------------------------------------------------------------------------------------------------- 
 // // <copyright file="CsvParser.cs" company="stephbu">
 // // Copyright (c) Steve Butler. All rights reserved.
 // // </copyright>
@@ -14,8 +14,8 @@ namespace Dns.Utility
     /// <summary>Parses CSV files</summary>
     public class CsvParser
     {
-        private static readonly char[] CSVDELIMITER = new[] {','};
-        private static readonly char[] COLONDELIMITER = new[] {':'};
+        private static readonly char[] CSVDELIMITER = new[] { ',' };
+        private static readonly char[] COLONDELIMITER = new[] { ':' };
 
         private readonly string _filePath;
 
@@ -46,43 +46,43 @@ namespace Dns.Utility
             {
                 using (FileStream stream = new FileStream(this._filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
                 using (StreamReader csvReader = new StreamReader(stream))
-                while (true)
-                {
-                    if (csvReader.Peek() < 0)
+                    while (true)
                     {
-                        yield break;
-                    }
-
-                    this._currentLine = csvReader.ReadLine();
-                    if (this._currentLine == null)
-                    {
-                        yield break;
-                    }
-                    if(this._currentLine.Trim() == string.Empty)
-                    {
-                        continue;
-                    }
-                    if ("#;".Contains(this._currentLine[0]))
-                    {
-                        // is a comment
-                        if (this._currentLine.Length > 1 && this._currentLine.Substring(1).StartsWith("Fields"))
+                        if (csvReader.Peek() < 0)
                         {
-                            string[] fieldDeclaration = this._currentLine.Split(COLONDELIMITER);
-                            if (fieldDeclaration.Length != 2)
+                            yield break;
+                        }
+
+                        this._currentLine = csvReader.ReadLine();
+                        if (this._currentLine == null)
+                        {
+                            yield break;
+                        }
+                        if (this._currentLine.Trim() == string.Empty)
+                        {
+                            continue;
+                        }
+                        if ("#;".Contains(this._currentLine[0]))
+                        {
+                            // is a comment
+                            if (this._currentLine.Length > 1 && this._currentLine.Substring(1).StartsWith("Fields"))
                             {
-                                this._fields = null;
-                            }
-                            else
-                            {
-                                this._fields = fieldDeclaration[1].Trim().Split(CSVDELIMITER);
+                                string[] fieldDeclaration = this._currentLine.Split(COLONDELIMITER);
+                                if (fieldDeclaration.Length != 2)
+                                {
+                                    this._fields = null;
+                                }
+                                else
+                                {
+                                    this._fields = fieldDeclaration[1].Trim().Split(CSVDELIMITER);
+                                }
                             }
                         }
+                        else
+                        {
+                            yield return new CsvRow(this._fields, this._currentLine.Split(CSVDELIMITER));
+                        }
                     }
-                    else
-                    {
-                        yield return new CsvRow(this._fields, this._currentLine.Split(CSVDELIMITER));
-                    }
-                }
             }
         }
 

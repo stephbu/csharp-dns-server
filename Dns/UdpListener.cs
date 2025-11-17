@@ -142,7 +142,7 @@ namespace Dns
         {
             if (m_eventArgs.SocketError != SocketError.Success)
             {
-                throw new SocketException((int) m_eventArgs.SocketError);
+                throw new SocketException((int)m_eventArgs.SocketError);
             }
         }
     }

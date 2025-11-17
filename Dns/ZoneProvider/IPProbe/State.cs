@@ -1,7 +1,7 @@
 ﻿namespace Dns.ZoneProvider.IPProbe
 {
-    using System.Net;
     using System.Collections.Generic;
+    using System.Net;
 
     internal class State
     {

@@ -1,4 +1,4 @@
-// //------------------------------------------------------------------------------------------------- 
+﻿// //------------------------------------------------------------------------------------------------- 
 // // <copyright file="CsvRow.cs" company="stephbu">
 // // Copyright (c) Steve Butler. All rights reserved.
 // // </copyright>
@@ -19,8 +19,8 @@ namespace Dns.Utility
             this._fieldValues = fieldValues;
             if ((fields != null) && (fields.Length == fieldValues.Length))
             {
-                
-                for(int index = 0; index < fields.Length; index++)
+
+                for (int index = 0; index < fields.Length; index++)
                 {
                     this._fieldsByName[fields[index]] = fieldValues[index];
                 }

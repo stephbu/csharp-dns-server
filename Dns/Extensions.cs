@@ -21,7 +21,7 @@ namespace Dns
 
         public static ushort SwapEndian(this ushort val)
         {
-            ushort value = (ushort) ((val << 8) | (val >> 8));
+            ushort value = (ushort)((val << 8) | (val >> 8));
             return value;
         }
 
@@ -42,7 +42,7 @@ namespace Dns
 
             using (MemoryStream stream = new MemoryStream(str.Length + 2))
             {
-                string[] segments = str.Split(new char[] {'.'});
+                string[] segments = str.Split(new char[] { '.' });
                 foreach (string segment in segments)
                 {
                     stream.WriteByte((byte)segment.Length);
@@ -89,14 +89,14 @@ namespace Dns
             long tempLong, temp;
 
             tempLong = ipLong;
-            temp = tempLong/(256*256*256);
-            tempLong = tempLong - (temp*256*256*256);
+            temp = tempLong / (256 * 256 * 256);
+            tempLong = tempLong - (temp * 256 * 256 * 256);
             b.Append(Convert.ToString(temp)).Append(".");
-            temp = tempLong/(256*256);
-            tempLong = tempLong - (temp*256*256);
+            temp = tempLong / (256 * 256);
+            tempLong = tempLong - (temp * 256 * 256);
             b.Append(Convert.ToString(temp)).Append(".");
-            temp = tempLong/256;
-            tempLong = tempLong - (temp*256);
+            temp = tempLong / 256;
+            tempLong = tempLong - (temp * 256);
             b.Append(Convert.ToString(temp)).Append(".");
             temp = tempLong;
             tempLong = tempLong - temp;

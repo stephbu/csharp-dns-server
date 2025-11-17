@@ -39,7 +39,7 @@ namespace Dns
             get { return this._zone; }
             set
             {
-                if(value == null) throw new ArgumentNullException("value");
+                if (value == null) throw new ArgumentNullException("value");
 
                 this._zone = value;
                 this._zoneReload = DateTime.Now;
@@ -107,7 +107,7 @@ namespace Dns
             if (_zoneMap.TryGetValue(key, out dispenser))
             {
                 Interlocked.Increment(ref this._hits);
-                entry = new IPHostEntry {AddressList = dispenser.GetAddresses().ToArray(), Aliases = new string[] {}, HostName = hostName};
+                entry = new IPHostEntry { AddressList = dispenser.GetAddresses().ToArray(), Aliases = new string[] { }, HostName = hostName };
                 return true;
             }
 

@@ -7,8 +7,8 @@
 namespace Dns
 {
     using System;
-    using Microsoft.Extensions.Caching.Memory;
     using Dns.Contracts;
+    using Microsoft.Extensions.Caching.Memory;
 
     public class DnsCache : IDnsCache
     {
@@ -17,7 +17,8 @@ namespace Dns
         byte[] IDnsCache.Get(string key)
         {
             byte[] entry;
-            if (_cache.TryGetValue(key, out entry)) {
+            if (_cache.TryGetValue(key, out entry))
+            {
                 return entry;
             }
 

@@ -16,7 +16,7 @@ namespace DnsCli
 
             Console.WriteLine("DNS Server - Console Mode");
 
-            if(args.Length == 0)
+            if (args.Length == 0)
             {
                 args = new string[] { "./appsettings.json" };
             }

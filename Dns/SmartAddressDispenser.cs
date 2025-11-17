@@ -37,15 +37,15 @@ namespace Dns
         {
             IPAddress[] addresses = _zoneRecord.Addresses;
 
-            if(addresses.Length == 0)
+            if (addresses.Length == 0)
             {
                 yield break;
             }
 
             // starting position in rollover list
-            int start = (int) (_sequence % (ulong) addresses.Length);
+            int start = (int)(_sequence % (ulong)addresses.Length);
             int offset = start;
-            
+
             uint count = 0;
             while (true)
             {

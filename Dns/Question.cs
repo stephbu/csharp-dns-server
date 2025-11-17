@@ -21,10 +21,10 @@ namespace Dns
             stream.Write(name, 0, name.Length);
 
             // Type
-            stream.Write(BitConverter.GetBytes(((ushort) (this.Type)).SwapEndian()), 0, 2);
+            stream.Write(BitConverter.GetBytes(((ushort)(this.Type)).SwapEndian()), 0, 2);
 
             // Class
-            stream.Write(BitConverter.GetBytes(((ushort) this.Class).SwapEndian()), 0, 2);
+            stream.Write(BitConverter.GetBytes(((ushort)this.Class).SwapEndian()), 0, 2);
         }
     }
 }

@@ -12,9 +12,8 @@ namespace Dns
     using System.Net;
     using System.Threading;
     using Dns.ZoneProvider.AP;
-
-    using Ninject;
     using Microsoft.Extensions.Configuration;
+    using Ninject;
 
     public class Program
     {
@@ -62,7 +61,7 @@ namespace Dns
             _zoneProvider.Start(ct);
             _dnsServer.Start(ct);
 
-            if(appConfig.Server.WebServer.Enabled)
+            if (appConfig.Server.WebServer.Enabled)
             {
                 _httpServer.Initialize(string.Format("http://+:{0}/", appConfig.Server.WebServer.Port));
                 _httpServer.OnProcessRequest += _httpServer_OnProcessRequest;
@@ -83,7 +82,7 @@ namespace Dns
             string rawUrl = context.Request.RawUrl;
             if (rawUrl == "/dump/dnsresolver")
             {
-                context.Response.Headers.Add("Content-Type","text/html");
+                context.Response.Headers.Add("Content-Type", "text/html");
                 using (TextWriter writer = context.Response.OutputStream.CreateWriter())
                 {
                     _zoneResolver.DumpHtml(writer);

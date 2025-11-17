@@ -42,7 +42,7 @@ namespace DnsTest
 
             bytes = BitConverter.GetBytes(0xAFFF);
             packer = new BitPacker(bytes);
-            
+
             Assert.True(packer.GetBoolean());
             Assert.True(packer.GetBoolean());
             Assert.Equal(15, packer.GetByte(4));
@@ -63,7 +63,7 @@ namespace DnsTest
 
             Assert.Equal(15, packer.GetByte(4));
             Assert.Equal(15, packer.GetByte(4));
-            Assert.Equal(0xAF,packer.GetUshort(8));
+            Assert.Equal(0xAF, packer.GetUshort(8));
 
             bytes = BitConverter.GetBytes(0x0CD000);
             packer = new BitPacker(bytes);
@@ -71,7 +71,7 @@ namespace DnsTest
             Assert.Equal(0x00, packer.GetByte(8));
             Assert.Equal(0x0CD0, packer.GetUshort(16));
 
-            bytes = BitConverter.GetBytes(0x000F << 1) ;
+            bytes = BitConverter.GetBytes(0x000F << 1);
             packer = new BitPacker(bytes);
             Assert.False(packer.GetBoolean());
             Assert.Equal(0xF, packer.GetUshort(8));

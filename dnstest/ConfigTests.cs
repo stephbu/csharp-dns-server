@@ -1,9 +1,8 @@
 ﻿using System;
-using Xunit;
+using Dns.Config;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
-
-using Dns.Config;
+using Xunit;
 
 namespace DnsTest
 {

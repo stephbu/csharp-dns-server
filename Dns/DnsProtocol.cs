@@ -30,14 +30,14 @@ namespace Dns
         public static ushort ReadUshort(byte[] bytes, ref int offset)
         {
             ushort ret = BitConverter.ToUInt16(bytes, offset);
-            offset += sizeof (ushort);
+            offset += sizeof(ushort);
             return ret;
         }
 
         public static uint ReadUint(byte[] bytes, ref int offset)
         {
             uint ret = BitConverter.ToUInt32(bytes, offset);
-            offset += sizeof (uint);
+            offset += sizeof(uint);
             return ret;
         }
 

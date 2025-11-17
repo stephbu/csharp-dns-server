@@ -15,7 +15,7 @@ namespace Dns
         public uint TTL { get; set; }
         public ResourceClass Class { get; set; }
         public ResourceType Type { get; set; }
-        public RData RData { get; set;}
+        public RData RData { get; set; }
         public ushort DataLength { get; set; }
 
         /// <summary>Serialize resource to stream according to RFC1034 format</summary>
@@ -27,7 +27,7 @@ namespace Dns
             ((ushort)(this.Class)).SwapEndian().WriteToStream(stream);
             this.TTL.SwapEndian().WriteToStream(stream);
 
-            if(this.RData != null)
+            if (this.RData != null)
             {
                 this.RData.Length.SwapEndian().WriteToStream(stream);
                 this.RData.WriteToStream(stream);

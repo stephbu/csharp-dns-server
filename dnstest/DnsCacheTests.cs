@@ -1,6 +1,6 @@
 using System;
-using System.Text;
 using System.Linq;
+using System.Text;
 using Xunit;
 
 namespace DnsTest
@@ -10,14 +10,16 @@ namespace DnsTest
     public class DnsCacheTests
     {
         [Fact]
-        public void Test1() {
+        public void Test1()
+        {
             Dns.Contracts.IDnsCache cache = new Dns.DnsCache();
             var invalidKeyResult = cache.Get("invalidTestKey");
             Xunit.Assert.Null(invalidKeyResult);
         }
 
         [Fact]
-        public void Test2() {
+        public void Test2()
+        {
             Dns.Contracts.IDnsCache cache = new Dns.DnsCache();
 
             string key = "sampleCacheKey";

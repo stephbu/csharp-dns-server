@@ -1,11 +1,11 @@
-namespace Dns.ZoneProvider.IPProbe
+﻿namespace Dns.ZoneProvider.IPProbe
 {
     using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using System.Net;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Microsoft.Extensions.Configuration;
 
 
@@ -66,8 +66,8 @@ namespace Dns.ZoneProvider.IPProbe
                 Console.WriteLine("Probe batch duration {0}", batchDuration);
 
                 // wait remainder of Polling Interval
-                var remainingWaitTimeout = (this.options.PollingIntervalSeconds * 1000) -(int)batchDuration.TotalMilliseconds;
-                if(remainingWaitTimeout > 0)
+                var remainingWaitTimeout = (this.options.PollingIntervalSeconds * 1000) - (int)batchDuration.TotalMilliseconds;
+                if (remainingWaitTimeout > 0)
                 {
                     ct.WaitHandle.WaitOne(remainingWaitTimeout);
                 }
@@ -82,7 +82,7 @@ namespace Dns.ZoneProvider.IPProbe
         public override void Start(CancellationToken ct)
         {
             ct.Register(this.Stop);
-            this.runningTask = Task.Run(()=>ProbeLoop(ct));
+            this.runningTask = Task.Run(() => ProbeLoop(ct));
         }
 
         private void Stop()
@@ -90,15 +90,15 @@ namespace Dns.ZoneProvider.IPProbe
             this.runningTask.Wait();
         }
 
-        internal IEnumerable<ZoneRecord>GetZoneRecords(State state)
+        internal IEnumerable<ZoneRecord> GetZoneRecords(State state)
         {
-            foreach(var host in state.Hosts)
+            foreach (var host in state.Hosts)
             {
                 var availableAddresses = host.AddressProbes
                     .Where(addr => addr.IsAvailable)
                     .Select(addr => addr.Address);
 
-                if(host.AvailabilityMode == AvailabilityMode.First)
+                if (host.AvailabilityMode == AvailabilityMode.First)
                 {
                     availableAddresses = availableAddresses.Take(1);
                 }

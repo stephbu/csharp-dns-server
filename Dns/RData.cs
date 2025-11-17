@@ -23,7 +23,7 @@ namespace Dns
     {
         public IPAddress Address
         {
-            get; 
+            get;
             set;
         }
 
@@ -67,7 +67,7 @@ namespace Dns
             // dots replaced by bytes 
             // + 1 segment prefix
             // + 1 null terminator
-            get { return (ushort) (Name.Length + 2); }
+            get { return (ushort)(Name.Length + 2); }
         }
 
         public static CNameRData Parse(byte[] bytes, int offset, int size)
@@ -178,7 +178,7 @@ namespace Dns
             // dots replaced by bytes 
             // + 1 segment prefix
             // + 1 null terminator
-            get { return (ushort) (PrimaryNameServer.Length + 2 + ResponsibleAuthoritativeMailbox.Length + 2 + 20); }
+            get { return (ushort)(PrimaryNameServer.Length + 2 + ResponsibleAuthoritativeMailbox.Length + 2 + 20); }
         }
 
         public override void WriteToStream(Stream stream)

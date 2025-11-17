@@ -25,17 +25,17 @@ namespace Dns
 
                 resourceRecord.Name = DnsProtocol.ReadString(bytes, ref currentOffset);
 
-                resourceRecord.Type = (ResourceType) (BitConverter.ToUInt16(bytes, currentOffset).SwapEndian());
-                currentOffset += sizeof (ushort);
+                resourceRecord.Type = (ResourceType)(BitConverter.ToUInt16(bytes, currentOffset).SwapEndian());
+                currentOffset += sizeof(ushort);
 
-                resourceRecord.Class = (ResourceClass) (BitConverter.ToUInt16(bytes, currentOffset).SwapEndian());
-                currentOffset += sizeof (ushort);
+                resourceRecord.Class = (ResourceClass)(BitConverter.ToUInt16(bytes, currentOffset).SwapEndian());
+                currentOffset += sizeof(ushort);
 
                 resourceRecord.TTL = BitConverter.ToUInt32(bytes, currentOffset).SwapEndian();
-                currentOffset += sizeof (uint);
+                currentOffset += sizeof(uint);
 
                 resourceRecord.DataLength = BitConverter.ToUInt16(bytes, currentOffset).SwapEndian();
-                currentOffset += sizeof (ushort);
+                currentOffset += sizeof(ushort);
 
                 if (resourceRecord.Class == ResourceClass.IN && resourceRecord.Type == ResourceType.A)
                 {
@@ -44,6 +44,10 @@ namespace Dns
                 else if (resourceRecord.Type == ResourceType.CNAME)
                 {
                     resourceRecord.RData = CNameRData.Parse(bytes, currentOffset, resourceRecord.DataLength);
+                }
+                else if (resourceRecord.Type == ResourceType.SOA)
+                {
+                    resourceRecord.RData = StatementOfAuthorityRData.Parse(bytes, currentOffset, resourceRecord.DataLength);
                 }
 
                 // move past resource data record

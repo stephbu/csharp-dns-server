@@ -24,10 +24,10 @@ namespace Dns
 
                 question.Name = DnsProtocol.ReadString(bytes, ref currentOffset);
 
-                question.Type = (ResourceType) (BitConverter.ToUInt16(bytes, currentOffset).SwapEndian());
+                question.Type = (ResourceType)(BitConverter.ToUInt16(bytes, currentOffset).SwapEndian());
                 currentOffset += 2;
 
-                question.Class = (ResourceClass) (BitConverter.ToUInt16(bytes, currentOffset).SwapEndian());
+                question.Class = (ResourceClass)(BitConverter.ToUInt16(bytes, currentOffset).SwapEndian());
                 currentOffset += 2;
 
                 this.Add(question);

@@ -1,10 +1,9 @@
-namespace Dns.ZoneProvider
+﻿namespace Dns.ZoneProvider
 {
     using System;
     using System.Collections.Generic;
-    using System.Threading.Tasks;
     using System.Threading;
-
+    using System.Threading.Tasks;
     using Microsoft.Extensions.Configuration;
 
     public abstract class BaseZoneProvider : IObservable<Zone>, IDisposable
@@ -70,6 +69,6 @@ namespace Dns.ZoneProvider
         }
 
         public abstract void Start(CancellationToken ct);
-        
+
     }
 }
