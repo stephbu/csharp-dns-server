@@ -28,3 +28,4 @@
 26. [ ] **T26 – Allow full 8-bit DNS labels (Medium)** — Relax `DnsProtocol.ReadString` ASCII enforcement in line with RFC 2181 so internationalized/underscored names don’t throw.
 27. [x] **T27 – Refresh VS Code launch/tasks configs** — Update `.vscode/launch.json` and `tasks.json` to mirror the current build/test/debug workflow so contributors get accurate defaults.
 28. [ ] **T28 – Evaluate grammar-based BIND parsing** — Prototype a BIND zone grammar in BNF/EBNF and assess tooling like Irony (lexer/parser generators) to simplify maintenance versus the current handwritten parser; document findings and recommended next steps.
+29. [ ] **T29 – IPv6 resolution support** — Extend SmartZoneResolver/DnsServer so AAAA records flow end-to-end (zone providers, dispensers, response writer) with regression tests proving dual-stack answers work across providers.
