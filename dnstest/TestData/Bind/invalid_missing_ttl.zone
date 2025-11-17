@@ -1,0 +1,9 @@
+$ORIGIN example.com.
+@ IN SOA ns1.example.com. hostmaster.example.com. (
+    2024010101
+    7200
+    3600
+    1209600
+    3600 )
+@ IN NS ns1.example.com.
+www IN A 10.0.0.1

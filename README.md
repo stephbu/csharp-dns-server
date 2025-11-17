@@ -48,6 +48,33 @@ The DNS server has a built-in Web Server providing operational insight into the 
 - counters
 - zone information
 
+## Zone Providers
+The server ships with several pluggable providers that publish authoritative data into `SmartZoneResolver`:
+
+- **CSV/AP provider** – watches a simple CSV file (`MachineFunction`, `StaticIP`) and publishes grouped A records for each function. See `docs/providers/AP_provider.md` for schema details.
+- **IPProbe provider** – continuously probes configured endpoints (ping/noop today) and only emits healthy addresses. Configuration and behavior live in `docs/providers/IPProbe_provider.md`.
+- **BIND zone provider** – watches a BIND-style forward zone file, parses `$ORIGIN`, `$TTL`, SOA/NS/A/AAAA/CNAME/MX/TXT records, and emits address records once the zone validates successfully.  Any lexical or semantic validation error (missing SOA/NS, malformed TTLs, unsupported record types, duplicate CNAMEs, etc.) is surfaced with line numbers and the previous zone continues serving traffic.
+  - See `docs/providers/BIND_provider.md` for configuration details, validation rules, and troubleshooting tips.
+
+### BIND Provider Configuration
+Add the provider via `appsettings.json` (both `Dns` and `dns-cli` hosts read the same shape):
+
+```json
+{
+  "server": {
+    "zone": {
+      "name": ".example.com",
+      "provider": "Dns.ZoneProvider.Bind.BindZoneProvider"
+    }
+  },
+  "zoneprovider": {
+    "FileName": "C:/zones/example.com.zone"
+  }
+}
+```
+
+The provider reads the file whenever it changes (a 10-second settlement window avoids partial writes), validates the directives/records, and only publishes `A`/`AAAA` data to SmartZoneResolver when the parse succeeds.  All other record types are parsed/validated so that zone files failing to meet RFC expectations never poison the active zone.
+
 ## Documentation
 - [Product requirements](docs/product_requirements.md) describe the current roadmap, observability goals, and .NET maintenance plans.
 - [Project priorities & plan](docs/priorities.md) outline the P0/P1/P2 focus areas plus execution notes (DI migration, OpenTelemetry instrumentation).

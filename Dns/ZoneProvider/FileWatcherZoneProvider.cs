@@ -107,7 +107,22 @@ namespace Dns.ZoneProvider
         private void OnTimer(object state)
         {
             this._timer.Change(Timeout.Infinite, Timeout.Infinite);
-            Task.Run(() => this.GenerateZone()).ContinueWith(t => this.Notify(t.Result));
+            Task.Run(() => this.GenerateZone()).ContinueWith(t =>
+            {
+                if (t.Status == TaskStatus.RanToCompletion)
+                {
+                    Zone generatedZone = t.Result;
+                    if (generatedZone != null)
+                    {
+                        this.Notify(generatedZone);
+                    }
+                }
+                else if (t.IsFaulted)
+                {
+                    Exception ex = t.Exception.GetBaseException();
+                    Console.WriteLine("Zone generation failed: {0}", ex.Message);
+                }
+            }, TaskScheduler.Default);
         }
 
 

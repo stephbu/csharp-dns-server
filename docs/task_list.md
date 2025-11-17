@@ -10,7 +10,7 @@
 8. [ ] **T08 – Instrument DNS & HTTP surfaces (OpenTelemetry-ready)** — Add metrics/tracing hooks (without bundling collectors) so operators can export via OTLP (issue #16).
 9. [x] **T09 – Fix CA2241 format warning** — Update the logging call in `Dns/DnsServer.cs` (line 250) to use the correct string-format arguments so builds are warning-free.
 10. [ ] **T10 – Secure HTTP admin surface** — Provide configuration for bindings/authz and document operational guidance to avoid exposing diagnostic endpoints unintentionally.
-11. [ ] **T11 – Complete BIND zone provider** — Implement parsing logic for `Dns/ZoneProvider/Bind`, supporting `$ORIGIN`, `$TTL`, and core record types (addresses “Static Zone declaration file” issue #1).
+11. [x] **T11 – Complete BIND zone provider** — Implement parsing logic for `Dns/ZoneProvider/Bind`, supporting `$ORIGIN`, `$TTL`, and core record types (addresses “Static Zone declaration file” issue #1).
 12. [ ] **T12 – Add dynamic configuration providers** — Introduce REST/service-backed configuration sources with validation and hot reload pipelines (issues #7/#8/#19).
 13. [ ] **T13 – Implement parental/time-based/MAC policies** — Deliver requested zone behaviors (issues #3/#4/#9) leveraging the SmartZoneResolver framework.
 14. [ ] **T14 – Extend health probes (HTTP/TCP)** — Add richer probe strategies with retries/weights within the IPProbe provider.
@@ -27,3 +27,4 @@
 25. [ ] **T25 – Support larger UDP payloads (Medium)** — Increase `UdpListener` buffer sizing and/or detect truncated packets so EDNS-sized responses don’t silently corrupt parsing.
 26. [ ] **T26 – Allow full 8-bit DNS labels (Medium)** — Relax `DnsProtocol.ReadString` ASCII enforcement in line with RFC 2181 so internationalized/underscored names don’t throw.
 27. [x] **T27 – Refresh VS Code launch/tasks configs** — Update `.vscode/launch.json` and `tasks.json` to mirror the current build/test/debug workflow so contributors get accurate defaults.
+28. [ ] **T28 – Evaluate grammar-based BIND parsing** — Prototype a BIND zone grammar in BNF/EBNF and assess tooling like Irony (lexer/parser generators) to simplify maintenance versus the current handwritten parser; document findings and recommended next steps.
