@@ -57,6 +57,7 @@ namespace Dns
         {
             _udpListener.Start();
             ct.Register(_udpListener.Stop);
+            Console.WriteLine("DNS server listening on port {0}", this.port);
         }
 
         /// <summary>Process UDP Request</summary>
