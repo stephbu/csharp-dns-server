@@ -63,6 +63,7 @@ Gotchas:
 
 ## 7. Testing Expectations
 - Minimum: `dotnet test csharp-dns-server.sln`.
+- The dns-cli integration harness (`dnstest/Integration` + `DnsCliAuthoritativeBehaviorTests`) runs automatically with `dotnet test`, spins up `dns-cli` using the sample assets in `dnstest/TestData`, and needs free TCP/UDP ports; keep configs deterministic when extending it.
 - For networking changes, add/extend unit tests in `dnstest` or new integration fixtures.
 - Capture repro cases for fixed bugs (#26 compressed pointers, #11 BitPacker write) and ensure tests fail before fixes.
 

@@ -1,7 +1,7 @@
 # Task List (Prioritized)
 
 1. [x] **T01 – Fix DNS compressed-name parsing regression** — Address issue #26 in `Dns/DnsProtocol`/`DnsMessage` and add regression tests to ensure compliant decoding/encoding under RFC 1035.
-2. [ ] **T02 – Authoritative response verification suite** — Create integration tests running `dns-cli` with sample zones to validate AA/RA/SOA behavior and caching semantics (P0 reliability).
+2. [x] **T02 – Authoritative response verification suite** — Added `dnstest` integration coverage that boots `dns-cli` with deterministic zone/config assets to assert AA/RA/SOA flags, TTL stability, and NXDOMAIN authority responses (run via `dotnet test csharp-dns-server.sln`).
 3. [ ] **T03 – Implement RFC 2308-compliant caching** — Extend `DnsServer`/`DnsCache` to honor positive/negative TTLs, flush stale entries, and cover with tests (issue #15).
 4. [ ] **T04 – Harden SmartZoneResolver concurrency** — Ensure zone reloads and address dispensers are thread-safe and resilient to null/empty provider updates.
 5. [ ] **T05 – Health-probe simulation tests** — Build deterministic tests for `Dns/ZoneProvider/IPProbe` strategies to guarantee consistent handling of latency/timeouts.

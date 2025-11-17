@@ -1,0 +1,6 @@
+#Version:1.0
+#Fields:MachineName,MachineFunction,StaticIP
+alpha-node,alpha,192.0.2.10
+rr-node-1,round,192.0.2.11
+rr-node-2,round,192.0.2.12
+rr-node-3,round,192.0.2.13
