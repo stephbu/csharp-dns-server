@@ -5,7 +5,7 @@
 3. [ ] **T03 – Implement RFC 2308-compliant caching** — Extend `DnsServer`/`DnsCache` to honor positive/negative TTLs, flush stale entries, and cover with tests (issue #15).
 4. [ ] **T04 – Harden SmartZoneResolver concurrency** — Ensure zone reloads and address dispensers are thread-safe and resilient to null/empty provider updates.
 5. [ ] **T05 – Health-probe simulation tests** — Build deterministic tests for `Dns/ZoneProvider/IPProbe` strategies to guarantee consistent handling of latency/timeouts.
-6. [ ] **T06 – Migrate to Microsoft.Extensions.DependencyInjection** — Replace Ninject usage in `Dns/Program.cs` and related projects with built-in DI, updating configuration wiring accordingly.
+6. [x] **T06 – Migrate to Microsoft.Extensions.DependencyInjection** — Replace Ninject usage in `Dns/Program.cs` and related projects with built-in DI, updating configuration wiring accordingly.
 7. [x] **T07 – Upgrade solution to .NET 8** — Move all projects to `net8.0`, update dependencies, and validate builds/tests across Windows/Linux.
 8. [ ] **T08 – Instrument DNS & HTTP surfaces (OpenTelemetry-ready)** — Add metrics/tracing hooks (without bundling collectors) so operators can export via OTLP (issue #16).
 9. [x] **T09 – Fix CA2241 format warning** — Update the logging call in `Dns/DnsServer.cs` (line 250) to use the correct string-format arguments so builds are warning-free.

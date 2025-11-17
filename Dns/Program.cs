@@ -11,14 +11,11 @@ namespace Dns
     using System.Linq;
     using System.Net;
     using System.Threading;
-    using Dns.ZoneProvider.AP;
     using Microsoft.Extensions.Configuration;
-    using Ninject;
+    using Microsoft.Extensions.DependencyInjection;
 
     public class Program
     {
-
-        private static IKernel container = new StandardKernel();
 
         private static ZoneProvider.BaseZoneProvider _zoneProvider; // reloads Zones from machineinfo.csv changes
         private static SmartZoneResolver _zoneResolver; // resolver and delegated lookup for unsupported zones;
@@ -43,18 +40,18 @@ namespace Dns
                 .Build();
 
             var appConfig = configuration.Get<Config.AppConfig>();
+            using var serviceProvider = BuildServiceProvider(configuration, appConfig);
 
-            container.Bind<ZoneProvider.BaseZoneProvider>().To(ByName(appConfig.Server.Zone.Provider));
             var zoneProviderConfig = configuration.GetSection("zoneprovider");
-            _zoneProvider = container.Get<ZoneProvider.BaseZoneProvider>();
+            _zoneProvider = serviceProvider.GetRequiredService<ZoneProvider.BaseZoneProvider>();
             _zoneProvider.Initialize(zoneProviderConfig, appConfig.Server.Zone.Name);
 
-            _zoneResolver = new SmartZoneResolver();
+            _zoneResolver = serviceProvider.GetRequiredService<SmartZoneResolver>();
             _zoneResolver.SubscribeTo(_zoneProvider);
 
-            _dnsServer = new DnsServer(appConfig.Server.DnsListener.Port);
+            _dnsServer = serviceProvider.GetRequiredService<DnsServer>();
 
-            _httpServer = new HttpServer();
+            _httpServer = serviceProvider.GetRequiredService<HttpServer>();
 
             _dnsServer.Initialize(_zoneResolver);
 
@@ -112,6 +109,28 @@ namespace Dns
                     _httpServer.DumpHtml(writer);
                 }
             }
+        }
+
+        private static ServiceProvider BuildServiceProvider(IConfiguration configuration, Config.AppConfig appConfig)
+        {
+            var services = new ServiceCollection();
+            services.AddSingleton(configuration);
+            services.AddSingleton(appConfig);
+            services.AddSingleton<SmartZoneResolver>();
+            services.AddSingleton<HttpServer>();
+            services.AddSingleton(provider => new DnsServer(appConfig.Server.DnsListener.Port));
+            services.AddSingleton<ZoneProvider.BaseZoneProvider>(provider =>
+            {
+                var zoneProviderType = ByName(appConfig.Server.Zone.Provider);
+                if (zoneProviderType == null || !typeof(ZoneProvider.BaseZoneProvider).IsAssignableFrom(zoneProviderType))
+                {
+                    throw new InvalidOperationException(string.Format("Unable to locate zone provider type '{0}'.", appConfig.Server.Zone.Provider));
+                }
+
+                return (ZoneProvider.BaseZoneProvider)ActivatorUtilities.CreateInstance(provider, zoneProviderType);
+            });
+
+            return services.BuildServiceProvider();
         }
 
         private static Type ByName(string name)

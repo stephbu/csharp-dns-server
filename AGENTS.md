@@ -16,7 +16,7 @@
 | `docs/` | Specs, PRD and future design docs. | `docs/product_requirements.md` drives priorities. |
 
 Key classes & files:
-- `Dns/Program.cs`: wiring for DI/config/servers.
+- `Dns/Program.cs`: wiring for DI/config/servers via `Microsoft.Extensions.DependencyInjection`.
 - `Dns/DnsServer.cs`: UDP DNS loop and upstream forwarding.
 - `Dns/SmartZoneResolver.cs`: in-memory zone cache & round-robin dispenser.
 - `Dns/HttpServer.cs`: embedded status/diagnostics surface.
