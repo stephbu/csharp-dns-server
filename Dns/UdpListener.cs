@@ -18,73 +18,184 @@ namespace Dns
     public class UdpListener
     {
         public OnRequestHandler OnRequest;
+
+        private readonly object _syncRoot = new object();
         private Socket _listener;
+        private CancellationTokenSource _cts;
+        private Task _receiveLoopTask;
+
+        public EndPoint LocalEndPoint => _listener?.LocalEndPoint;
 
         public void Initialize(ushort port = 53)
         {
+            if (_listener != null)
+            {
+                throw new InvalidOperationException("Listener already initialized.");
+            }
+
             _listener = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             IPEndPoint ep = new IPEndPoint(IPAddress.Any, port);
             _listener.Bind(ep);
         }
 
-        public async void Start()
+        public void Start()
         {
-            while (true)
+            if (_listener == null)
             {
-                try
-                {
-                    // Reusable SocketAsyncEventArgs and awaitable wrapper 
-                    SocketAsyncEventArgs args = new SocketAsyncEventArgs();
-                    args.SetBuffer(new byte[0x1000], 0, 0x1000);
-                    args.RemoteEndPoint = _listener.LocalEndPoint;
-                    SocketAwaitable awaitable = new SocketAwaitable(args);
+                throw new InvalidOperationException("Call Initialize before Start.");
+            }
 
-                    // Do processing, continually receiving from the socket 
-                    while (true)
-                    {
-                        await _listener.ReceiveFromAsync(awaitable);
-                        int bytesRead = args.BytesTransferred;
-                        if (bytesRead <= 0)
-                        {
-                            break;
-                        }
-
-                        if (OnRequest != null)
-                        {
-                            var buffer = new byte[bytesRead];
-                            Buffer.BlockCopy(args.Buffer, 0, buffer, 0, buffer.Length);
-                            var process = Task.Run(() => OnRequest(buffer, args.RemoteEndPoint));
-                        }
-                        else
-                        {
-                            // defaults to console dump if no listener is bound
-                            var dump = Task.Run(() => ProcessReceiveFrom(args));
-                        }
-                    }
-                }
-                catch (Exception ex)
+            lock (_syncRoot)
+            {
+                if (_cts != null)
                 {
-                    Console.WriteLine(ex.ToString());
+                    throw new InvalidOperationException("UDP listener already started.");
                 }
-                // listener restarts if an exception occurs
+
+                _cts = new CancellationTokenSource();
+                _receiveLoopTask = ReceiveLoopAsync(_cts.Token);
             }
         }
 
         public void Stop()
         {
-            _listener.Close();
+            CancellationTokenSource cts;
+            Task receiveLoop;
+
+            lock (_syncRoot)
+            {
+                if (_cts == null)
+                {
+                    return;
+                }
+
+                cts = _cts;
+                receiveLoop = _receiveLoopTask;
+                _cts = null;
+                _receiveLoopTask = null;
+            }
+
+            cts.Cancel();
+
+            _listener?.Close();
+
+            if (receiveLoop != null)
+            {
+                try
+                {
+                    receiveLoop.Wait();
+                }
+                catch (AggregateException ex)
+                {
+                    ex.Handle(inner => inner is OperationCanceledException || inner is ObjectDisposedException);
+                }
+            }
+
+            cts.Dispose();
         }
 
         public async void SendToAsync(SocketAsyncEventArgs args)
         {
+            if (_listener == null)
+            {
+                throw new InvalidOperationException("Listener is not initialized.");
+            }
+
             SocketAwaitable awaitable = new SocketAwaitable(args);
             await _listener.SendToAsync(awaitable);
         }
 
-        public void ProcessReceiveFrom(SocketAsyncEventArgs args)
+        private async Task ReceiveLoopAsync(CancellationToken ct)
         {
-            Console.WriteLine(args.RemoteEndPoint.ToString());
-            Console.WriteLine(args.BytesTransferred);
+            Socket listener = _listener;
+            if (listener == null)
+            {
+                return;
+            }
+
+            SocketAsyncEventArgs args = new SocketAsyncEventArgs();
+            args.SetBuffer(new byte[0x1000], 0, 0x1000);
+            SocketAwaitable awaitable = new SocketAwaitable(args);
+
+            try
+            {
+                while (!ct.IsCancellationRequested)
+                {
+                    args.RemoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
+
+                    try
+                    {
+                        await listener.ReceiveFromAsync(awaitable);
+                        int bytesRead = args.BytesTransferred;
+                        if (bytesRead <= 0)
+                        {
+                            continue;
+                        }
+
+                        byte[] payload = new byte[bytesRead];
+                        Buffer.BlockCopy(args.Buffer, 0, payload, 0, bytesRead);
+
+                        EndPoint remoteClone = CloneEndPoint(args.RemoteEndPoint);
+
+                        if (OnRequest != null)
+                        {
+                            _ = Task.Run(() => OnRequest(payload, remoteClone));
+                        }
+                        else
+                        {
+                            _ = Task.Run(() => ProcessReceiveFrom(remoteClone, payload.Length));
+                        }
+                    }
+                    catch (ObjectDisposedException)
+                    {
+                        if (ct.IsCancellationRequested)
+                        {
+                            break;
+                        }
+
+                        throw;
+                    }
+                    catch (SocketException ex)
+                    {
+                        if (ct.IsCancellationRequested && (ex.SocketErrorCode == SocketError.OperationAborted || ex.SocketErrorCode == SocketError.Interrupted))
+                        {
+                            break;
+                        }
+
+                        Console.WriteLine(ex.ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.ToString());
+                    }
+                }
+            }
+            finally
+            {
+                args.Dispose();
+            }
+        }
+
+        private static EndPoint CloneEndPoint(EndPoint endpoint)
+        {
+            if (endpoint == null)
+            {
+                return null;
+            }
+
+            if (endpoint is IPEndPoint ip)
+            {
+                return new IPEndPoint(ip.Address, ip.Port);
+            }
+
+            SocketAddress address = endpoint.Serialize();
+            return endpoint.Create(address);
+        }
+
+        public void ProcessReceiveFrom(EndPoint remoteEndPoint, int bytesTransferred)
+        {
+            Console.WriteLine(remoteEndPoint?.ToString());
+            Console.WriteLine(bytesTransferred);
         }
     }
 
