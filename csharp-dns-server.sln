@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dns", "Dns\Dns.csproj", "{6804468B-333A-4A7C-BFC1-FD4E498AB4A6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dns", "Dns\Dns.csproj", "{6804468B-333A-4A7C-BFC1-FD4E498AB4A6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dnstest", "dnstest\dnstest.csproj", "{126A266A-FF89-4516-BF36-37774EA35CD6}"
 EndProject

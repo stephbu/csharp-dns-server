@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\dns\dns.csproj" />
+    <ProjectReference Include="..\Dns\Dns.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="appsettings.json" />
