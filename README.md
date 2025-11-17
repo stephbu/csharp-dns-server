@@ -1,6 +1,6 @@
 # csharp-dns-server
 
-[![GitHub Actions Status](https://github.com/stephbu/csharp-dns-server/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/stephbu/csharp-dns-server/actions/workflows/ci.yml)
+[![GitHub Actions Status](https://github.com/stephbu/csharp-dns-server/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/stephbu/csharp-dns-server/actions/workflows/ci.yml)
 
 Fully functional DNS server written in C#.
 
