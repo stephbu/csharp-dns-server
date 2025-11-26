@@ -7,6 +7,7 @@
 namespace Dns
 {
     using System;
+    using System.Buffers.Binary;
     using System.IO;
 
     public class DnsMessage
@@ -31,8 +32,8 @@ namespace Dns
             set
             {
                 _flags = value.SwapEndian();
-                byte[] bytes = BitConverter.GetBytes(_flags);
-                bytes.CopyTo(_header, 2);
+                // Phase 5: Use BinaryPrimitives to write directly to header (zero allocation)
+                BinaryPrimitives.WriteUInt16LittleEndian(_header.AsSpan(2), _flags);
             }
         }
 
@@ -189,8 +190,8 @@ namespace Dns
             set
             {
                 _additionalCount = value;
-                byte[] bytes = BitConverter.GetBytes(_additionalCount.SwapEndian());
-                bytes.CopyTo(_header, 10);
+                // Phase 5: Use BinaryPrimitives to write directly to header (zero allocation)
+                BinaryPrimitives.WriteUInt16BigEndian(_header.AsSpan(10), _additionalCount);
             }
         }
 
@@ -200,8 +201,8 @@ namespace Dns
             set
             {
                 _answerCount = value;
-                byte[] bytes = BitConverter.GetBytes(_answerCount.SwapEndian());
-                bytes.CopyTo(_header, 6);
+                // Phase 5: Use BinaryPrimitives to write directly to header (zero allocation)
+                BinaryPrimitives.WriteUInt16BigEndian(_header.AsSpan(6), _answerCount);
             }
         }
 
@@ -211,8 +212,8 @@ namespace Dns
             set
             {
                 _nameServerCount = value;
-                byte[] bytes = BitConverter.GetBytes(_nameServerCount.SwapEndian());
-                bytes.CopyTo(_header, 8);
+                // Phase 5: Use BinaryPrimitives to write directly to header (zero allocation)
+                BinaryPrimitives.WriteUInt16BigEndian(_header.AsSpan(8), _nameServerCount);
             }
         }
 
@@ -222,8 +223,8 @@ namespace Dns
             set
             {
                 _queryIdentifier = value;
-                byte[] bytes = BitConverter.GetBytes(_queryIdentifier.SwapEndian());
-                bytes.CopyTo(_header, 0);
+                // Phase 5: Use BinaryPrimitives to write directly to header (zero allocation)
+                BinaryPrimitives.WriteUInt16BigEndian(_header.AsSpan(0), _queryIdentifier);
             }
         }
 
@@ -233,8 +234,8 @@ namespace Dns
             set
             {
                 _questionCount = value;
-                byte[] bytes = BitConverter.GetBytes(_questionCount.SwapEndian());
-                bytes.CopyTo(_header, 4);
+                // Phase 5: Use BinaryPrimitives to write directly to header (zero allocation)
+                BinaryPrimitives.WriteUInt16BigEndian(_header.AsSpan(4), _questionCount);
             }
         }
 
@@ -274,12 +275,15 @@ namespace Dns
             }
 
             Buffer.BlockCopy(bytes, 0, _header, 0, 12);
-            _queryIdentifier = BitConverter.ToUInt16(_header, 0).SwapEndian();
-            _flags = BitConverter.ToUInt16(_header, 2);
-            _questionCount = BitConverter.ToUInt16(_header, 4).SwapEndian();
-            _answerCount = BitConverter.ToUInt16(_header, 6).SwapEndian();
-            _nameServerCount = BitConverter.ToUInt16(_header, 8).SwapEndian();
-            _additionalCount = BitConverter.ToUInt16(_header, 10).SwapEndian();
+
+            // Phase 5: Use BinaryPrimitives for reading (cleaner, no SwapEndian needed)
+            var headerSpan = _header.AsSpan();
+            _queryIdentifier = BinaryPrimitives.ReadUInt16BigEndian(headerSpan);
+            _flags = BinaryPrimitives.ReadUInt16LittleEndian(headerSpan.Slice(2)); // Flags stored in little-endian
+            _questionCount = BinaryPrimitives.ReadUInt16BigEndian(headerSpan.Slice(4));
+            _answerCount = BinaryPrimitives.ReadUInt16BigEndian(headerSpan.Slice(6));
+            _nameServerCount = BinaryPrimitives.ReadUInt16BigEndian(headerSpan.Slice(8));
+            _additionalCount = BinaryPrimitives.ReadUInt16BigEndian(headerSpan.Slice(10));
 
             return 12;
         }

@@ -7,6 +7,7 @@
 namespace Dns
 {
     using System;
+    using System.Buffers.Binary;
     using System.Collections.Generic;
     using System.IO;
 
@@ -25,16 +26,18 @@ namespace Dns
 
                 resourceRecord.Name = DnsProtocol.ReadString(bytes, ref currentOffset);
 
-                resourceRecord.Type = (ResourceType)(BitConverter.ToUInt16(bytes, currentOffset).SwapEndian());
+                // Phase 5: Use BinaryPrimitives for zero-allocation reads
+                var span = bytes.AsSpan(currentOffset);
+                resourceRecord.Type = (ResourceType)BinaryPrimitives.ReadUInt16BigEndian(span);
                 currentOffset += sizeof(ushort);
 
-                resourceRecord.Class = (ResourceClass)(BitConverter.ToUInt16(bytes, currentOffset).SwapEndian());
+                resourceRecord.Class = (ResourceClass)BinaryPrimitives.ReadUInt16BigEndian(span.Slice(2));
                 currentOffset += sizeof(ushort);
 
-                resourceRecord.TTL = BitConverter.ToUInt32(bytes, currentOffset).SwapEndian();
+                resourceRecord.TTL = BinaryPrimitives.ReadUInt32BigEndian(span.Slice(4));
                 currentOffset += sizeof(uint);
 
-                resourceRecord.DataLength = BitConverter.ToUInt16(bytes, currentOffset).SwapEndian();
+                resourceRecord.DataLength = BinaryPrimitives.ReadUInt16BigEndian(span.Slice(8));
                 currentOffset += sizeof(ushort);
 
                 if (resourceRecord.Class == ResourceClass.IN && resourceRecord.Type == ResourceType.A)

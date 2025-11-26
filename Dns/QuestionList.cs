@@ -7,6 +7,7 @@
 namespace Dns
 {
     using System;
+    using System.Buffers.Binary;
     using System.Collections.Generic;
     using System.IO;
 
@@ -24,10 +25,12 @@ namespace Dns
 
                 question.Name = DnsProtocol.ReadString(bytes, ref currentOffset);
 
-                question.Type = (ResourceType)(BitConverter.ToUInt16(bytes, currentOffset).SwapEndian());
+                // Phase 5: Use BinaryPrimitives for zero-allocation reads
+                var span = bytes.AsSpan(currentOffset);
+                question.Type = (ResourceType)BinaryPrimitives.ReadUInt16BigEndian(span);
                 currentOffset += 2;
 
-                question.Class = (ResourceClass)(BitConverter.ToUInt16(bytes, currentOffset).SwapEndian());
+                question.Class = (ResourceClass)BinaryPrimitives.ReadUInt16BigEndian(span.Slice(2));
                 currentOffset += 2;
 
                 this.Add(question);

@@ -2,7 +2,7 @@
 <html lang='en'>
 <head>
 <meta charset='utf-8' />
-<title>DnsBench.DnsMessageBenchmarks-20251125-235803</title>
+<title>DnsBench.DnsMessageBenchmarks-20251126-011119</title>
 
 <style type="text/css">
 	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
@@ -22,19 +22,19 @@ Apple M1 Max, 1 CPU, 10 logical and 10 physical cores
 <pre><code></code></pre>
 
 <table>
-<thead><tr><th>Method                           </th><th>Mean</th><th>Error</th><th>StdDev</th><th>Gen0</th><th>Gen1</th><th>Allocated</th>
+<thead><tr><th>Method                           </th><th>Mean</th><th>Error</th><th>StdDev</th><th>Median</th><th>Gen0</th><th>Gen1</th><th>Allocated</th>
 </tr>
-</thead><tbody><tr><td>&#39;Parse: Simple query&#39;</td><td>272.8 ns</td><td>2.88 ns</td><td>2.70 ns</td><td>0.1669</td><td>-</td><td>1048 B</td>
-</tr><tr><td>&#39;Parse: AAAA query&#39;</td><td>293.5 ns</td><td>1.71 ns</td><td>1.51 ns</td><td>0.1783</td><td>-</td><td>1120 B</td>
-</tr><tr><td>&#39;Parse: Simple response (1 A)&#39;</td><td>292.1 ns</td><td>2.62 ns</td><td>2.32 ns</td><td>0.1974</td><td>-</td><td>1240 B</td>
-</tr><tr><td>&#39;Parse: CNAME response (2 records)&#39;</td><td>616.7 ns</td><td>3.85 ns</td><td>3.41 ns</td><td>0.4587</td><td>0.0010</td><td>2880 B</td>
-</tr><tr><td>&#39;Parse: Large response (12 records)&#39;</td><td>2,738.8 ns</td><td>14.46 ns</td><td>12.82 ns</td><td>2.1782</td><td>0.0229</td><td>13664 B</td>
-</tr><tr><td>&#39;Write: Query (new MemoryStream)&#39;</td><td>144.6 ns</td><td>0.77 ns</td><td>0.64 ns</td><td>0.1528</td><td>0.0002</td><td>960 B</td>
-</tr><tr><td>&#39;Write: Response (new MemoryStream)&#39;</td><td>396.1 ns</td><td>1.88 ns</td><td>1.66 ns</td><td>0.2217</td><td>-</td><td>1392 B</td>
-</tr><tr><td>&#39;Write: Query (reused MemoryStream)&#39;</td><td>123.6 ns</td><td>0.56 ns</td><td>0.52 ns</td><td>0.0572</td><td>-</td><td>360 B</td>
-</tr><tr><td>&#39;Write: Response (reused MemoryStream)&#39;</td><td>367.3 ns</td><td>1.44 ns</td><td>1.21 ns</td><td>0.1259</td><td>-</td><td>792 B</td>
-</tr><tr><td>&#39;Round-trip: Parse + Write query&#39;</td><td>427.3 ns</td><td>2.62 ns</td><td>2.45 ns</td><td>0.3376</td><td>0.0005</td><td>2120 B</td>
-</tr><tr><td>&#39;Round-trip: Parse + Write response&#39;</td><td>1,190.5 ns</td><td>3.10 ns</td><td>2.59 ns</td><td>0.7420</td><td>0.0019</td><td>4656 B</td>
+</thead><tbody><tr><td>&#39;Parse: Simple query&#39;</td><td>107.3 ns</td><td>0.64 ns</td><td>0.54 ns</td><td>107.4 ns</td><td>0.0675</td><td>-</td><td>424 B</td>
+</tr><tr><td>&#39;Parse: AAAA query&#39;</td><td>112.0 ns</td><td>0.65 ns</td><td>0.54 ns</td><td>112.1 ns</td><td>0.0688</td><td>-</td><td>432 B</td>
+</tr><tr><td>&#39;Parse: Simple response (1 A)&#39;</td><td>172.5 ns</td><td>0.50 ns</td><td>0.45 ns</td><td>172.5 ns</td><td>0.1261</td><td>-</td><td>792 B</td>
+</tr><tr><td>&#39;Parse: CNAME response (2 records)&#39;</td><td>333.3 ns</td><td>4.49 ns</td><td>4.20 ns</td><td>332.1 ns</td><td>0.2193</td><td>0.0005</td><td>1376 B</td>
+</tr><tr><td>&#39;Parse: Large response (12 records)&#39;</td><td>1,412.8 ns</td><td>27.71 ns</td><td>51.36 ns</td><td>1,396.3 ns</td><td>0.9022</td><td>0.0095</td><td>5664 B</td>
+</tr><tr><td>&#39;Write: Query (new MemoryStream)&#39;</td><td>147.4 ns</td><td>1.47 ns</td><td>1.15 ns</td><td>147.2 ns</td><td>0.1528</td><td>0.0002</td><td>960 B</td>
+</tr><tr><td>&#39;Write: Response (new MemoryStream)&#39;</td><td>400.4 ns</td><td>5.25 ns</td><td>4.65 ns</td><td>398.6 ns</td><td>0.2217</td><td>-</td><td>1392 B</td>
+</tr><tr><td>&#39;Write: Query (reused MemoryStream)&#39;</td><td>126.6 ns</td><td>2.51 ns</td><td>3.84 ns</td><td>124.6 ns</td><td>0.0572</td><td>-</td><td>360 B</td>
+</tr><tr><td>&#39;Write: Response (reused MemoryStream)&#39;</td><td>368.4 ns</td><td>3.39 ns</td><td>2.83 ns</td><td>368.0 ns</td><td>0.1259</td><td>-</td><td>792 B</td>
+</tr><tr><td>&#39;Round-trip: Parse + Write query&#39;</td><td>319.9 ns</td><td>2.61 ns</td><td>2.18 ns</td><td>319.4 ns</td><td>0.2384</td><td>0.0005</td><td>1496 B</td>
+</tr><tr><td>&#39;Round-trip: Parse + Write response&#39;</td><td>912.5 ns</td><td>5.30 ns</td><td>4.69 ns</td><td>911.8 ns</td><td>0.5016</td><td>0.0019</td><td>3152 B</td>
 </tr></tbody></table>
 </body>
 </html>
