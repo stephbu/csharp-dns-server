@@ -2,7 +2,7 @@
 
 ## 1. Overview
 - **Purpose**: capture the feature, testing, and operational requirements needed to evolve the C# DNS server into a production-ready, multi-platform service and seed long-term maintenance/AI-assisted development.
-- **Current State**: unified `.NET 8` solution (`Dns`, `dns-cli`, `dnstest`) providing an authoritative UDP DNS server with pluggable zone providers (CSV file, IP-health probes) and a minimal HTML status endpoint. No production deployments exist yet.
+- **Current State**: unified `.NET 8` solution (`Dns`, `dns-cli`, `dnstest`) providing an authoritative UDP DNS server with pluggable zone providers (CSV file, IP-health probes) and a minimal HTML status endpoint. The .NET 8 migration is complete. No production deployments exist yet.
 - **Primary Goals**
   - Ship a reliable DNS service with extensible zone data sources, configurable health probes, and first-class observability.
   - Establish a comprehensive automated testing strategy.
@@ -16,7 +16,7 @@
   - Support AAAA, CNAME, and MX records emitted by zone providers.
   - Provide an extension point for future record types (SRV, TXT).
 - Implement RFC-compliant caching with configurable TTL respect (`Issue #15`).
-- Add DNSSEC parsing/response stubs with a roadmap to full signing/validation (`Issue #2`).
+- Add DNSSEC support in phases: (1) EDNS(0) prerequisite, (2) DNSSEC record parsing (RRSIG, DNSKEY, DS, NSEC), (3) validating resolver for upstream responses, and (4) future authoritative zone signing (`Issue #2`). Coordinate buffer/memory changes with performance tuning (`Issue #29`).
 - Fix compressed-pointer parsing defects and add regression tests (`Issue #26`).
 
 ### 2.2 Zone Providers & Configuration
@@ -55,13 +55,12 @@
 - **Security**: define TLS requirements for HTTP endpoints, access control for admin APIs, and logging of configuration changes.
 
 ## 6. .NET Maintenance & Upgrades
-- **Target Runtime**: move `Dns`, `dns-cli`, and `dnstest` to `.NET 8` (LTS) for multi-platform support.
-- **Dependency Audit**: verify Ninject and Microsoft.Extensions packages for .NET 8 compatibility or plan replacements (e.g., Microsoft.Extensions.DependencyInjection).
-- **Upgrade Plan**:
-  - Update SDK/TFM, resolve API changes, and ensure build pipelines install the correct .NET 8 SDK.
-  - Run full regression + performance suite pre/post-upgrade.
-  - Document rollout steps and rollback strategy.
-- **Ongoing Maintenance**: establish a quarterly review for SDK patches, dependency updates, and security advisories; codify required validation steps (unit, integration, smoke tests).
+- **Target Runtime**: ✅ **COMPLETED** — `Dns`, `dns-cli`, and `dnstest` now target `.NET 8` (LTS) for multi-platform support.
+- **Dependency Status**: Ninject removed; using `Microsoft.Extensions.DependencyInjection`. Some `Microsoft.Extensions.*` packages remain at 3.1.9 and should be upgraded to 8.x versions.
+- **Completed Migration Steps**:
+  - Updated SDK/TFM to `net8.0` across all projects.
+  - Resolved API changes and verified builds on Windows/macOS/Linux.
+- **Ongoing Maintenance**: establish a quarterly review for SDK patches, dependency updates, and security advisories; codify required validation steps (unit, integration, smoke tests). Consider upgrading remaining 3.1.9 packages to .NET 8 compatible versions.
 
 ## 7. AI Agent Enablement
 - Deliver an `AGENTS.md` modeled after [OpenAI’s reference](https://raw.githubusercontent.com/openai/agents.md/refs/heads/main/AGENTS.md) with:

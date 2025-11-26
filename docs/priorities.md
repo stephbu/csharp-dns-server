@@ -1,7 +1,8 @@
 # Project Priorities
 
 ## P0 – Security & Maintenance
-- Upgrade runtime/dependencies (target .NET 8), monitor CVEs, and enforce regular patch cadence.
+- ✅ **COMPLETED**: Runtime upgraded to .NET 8; Ninject replaced with `Microsoft.Extensions.DependencyInjection`.
+- Monitor CVEs and enforce regular patch cadence; upgrade remaining 3.1.9 `Microsoft.Extensions.*` packages to 8.x.
 - Implement observability guardrails (metrics, logging, tracing) to detect anomalies quickly.
 - Plan authentication/authorization for admin surfaces (HTTP endpoints) and adopt secure defaults (TLS, restricted ports).
 - Document operational runbooks and incident response procedures.
@@ -17,6 +18,7 @@
 - Iterate on HTTP dashboards/metrics export per roadmap once P0/P1 goals are satisfied.
 
 ## Execution Plan Highlights
-- **Dependency Injection**: migrate from Ninject to the built-in `Microsoft.Extensions.DependencyInjection` container across `Dns`, `dns-cli`, and supporting libraries as part of the P1 maintenance track.
+- **Dependency Injection**: ✅ **COMPLETED** \u2014 migrated from Ninject to `Microsoft.Extensions.DependencyInjection` across `Dns`, `dns-cli`, and supporting libraries.
 - **Telemetry Direction**: instrument the DNS server, zone providers, and HTTP endpoints with OpenTelemetry-compatible metrics/traces. External operators are expected to supply collectors/exporters; the codebase will emit OTLP-compatible data but will not bundle collector infrastructure.
+- **DNSSEC Roadmap**: implement in phases: (1) EDNS(0) support as prerequisite, (2) DNSSEC record parsing, (3) validating resolver, (4) future authoritative signing. Coordinate buffer work with performance tuning (#29).
 - **Roadmap Sync**: keep `docs/product_requirements.md`, this priorities doc, and `AGENTS.md` in sync whenever workstreams change so contributors understand current focus.
