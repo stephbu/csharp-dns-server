@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>DnsBench.RequestProcessingBenchmarks-20251126-000312</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.14.0, macOS 26.1 (25B78) [Darwin 25.1.0]
+Apple M1 Max, 1 CPU, 10 logical and 10 physical cores
+.NET SDK 8.0.104
+  [Host]     : .NET 8.0.4 (8.0.424.16909), Arm64 RyuJIT AdvSIMD
+  DefaultJob : .NET 8.0.4 (8.0.424.16909), Arm64 RyuJIT AdvSIMD
+</code></pre>
+<pre><code></code></pre>
+
+<table>
+<thead><tr><th>Method                                    </th><th>Mean</th><th>Error</th><th>StdDev</th><th>Gen0</th><th>Gen1</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>&#39;GetKeyName: string.Format (current)&#39;</td><td>104.237 ns</td><td>0.4740 ns</td><td>0.4202 ns</td><td>0.0331</td><td>-</td><td>208 B</td>
+</tr><tr><td>&#39;GetKeyName: interpolation&#39;</td><td>48.580 ns</td><td>0.1547 ns</td><td>0.1371 ns</td><td>0.0128</td><td>-</td><td>80 B</td>
+</tr><tr><td>&#39;Full cycle: Parse → Build response → Serialize&#39;</td><td>501.776 ns</td><td>4.6161 ns</td><td>4.3179 ns</td><td>0.3424</td><td>-</td><td>2152 B</td>
+</tr><tr><td>&#39;Buffer copy: new byte[] + BlockCopy&#39;</td><td>8.330 ns</td><td>0.0335 ns</td><td>0.0280 ns</td><td>0.0102</td><td>-</td><td>64 B</td>
+</tr><tr><td>&#39;MemoryStream: new per request&#39;</td><td>146.990 ns</td><td>1.7060 ns</td><td>1.4246 ns</td><td>0.1528</td><td>0.0002</td><td>960 B</td>
+</tr><tr><td>&#39;SocketAsyncEventArgs: new per send&#39;</td><td>326.122 ns</td><td>5.2144 ns</td><td>4.8775 ns</td><td>0.0367</td><td>0.0181</td><td>232 B</td>
+</tr><tr><td>&#39;RequestMap: Add with RWLock&#39;</td><td>58.691 ns</td><td>0.2279 ns</td><td>0.2020 ns</td><td>0.0076</td><td>-</td><td>48 B</td>
+</tr><tr><td>&#39;RequestMap: TryGet with RWLock&#39;</td><td>82.904 ns</td><td>0.1868 ns</td><td>0.1656 ns</td><td>0.0076</td><td>-</td><td>48 B</td>
+</tr></tbody></table>
+</body>
+</html>
