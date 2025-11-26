@@ -9,6 +9,7 @@ using System.Net.NetworkInformation;
 namespace Dns
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -27,9 +28,11 @@ namespace Dns
         private long _responses;
         private long _nacks;
 
-        private Dictionary<string, EndPoint> _requestResponseMap = new Dictionary<string, EndPoint>();
-
-        private ReaderWriterLockSlim _requestResponseMapLock = new ReaderWriterLockSlim();
+        /// <summary>
+        /// Maps forwarded DNS requests to their originating endpoints.
+        /// Phase 4: Uses struct key (DnsRequestKey) + ConcurrentDictionary for lock-free, allocation-free lookups.
+        /// </summary>
+        private readonly ConcurrentDictionary<DnsRequestKey, EndPoint> _requestResponseMap = new ConcurrentDictionary<DnsRequestKey, EndPoint>();
 
         private ushort port;
 
@@ -124,17 +127,9 @@ namespace Dns
                         // 
                         else // Referral to regular DC DNS servers
                         {
-                            // store current IP address and Query ID.
-                            try
-                            {
-                                string key = GetKeyName(message);
-                                _requestResponseMapLock.EnterWriteLock();
-                                _requestResponseMap.Add(key, remoteEndPoint);
-                            }
-                            finally
-                            {
-                                _requestResponseMapLock.ExitWriteLock();
-                            }
+                            // store current IP address and Query ID using struct key (zero allocation)
+                            var key = new DnsRequestKey(message);
+                            _requestResponseMap.TryAdd(key, remoteEndPoint);
                         }
 
                         using (PooledMemoryStream responseStream = BufferPool.RentMemoryStream())
@@ -159,52 +154,34 @@ namespace Dns
             }
             else
             {
-                // message is response to a delegated query
-                string key = GetKeyName(message);
-                try
+                // message is response to a delegated query - use struct key (zero allocation)
+                var key = new DnsRequestKey(message);
+
+                // TryRemove atomically checks and removes - no locks needed
+                if (_requestResponseMap.TryRemove(key, out EndPoint ep))
                 {
-                    _requestResponseMapLock.EnterUpgradeableReadLock();
-
-                    EndPoint ep;
-                    if (_requestResponseMap.TryGetValue(key, out ep))
+                    using (PooledMemoryStream responseStream = BufferPool.RentMemoryStream())
                     {
-                        // first test establishes presence
-                        try
-                        {
-                            _requestResponseMapLock.EnterWriteLock();
-                            // second test within lock means exclusive access
-                            if (_requestResponseMap.TryGetValue(key, out ep))
-                            {
-                                using (PooledMemoryStream responseStream = BufferPool.RentMemoryStream())
-                                {
-                                    message.WriteToStream(responseStream);
-                                    Interlocked.Increment(ref _responses);
+                        message.WriteToStream(responseStream);
+                        Interlocked.Increment(ref _responses);
 
-                                    Console.WriteLine("{0} answered {1} {2} {3} to {4}", remoteEndPoint.ToString(), message.Questions[0].Name, message.Questions[0].Class, message.Questions[0].Type, ep.ToString());
+                        Console.WriteLine("{0} answered {1} {2} {3} to {4}", remoteEndPoint.ToString(), message.Questions[0].Name, message.Questions[0].Class, message.Questions[0].Type, ep.ToString());
 
-                                    SendUdp(responseStream.GetBuffer(), 0, (int)responseStream.Position, ep);
-                                }
-                                _requestResponseMap.Remove(key);
-                            }
-
-                        }
-                        finally
-                        {
-                            _requestResponseMapLock.ExitWriteLock();
-                        }
-                    }
-                    else
-                    {
-                        Interlocked.Increment(ref _nacks);
+                        SendUdp(responseStream.GetBuffer(), 0, (int)responseStream.Position, ep);
                     }
                 }
-                finally
+                else
                 {
-                    _requestResponseMapLock.ExitUpgradeableReadLock();
+                    Interlocked.Increment(ref _nacks);
                 }
             }
         }
 
+        /// <summary>
+        /// Creates a lookup key from a DNS message.
+        /// Legacy method preserved for compatibility - prefer using DnsRequestKey struct directly.
+        /// </summary>
+        [Obsolete("Use new DnsRequestKey(message) for zero-allocation key creation")]
         private string GetKeyName(DnsMessage message)
         {
             if (message.QuestionCount > 0)
