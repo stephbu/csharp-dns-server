@@ -100,6 +100,13 @@ Two phases of testing was completed.
 
 Much time was spent using Netmon to capture real DNS challenges and verify that the C# DNS server responded appropriately.
 
+### Endianness Support
+The DNS protocol uses **network byte order (big-endian)** for all multi-byte values. The codebase is designed to work correctly on both little-endian (x86, x64, ARM) and big-endian systems:
+
+- The `SwapEndian()` extension methods in `Dns/Extensions.cs` conditionally swap bytes based on `BitConverter.IsLittleEndian`.
+- Semantic aliases `NetworkToHost()` and `HostToNetwork()` provide clarity when converting DNS wire format.
+- Unit tests in `dnstest/EndianTests.cs` validate correct byte order handling.
+
 ### DNS-Sec
 No effort made to handle or respond to DNS-Sec challenges.
 

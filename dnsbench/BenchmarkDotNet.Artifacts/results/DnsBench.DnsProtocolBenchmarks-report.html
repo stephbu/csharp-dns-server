@@ -2,7 +2,7 @@
 <html lang='en'>
 <head>
 <meta charset='utf-8' />
-<title>DnsBench.DnsProtocolBenchmarks-20251126-000139</title>
+<title>DnsBench.DnsProtocolBenchmarks-20251126-003357</title>
 
 <style type="text/css">
 	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
@@ -22,13 +22,18 @@ Apple M1 Max, 1 CPU, 10 logical and 10 physical cores
 <pre><code></code></pre>
 
 <table>
-<thead><tr><th>Method                      </th><th>Mean </th><th>Error</th><th>StdDev</th><th>Gen0</th><th>Allocated</th>
+<thead><tr><th>Method                                   </th><th>Mean </th><th>Error</th><th>StdDev</th><th>Gen0</th><th>Allocated</th>
 </tr>
-</thead><tbody><tr><td>&#39;ReadString: Simple (www.msn.com)&#39;</td><td>60.6599 ns</td><td>0.3570 ns</td><td>0.3164 ns</td><td>0.0471</td><td>296 B</td>
-</tr><tr><td>&#39;ReadString: Medium (7 labels)&#39;</td><td>165.7388 ns</td><td>0.6849 ns</td><td>0.5719 ns</td><td>0.1261</td><td>792 B</td>
-</tr><tr><td>&#39;ReadString: Compressed pointer&#39;</td><td>80.2575 ns</td><td>0.4812 ns</td><td>0.4018 ns</td><td>0.0739</td><td>464 B</td>
-</tr><tr><td>ReadUshort</td><td>0.8081 ns</td><td>0.0049 ns</td><td>0.0038 ns</td><td>-</td><td>-</td>
-</tr><tr><td>ReadUint</td><td>0.8254 ns</td><td>0.0271 ns</td><td>0.0266 ns</td><td>-</td><td>-</td>
+</thead><tbody><tr><td>&#39;ReadString: Simple (legacy StringBuilder)&#39;</td><td>60.2319 ns</td><td>0.4076 ns</td><td>0.3813 ns</td><td>0.0471</td><td>296 B</td>
+</tr><tr><td>&#39;ReadString: Simple (Phase 3 Span)&#39;</td><td>34.3911 ns</td><td>0.1426 ns</td><td>0.1264 ns</td><td>0.0076</td><td>48 B</td>
+</tr><tr><td>&#39;ReadString: Medium (legacy StringBuilder)&#39;</td><td>164.0997 ns</td><td>0.9025 ns</td><td>0.8442 ns</td><td>0.1261</td><td>792 B</td>
+</tr><tr><td>&#39;ReadString: Medium (Phase 3 Span)&#39;</td><td>49.9105 ns</td><td>0.2611 ns</td><td>0.2443 ns</td><td>0.0166</td><td>104 B</td>
+</tr><tr><td>&#39;ReadString: Compressed (legacy StringBuilder)&#39;</td><td>81.3111 ns</td><td>0.4062 ns</td><td>0.3800 ns</td><td>0.0739</td><td>464 B</td>
+</tr><tr><td>&#39;ReadString: Compressed (Phase 3 Span)&#39;</td><td>51.5990 ns</td><td>0.1687 ns</td><td>0.1409 ns</td><td>0.0344</td><td>216 B</td>
+</tr><tr><td>ReadUshort</td><td>0.8055 ns</td><td>0.0058 ns</td><td>0.0054 ns</td><td>-</td><td>-</td>
+</tr><tr><td>&#39;ReadUshort (BigEndian Span)&#39;</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>-</td><td>-</td>
+</tr><tr><td>ReadUint</td><td>0.8114 ns</td><td>0.0016 ns</td><td>0.0014 ns</td><td>-</td><td>-</td>
+</tr><tr><td>&#39;ReadUint (BigEndian Span)&#39;</td><td>0.0371 ns</td><td>0.0010 ns</td><td>0.0008 ns</td><td>-</td><td>-</td>
 </tr></tbody></table>
 </body>
 </html>

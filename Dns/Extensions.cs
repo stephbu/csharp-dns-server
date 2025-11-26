@@ -7,6 +7,7 @@
 namespace Dns
 {
     using System;
+    using System.Buffers.Binary;
     using System.IO;
     using System.Text;
 
@@ -19,17 +20,63 @@ namespace Dns
             return new StreamWriter(stream, encoding);
         }
 
+        /// <summary>
+        /// Converts a ushort between host byte order and network byte order (big-endian).
+        /// On little-endian systems, this swaps the bytes. On big-endian systems, this is a no-op.
+        /// </summary>
+        /// <remarks>
+        /// DNS protocol uses network byte order (big-endian) for all multi-byte values.
+        /// This method handles the conversion regardless of host architecture.
+        /// </remarks>
         public static ushort SwapEndian(this ushort val)
         {
-            ushort value = (ushort)((val << 8) | (val >> 8));
-            return value;
+            if (BitConverter.IsLittleEndian)
+            {
+                return (ushort)((val << 8) | (val >> 8));
+            }
+            return val;
         }
 
+        /// <summary>
+        /// Converts a uint between host byte order and network byte order (big-endian).
+        /// On little-endian systems, this swaps the bytes. On big-endian systems, this is a no-op.
+        /// </summary>
+        /// <remarks>
+        /// DNS protocol uses network byte order (big-endian) for all multi-byte values.
+        /// This method handles the conversion regardless of host architecture.
+        /// </remarks>
         public static uint SwapEndian(this uint val)
         {
-            uint value = (val << 24) | ((val << 8) & 0x00ff0000) | ((val >> 8) & 0x0000ff00) | (val >> 24);
-            return value;
+            if (BitConverter.IsLittleEndian)
+            {
+                return (val << 24) | ((val << 8) & 0x00ff0000) | ((val >> 8) & 0x0000ff00) | (val >> 24);
+            }
+            return val;
         }
+
+        /// <summary>
+        /// Converts a ushort from network byte order (big-endian) to host byte order.
+        /// Equivalent to SwapEndian but semantically clearer for reading operations.
+        /// </summary>
+        public static ushort NetworkToHost(this ushort val) => val.SwapEndian();
+
+        /// <summary>
+        /// Converts a uint from network byte order (big-endian) to host byte order.
+        /// Equivalent to SwapEndian but semantically clearer for reading operations.
+        /// </summary>
+        public static uint NetworkToHost(this uint val) => val.SwapEndian();
+
+        /// <summary>
+        /// Converts a ushort from host byte order to network byte order (big-endian).
+        /// Equivalent to SwapEndian but semantically clearer for writing operations.
+        /// </summary>
+        public static ushort HostToNetwork(this ushort val) => val.SwapEndian();
+
+        /// <summary>
+        /// Converts a uint from host byte order to network byte order (big-endian).
+        /// Equivalent to SwapEndian but semantically clearer for writing operations.
+        /// </summary>
+        public static uint HostToNetwork(this uint val) => val.SwapEndian();
 
 
 
@@ -105,13 +152,26 @@ namespace Dns
             return b.ToString().ToLower();
         }
 
+        /// <summary>
+        /// Writes a ushort to stream in little-endian byte order.
+        /// </summary>
+        /// <remarks>
+        /// Note: For DNS protocol, callers should use .SwapEndian().WriteToStream() 
+        /// to write in network byte order (big-endian).
+        /// </remarks>
         public static void WriteToStream(this ushort value, Stream stream)
         {
             stream.WriteByte((byte)(value & 0xFF));
             stream.WriteByte((byte)((value >> 8) & 0xFF));
         }
 
-
+        /// <summary>
+        /// Writes a uint to stream in little-endian byte order.
+        /// </summary>
+        /// <remarks>
+        /// Note: For DNS protocol, callers should use .SwapEndian().WriteToStream() 
+        /// to write in network byte order (big-endian).
+        /// </remarks>
         public static void WriteToStream(this uint value, Stream stream)
         {
             stream.WriteByte((byte)(value & 0xFF));

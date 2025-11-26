@@ -6,6 +6,7 @@
 
 namespace DnsBench
 {
+    using System;
     using BenchmarkDotNet.Attributes;
     using Dns;
 
@@ -102,22 +103,43 @@ namespace DnsBench
             };
         }
 
-        [Benchmark(Description = "ReadString: Simple (www.msn.com)")]
-        public string ReadString_Simple()
+        [Benchmark(Description = "ReadString: Simple (legacy StringBuilder)")]
+        public string ReadString_Simple_Legacy()
+        {
+            int offset = _simpleDomainOffset;
+            return DnsProtocol.ReadStringLegacy(_simpleDomain, ref offset);
+        }
+
+        [Benchmark(Description = "ReadString: Simple (Phase 3 Span)")]
+        public string ReadString_Simple_Optimized()
         {
             int offset = _simpleDomainOffset;
             return DnsProtocol.ReadString(_simpleDomain, ref offset);
         }
 
-        [Benchmark(Description = "ReadString: Medium (7 labels)")]
-        public string ReadString_Medium()
+        [Benchmark(Description = "ReadString: Medium (legacy StringBuilder)")]
+        public string ReadString_Medium_Legacy()
+        {
+            int offset = _mediumDomainOffset;
+            return DnsProtocol.ReadStringLegacy(_mediumDomain, ref offset);
+        }
+
+        [Benchmark(Description = "ReadString: Medium (Phase 3 Span)")]
+        public string ReadString_Medium_Optimized()
         {
             int offset = _mediumDomainOffset;
             return DnsProtocol.ReadString(_mediumDomain, ref offset);
         }
 
-        [Benchmark(Description = "ReadString: Compressed pointer")]
-        public string ReadString_Compressed()
+        [Benchmark(Description = "ReadString: Compressed (legacy StringBuilder)")]
+        public string ReadString_Compressed_Legacy()
+        {
+            int offset = _compressedDomainOffset;
+            return DnsProtocol.ReadStringLegacy(_compressedDomain, ref offset);
+        }
+
+        [Benchmark(Description = "ReadString: Compressed (Phase 3 Span)")]
+        public string ReadString_Compressed_Optimized()
         {
             int offset = _compressedDomainOffset;
             return DnsProtocol.ReadString(_compressedDomain, ref offset);
@@ -130,11 +152,25 @@ namespace DnsBench
             return DnsProtocol.ReadUshort(_fullQueryMessage, ref offset);
         }
 
+        [Benchmark(Description = "ReadUshort (BigEndian Span)")]
+        public ushort ReadUshort_BigEndian()
+        {
+            int offset = 0;
+            return DnsProtocol.ReadUshortBigEndian(_fullQueryMessage.AsSpan(), ref offset);
+        }
+
         [Benchmark(Description = "ReadUint")]
         public uint ReadUint()
         {
             int offset = 0;
             return DnsProtocol.ReadUint(_fullQueryMessage, ref offset);
+        }
+
+        [Benchmark(Description = "ReadUint (BigEndian Span)")]
+        public uint ReadUint_BigEndian()
+        {
+            int offset = 0;
+            return DnsProtocol.ReadUintBigEndian(_fullQueryMessage.AsSpan(), ref offset);
         }
     }
 }

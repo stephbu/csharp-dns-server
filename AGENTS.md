@@ -48,6 +48,14 @@ Gotchas:
 - ```dotnet format``` all code before submission
 - MIT license headers already present — preserve them.
 
+### Endianness
+- **DNS uses network byte order (big-endian)** for all multi-byte values per RFC 1035.
+- The codebase supports **both big-endian and little-endian host systems** via the `SwapEndian()` extension methods in `Extensions.cs`.
+- `SwapEndian()` checks `BitConverter.IsLittleEndian` and only swaps bytes when necessary.
+- Use `.SwapEndian()` when reading/writing multi-byte DNS fields (QueryID, counts, TTL, Type, Class, etc.).
+- Semantic aliases `NetworkToHost()` and `HostToNetwork()` are available for clarity.
+- **Test coverage**: `dnstest/EndianTests.cs` validates correct byte order on any platform.
+
 ## 5. Allowed / Disallowed Work
 - ✅ Modify C# source, tests, sample configs, docs within `docs/` and root (`AGENTS.md`, README).
 - ✅ Add new tests or scripts that live in-repo (delete temporary tooling before submitting).
