@@ -12,6 +12,7 @@
 ## 2. Functional Requirements
 ### 2.1 DNS Resolution & Protocol Support
 - Maintain authoritative responses for configured zones with round-robin rotation and delegation to upstream DNS when needed.
+- **Cross-Platform Endianness**: support both big-endian and little-endian host systems. DNS wire format uses network byte order (big-endian) per RFC 1035; all multi-byte field reads/writes must handle endian conversion correctly using `BinaryPrimitives` or equivalent safe APIs.
 - Expand record coverage beyond A/PTR:
   - Support AAAA, CNAME, and MX records emitted by zone providers.
   - Provide an extension point for future record types (SRV, TXT).
