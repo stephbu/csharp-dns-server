@@ -19,4 +19,5 @@ The DNS protocol is specified and built on a raft of IETF RFCs. These links serv
 - **[RFC 9293](https://datatracker.ietf.org/doc/html/rfc9293)** — Transmission Control Protocol; DNS fallbacks to TCP must conform when implementing large responses or zone transfers.
 - **[RFC 6891](https://datatracker.ietf.org/doc/html/rfc6891)** — Extension Mechanisms for DNS (EDNS(0)); governs modern DNS extensions and message size negotiation.
 - **[RFC 7766](https://datatracker.ietf.org/doc/html/rfc7766)** — DNS Transport over TCP: Requirements; clarifies persistent TCP usage for DNS.
+- **[RFC 8484](https://datatracker.ietf.org/doc/html/rfc8484)** — DNS Queries over HTTPS (DoH); specifies DNS resolution over HTTPS for privacy and firewall traversal.
 - **[RFC 9110](https://datatracker.ietf.org/doc/html/rfc9110)** — HTTP Semantics; referenced by the embedded HTTP server providing health and diagnostics.
