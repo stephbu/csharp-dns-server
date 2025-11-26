@@ -30,16 +30,16 @@ namespace DnsTest
             Assert.Equal(".example.com", zone.Suffix);
             Assert.Equal(0u, zone.Serial);
 
-            ZoneRecord wwwA = Assert.Single(zone.Where(record => record.Host == "www.example.com" && record.Type == ResourceType.A));
+            ZoneRecord wwwA = Assert.Single(zone, record => record.Host == "www.example.com" && record.Type == ResourceType.A);
             Assert.Equal(IPAddress.Parse("192.0.2.10"), Assert.Single(wwwA.Addresses));
 
-            ZoneRecord wwwAaaa = Assert.Single(zone.Where(record => record.Host == "www.example.com" && record.Type == ResourceType.AAAA));
+            ZoneRecord wwwAaaa = Assert.Single(zone, record => record.Host == "www.example.com" && record.Type == ResourceType.AAAA);
             Assert.Equal(IPAddress.Parse("2001:db8::10"), Assert.Single(wwwAaaa.Addresses));
 
-            ZoneRecord apex = Assert.Single(zone.Where(record => record.Host == "example.com" && record.Type == ResourceType.A));
+            ZoneRecord apex = Assert.Single(zone, record => record.Host == "example.com" && record.Type == ResourceType.A);
             Assert.Contains(IPAddress.Parse("192.0.2.20"), apex.Addresses);
 
-            ZoneRecord api = Assert.Single(zone.Where(record => record.Host == "api.example.com"));
+            ZoneRecord api = Assert.Single(zone, record => record.Host == "api.example.com");
             Assert.Equal(IPAddress.Parse("192.0.2.30"), Assert.Single(api.Addresses));
         }
 

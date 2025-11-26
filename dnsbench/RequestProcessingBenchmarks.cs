@@ -6,6 +6,9 @@
 
 namespace DnsBench
 {
+    using System;
+    using System.Buffers;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.IO;
     using System.Net;
@@ -142,6 +145,19 @@ namespace DnsBench
         }
 
         /// <summary>
+        /// Simulates pooled MemoryStream usage (Phase 2 optimization).
+        /// Uses BufferPool.RentMemoryStream() pattern.
+        /// </summary>
+        [Benchmark(Description = "MemoryStream: pooled (Phase 2)")]
+        public PooledMemoryStream MemoryStream_Pooled()
+        {
+            var stream = BufferPool.RentMemoryStream();
+            _parsedQuery.WriteToStream(stream);
+            stream.Dispose(); // Returns to pool
+            return stream;
+        }
+
+        /// <summary>
         /// Simulates SocketAsyncEventArgs allocation pattern.
         /// Current code: new SocketAsyncEventArgs() per send
         /// </summary>
@@ -152,6 +168,33 @@ namespace DnsBench
             args.RemoteEndPoint = _sampleEndpoint;
             args.SetBuffer(_queryBytes, 0, _queryBytes.Length);
             return args;
+        }
+
+        /// <summary>
+        /// Simulates pooled SocketAsyncEventArgs usage (Phase 2 optimization).
+        /// Uses BufferPool.RentSocketAsyncEventArgs() pattern.
+        /// </summary>
+        [Benchmark(Description = "SocketAsyncEventArgs: pooled (Phase 2)")]
+        public System.Net.Sockets.SocketAsyncEventArgs SocketAsyncEventArgs_Pooled()
+        {
+            var args = BufferPool.RentSocketAsyncEventArgs();
+            args.RemoteEndPoint = _sampleEndpoint;
+            args.SetBuffer(_queryBytes, 0, _queryBytes.Length);
+            BufferPool.ReturnSocketAsyncEventArgs(args);
+            return args;
+        }
+
+        /// <summary>
+        /// Simulates buffer rental from MemoryPool (Phase 2 optimization).
+        /// Uses BufferPool.RentBuffer() pattern.
+        /// </summary>
+        [Benchmark(Description = "Buffer: MemoryPool rental (Phase 2)")]
+        public IMemoryOwner<byte> Buffer_MemoryPoolRental()
+        {
+            var owner = BufferPool.RentBuffer();
+            // Simulate copy into rented buffer
+            _queryBytes.AsSpan().CopyTo(owner.Memory.Span);
+            return owner;
         }
 
         /// <summary>

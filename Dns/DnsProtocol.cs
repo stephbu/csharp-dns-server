@@ -13,13 +13,23 @@ namespace Dns
 
     public class DnsProtocol
     {
-        /// <summary></summary>
-        /// <param name="bytes"></param>
-        /// <param name="dnsMessage"></param>
-        /// <returns></returns>
+        /// <summary>Try to parse a DNS message from a byte array.</summary>
+        /// <param name="bytes">The buffer containing the DNS message.</param>
+        /// <param name="dnsMessage">The parsed DNS message if successful.</param>
+        /// <returns>True if parsing succeeded, false otherwise.</returns>
         public static bool TryParse(byte[] bytes, out DnsMessage dnsMessage)
         {
-            if (!DnsMessage.TryParse(bytes, out dnsMessage))
+            return TryParse(bytes, bytes.Length, out dnsMessage);
+        }
+
+        /// <summary>Try to parse a DNS message from a byte array with explicit length.</summary>
+        /// <param name="bytes">The buffer containing the DNS message.</param>
+        /// <param name="length">The number of valid bytes in the buffer.</param>
+        /// <param name="dnsMessage">The parsed DNS message if successful.</param>
+        /// <returns>True if parsing succeeded, false otherwise.</returns>
+        public static bool TryParse(byte[] bytes, int length, out DnsMessage dnsMessage)
+        {
+            if (!DnsMessage.TryParse(bytes, length, out dnsMessage))
             {
                 return false;
             }

@@ -61,11 +61,13 @@ namespace Dns
         }
 
         /// <summary>Process UDP Request</summary>
-        /// <param name="args"></param>
-        private void ProcessUdpRequest(byte[] buffer, EndPoint remoteEndPoint)
+        /// <param name="buffer">The received data buffer.</param>
+        /// <param name="length">The number of valid bytes in the buffer.</param>
+        /// <param name="remoteEndPoint">The remote endpoint that sent the request.</param>
+        private void ProcessUdpRequest(byte[] buffer, int length, EndPoint remoteEndPoint)
         {
             DnsMessage message;
-            if (!DnsProtocol.TryParse(buffer, out message))
+            if (!DnsProtocol.TryParse(buffer, length, out message))
             {
                 // TODO log bad message
                 Console.WriteLine("unable to parse message");
@@ -135,7 +137,7 @@ namespace Dns
                             }
                         }
 
-                        using (MemoryStream responseStream = new MemoryStream(512))
+                        using (PooledMemoryStream responseStream = BufferPool.RentMemoryStream())
                         {
                             message.WriteToStream(responseStream);
                             if (message.IsQuery())
@@ -173,7 +175,7 @@ namespace Dns
                             // second test within lock means exclusive access
                             if (_requestResponseMap.TryGetValue(key, out ep))
                             {
-                                using (MemoryStream responseStream = new MemoryStream(512))
+                                using (PooledMemoryStream responseStream = BufferPool.RentMemoryStream())
                                 {
                                     message.WriteToStream(responseStream);
                                     Interlocked.Increment(ref _responses);
@@ -207,7 +209,7 @@ namespace Dns
         {
             if (message.QuestionCount > 0)
             {
-                return string.Format("{0}|{1}|{2}|{3}", message.QueryIdentifier, message.Questions[0].Class, message.Questions[0].Type, message.Questions[0].Name);
+                return $"{message.QueryIdentifier}|{message.Questions[0].Class}|{message.Questions[0].Type}|{message.Questions[0].Name}";
             }
             else
             {
@@ -216,23 +218,33 @@ namespace Dns
         }
 
         /// <summary>Send UDP response via UDP listener socket</summary>
-        /// <param name="bytes"></param>
-        /// <param name="offset"></param>
-        /// <param name="count"></param>
-        /// <param name="remoteEndpoint"></param>
+        /// <param name="bytes">The buffer containing the data to send.</param>
+        /// <param name="offset">The offset in the buffer where data starts.</param>
+        /// <param name="count">The number of bytes to send.</param>
+        /// <param name="remoteEndpoint">The destination endpoint.</param>
         private void SendUdp(byte[] bytes, int offset, int count, EndPoint remoteEndpoint)
         {
-            //for (int index = 0; index < count; index++)
-            //{
-            //    Console.Write("0x{0:X},", bytes[offset + index]);
-            //}
-            //Console.WriteLine();
-
-            SocketAsyncEventArgs args = new SocketAsyncEventArgs();
+            // Get a pooled SocketAsyncEventArgs
+            SocketAsyncEventArgs args = BufferPool.RentSocketAsyncEventArgs();
             args.RemoteEndPoint = remoteEndpoint;
-            args.SetBuffer(bytes, offset, count);
+
+            // Copy data to a new buffer since the source may be reused
+            // TODO: Future optimization - pool these send buffers too
+            byte[] sendBuffer = new byte[count];
+            Buffer.BlockCopy(bytes, offset, sendBuffer, 0, count);
+            args.SetBuffer(sendBuffer, 0, count);
+
+            // Set up completion callback to return args to pool
+            args.Completed += OnSendCompleted;
 
             _udpListener.SendToAsync(args);
+        }
+
+        /// <summary>Callback when send completes - returns SocketAsyncEventArgs to pool.</summary>
+        private void OnSendCompleted(object sender, SocketAsyncEventArgs args)
+        {
+            args.Completed -= OnSendCompleted;
+            BufferPool.ReturnSocketAsyncEventArgs(args);
         }
 
         /// <summary>Returns list of manual or DHCP specified DNS addresses</summary>

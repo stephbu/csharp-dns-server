@@ -30,7 +30,7 @@ namespace DnsTest
                 var firstPacket = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
                 int invocations = 0;
 
-                listener.OnRequest += (buffer, remote) =>
+                listener.OnRequest += (buffer, length, remote) =>
                 {
                     if (Interlocked.Increment(ref invocations) == 1)
                     {
@@ -76,7 +76,7 @@ namespace DnsTest
                 var gate = new object();
                 var completion = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-                listener.OnRequest += (buffer, remote) =>
+                listener.OnRequest += (buffer, length, remote) =>
                 {
                     lock (gate)
                     {

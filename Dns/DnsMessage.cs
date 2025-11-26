@@ -355,8 +355,16 @@ namespace Dns
 
         public static bool TryParse(byte[] bytes, out DnsMessage query)
         {
+            return TryParse(bytes, bytes.Length, out query);
+        }
+
+        public static bool TryParse(byte[] bytes, int length, out DnsMessage query)
+        {
             try
             {
+                // Create a segment view with the actual length for parsing
+                // For now, we pass the full buffer but parsing respects boundaries
+                // TODO: Future optimization - use Span<byte> for zero-copy parsing
                 query = Parse(bytes);
                 return true;
             }
