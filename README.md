@@ -2,9 +2,9 @@
 
 [![GitHub Actions Status](https://github.com/stephbu/csharp-dns-server/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/stephbu/csharp-dns-server/actions/workflows/ci.yml)
 
-Fully functional DNS server written in C# targeting .NET 8. Ensure the .NET 8 SDK is installed before building or testing.
+Fully functional software-extensible DNS server written in C# targeting .NET 8. Ensure the .NET 8 SDK is installed before building or testing.
 
-The project was conceived while working to reduce the cost of datacentre "stamps" while providing robust services within a datacentre, specifically to remove the need for an expensive load-balancer device by providing round-robin DNS services, and retrying connectivity instead.
+The project was conceived while working to reduce the cost of cloud datacentre "stamps", providing robust discovery services within a datacentre, while specifically removing the need for expensive load-balancer devices.  The DNS Service would support software-defined/pluggable discovery of healthy hosts and services, and round-robin DNS services.  Such that clients may re-resolve, and retry connectivity instead.
 
 ## Licence
 This software is licenced under MIT terms that permits reuse within proprietary software provided all copies of the licensed software include a copy of the MIT License terms and the copyright notice.  See [licence.txt](./licence.txt)
